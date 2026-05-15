@@ -31,7 +31,45 @@ Install a subset by naming skill IDs:
 ./scripts/link_skills.sh --copy alphagenome-api borzoi-workflows dnabert2
 ```
 
-To install directly from GitHub with Codex's skill installer, use paths under `skills/`:
+## Install with `npx skills`
+
+If Node.js/npm are available, the Agent Skills CLI can install directly from GitHub:
+
+```bash
+npx --yes skills add JiaqiLiZju/s2f-agent --list -a codex --full-depth
+```
+
+Install the stable skill set explicitly:
+
+```bash
+npx --yes skills add JiaqiLiZju/s2f-agent \
+  -a codex -g -y --copy --full-depth \
+  --skill alphagenome-api \
+  --skill borzoi-workflows \
+  --skill dnabert2 \
+  --skill evo2-inference \
+  --skill gpn-models \
+  --skill nucleotide-transformer-v3 \
+  --skill segment-nt \
+  --skill skill-factory
+```
+
+For local development before publishing:
+
+```bash
+npx --yes skills add . \
+  -a codex -g -y --copy \
+  --skill alphagenome-api \
+  --skill borzoi-workflows \
+  --skill dnabert2 \
+  --skill evo2-inference \
+  --skill gpn-models \
+  --skill nucleotide-transformer-v3 \
+  --skill segment-nt \
+  --skill skill-factory
+```
+
+To install directly from GitHub with Codex's built-in skill installer, use paths under `skills/`:
 
 ```text
 repo: JiaqiLiZju/s2f-agent

@@ -212,47 +212,90 @@ Open the local interactive console:
 
 ## Installation and Deployment
 
-For Codex plugin / GitHub skill installation details, see [`docs/codex-install.md`](./docs/codex-install.md).
+This repository can be used in two layers:
+
+- **Codex skills only**: install the packaged skill folders so Codex can route to them immediately.
+- **Full s2f runtime**: also provision Python environments and model stacks for local execution.
+
+For extended Codex/plugin notes, see [`docs/codex-install.md`](./docs/codex-install.md).
 
 ### Prerequisites
 
-- Bash and Git
-- Python 3.10+ recommended (required by multiple stacks in practice)
-- Conda only if using `evo2-full`
-- NVIDIA GPU + CUDA stack for local Evo 2 GPU paths (`evo2-light` / `evo2-full`)
+- Bash and Git.
+- Node.js/npm only if installing with `npx skills`.
+- Python 3.10+ for local runtime provisioning.
+- Conda only for the `evo2-full` path.
+- NVIDIA GPU + CUDA only for local Evo 2 GPU paths (`evo2-light` / `evo2-full`).
 
-### 1. Install skills for Codex discovery
+### 1. Recommended: install with `npx skills`
 
-Default skills directory:
+List the skills published by this repository:
+
+```bash
+npx --yes skills add JiaqiLiZju/s2f-agent --list -a codex --full-depth
+```
+
+Install the stable Codex skill set:
+
+```bash
+npx --yes skills add JiaqiLiZju/s2f-agent \
+  -a codex -g -y --copy --full-depth \
+  --skill alphagenome-api \
+  --skill borzoi-workflows \
+  --skill dnabert2 \
+  --skill evo2-inference \
+  --skill gpn-models \
+  --skill nucleotide-transformer-v3 \
+  --skill segment-nt \
+  --skill skill-factory
+```
+
+Restart Codex after installing or updating skills.
+
+### 2. Local checkout install
+
+Use this path when you have cloned the repo and want deterministic local installation without `npx`.
+
+The default Codex skills directory is:
 
 ```bash
 ${CODEX_HOME:-$HOME/.codex}/skills
 ```
 
-Install all registry-listed skills:
+Copy all enabled, registry-listed skills:
 
 ```bash
-./scripts/link_skills.sh
+./scripts/link_skills.sh --copy
 # or
-make link-skills
+make link-skills COPY_SKILLS=1
 ```
 
-Include disabled dev skills explicitly:
+For development, symlink instead of copying so edits are picked up after restarting Codex:
 
 ```bash
-./scripts/link_skills.sh --include-disabled
+./scripts/link_skills.sh --force
 ```
 
 Useful variants:
 
 ```bash
 ./scripts/link_skills.sh --list
-./scripts/link_skills.sh --registry ./registry/skills.yaml --list
-./scripts/link_skills.sh --skills-dir /opt/codex/skills --force
-./scripts/link_skills.sh basset-workflows bpnet dnabert2 nucleotide-transformer nucleotide-transformer-v3 segment-nt borzoi-workflows
+./scripts/link_skills.sh --skills-dir "$HOME/.codex/skills" --copy --force
+./scripts/link_skills.sh --copy alphagenome-api borzoi-workflows dnabert2
+./scripts/link_skills.sh --include-disabled
 ```
 
-### 2. Provision software stacks
+### 3. Provision software stacks
+
+Installing skills gives Codex the workflow knowledge. Provisioning installs optional runnable model stacks for local execution.
+
+One-step default install: skills + `alphagenome` + `gpn` + `nt-jax` + smoke test.
+
+```bash
+./scripts/bootstrap.sh
+# or
+make bootstrap
+```
 
 Provision individual stacks:
 
@@ -262,14 +305,6 @@ Provision individual stacks:
 ./scripts/provision_stack.sh nt-jax
 ./scripts/provision_stack.sh ntv3-hf
 ./scripts/provision_stack.sh borzoi
-```
-
-One-step default install (skills + `alphagenome` + `gpn` + `nt-jax` + smoke test):
-
-```bash
-./scripts/bootstrap.sh
-# or
-make bootstrap
 ```
 
 One-time persistent install (keeps deploy envs and caches in a stable location):
