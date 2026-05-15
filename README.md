@@ -212,6 +212,8 @@ Open the local interactive console:
 
 ## Installation and Deployment
 
+For Codex plugin / GitHub skill installation details, see [`docs/codex-install.md`](./docs/codex-install.md).
+
 ### Prerequisites
 
 - Bash and Git
@@ -374,6 +376,7 @@ Baseline smoke checks:
 Registry and metadata checks:
 
 ```bash
+./scripts/validate_codex_package.sh
 ./scripts/validate_registry.sh
 ./scripts/validate_registry_tracking.sh
 ./scripts/validate_skill_metadata.sh

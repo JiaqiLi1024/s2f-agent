@@ -25,12 +25,13 @@ ifeq ($(PREFETCH_MODELS),1)
 BOOTSTRAP_FLAGS += --prefetch-models
 endif
 
-.PHONY: help link-skills validate-registry validate-registry-tracking validate-skill-metadata validate-input-contracts validate-routing validate-migration-paths validate-agent eval-routing eval-groundedness eval-task-success eval-benchmark test-eval-benchmark-mock route-query run-agent execute-plan agent-console bootstrap bootstrap-persistent bootstrap-ntv3-hf bootstrap-borzoi bootstrap-evo2-light bootstrap-evo2-full prefetch-models clean-runtime smoke smoke-lite
+.PHONY: help link-skills validate-codex-package validate-registry validate-registry-tracking validate-skill-metadata validate-input-contracts validate-routing validate-migration-paths validate-agent eval-routing eval-groundedness eval-task-success eval-benchmark test-eval-benchmark-mock route-query run-agent execute-plan agent-console bootstrap bootstrap-persistent bootstrap-ntv3-hf bootstrap-borzoi bootstrap-evo2-light bootstrap-evo2-full prefetch-models clean-runtime smoke smoke-lite
 
 help:
 	@printf '%s\n' \
 	  'Available targets:' \
 	  '  make link-skills           Link all packaged skills into the Codex skills dir' \
+	  '  make validate-codex-package Validate Codex plugin manifest and package-ready skills' \
 	  '  make validate-registry     Validate registry entries against local skill package paths' \
 	  '  make validate-registry-tracking Validate enabled registry skills are tracked and not ignored' \
 	  '  make validate-skill-metadata Validate skill.yaml completeness and registry consistency' \
@@ -73,6 +74,9 @@ help:
 link-skills:
 	bash $(REPO_ROOT)/scripts/link_skills.sh --skills-dir "$(SKILLS_DIR)" $(if $(filter 1,$(COPY_SKILLS)),--copy,) $(if $(filter 1,$(FORCE_LINKS)),--force,)
 
+validate-codex-package:
+	bash $(REPO_ROOT)/scripts/validate_codex_package.sh
+
 validate-registry:
 	bash $(REPO_ROOT)/scripts/validate_registry.sh
 
@@ -92,6 +96,7 @@ validate-migration-paths:
 	bash $(REPO_ROOT)/scripts/validate_migration_paths.sh
 
 validate-agent:
+	bash $(REPO_ROOT)/scripts/validate_codex_package.sh
 	bash $(REPO_ROOT)/scripts/validate_registry.sh
 	bash $(REPO_ROOT)/scripts/validate_registry_tracking.sh
 	bash $(REPO_ROOT)/scripts/validate_skill_metadata.sh
