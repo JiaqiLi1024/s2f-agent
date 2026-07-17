@@ -1,0 +1,74 @@
+[
+  {
+    "description": "A plain text file containing the hit alignments and scores.",
+    "format": "text",
+    "name": "Text",
+    "size": null,
+    "status": "NOT_GENERATED",
+    "url": null
+  },
+  {
+    "description": "A tab delimited text file containing the hit information. No alignments.",
+    "format": "tsv",
+    "name": "Tab Delimited",
+    "size": null,
+    "status": "NOT_GENERATED",
+    "url": null
+  },
+  {
+    "description": "Download the significant hits from your search as a gzipped FASTA file.",
+    "format": "fasta",
+    "name": "FASTA",
+    "size": null,
+    "status": "NOT_GENERATED",
+    "url": null
+  },
+  {
+    "description": "A gzipped file containing the full length sequences for significant search hits.",
+    "format": "fullfasta",
+    "name": "Full length FASTA",
+    "size": null,
+    "status": "NOT_GENERATED",
+    "url": null
+  },
+  {
+    "description": "A gzipped file containing aligned significant search hits in FASTA format.",
+    "format": "afa",
+    "name": "Aligned FASTA",
+    "size": null,
+    "status": "NOT_GENERATED",
+    "url": null
+  },
+  {
+    "description": "Download an alignment of significant hits as a gzipped STOCKHOLM file.",
+    "format": "stockholm",
+    "name": "STOCKHOLM",
+    "size": 799806,
+    "status": "AVAILABLE",
+    "url": "https://www.ebi.ac.uk/Tools/hmmer/downloads/7c41ec84-9910-44fb-9a9a-5d86ae2bf456-5f14c9c6783ff9c0.sto.gz"
+  },
+  {
+    "description": "Download an alignment of significant hits as a gzipped ClustalW file.",
+    "format": "clustal",
+    "name": "ClustalW",
+    "size": null,
+    "status": "NOT_GENERATED",
+    "url": null
+  },
+  {
+    "description": "Download an alignment of significant hits as a gzipped psiblast file.",
+    "format": "psiblast",
+    "name": "PSI-BLAST",
+    "size": null,
+    "status": "NOT_GENERATED",
+    "url": null
+  },
+  {
+    "description": "Download an alignment of significant hits as a gzipped phylip file.",
+    "format": "phylip",
+    "name": "PHYLIP",
+    "size": null,
+    "status": "NOT_GENERATED",
+    "url": null
+  }
+]

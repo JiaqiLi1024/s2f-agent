@@ -1,0 +1,2 @@
+query_id	region_type	start	end	length	mean_conservation_score	mean_gap_fraction	max_conservation_score	min_conservation_score	evidence	note
+query1	conserved	1	29	29	0.961163	0.0	1.0	0.812288	MSA entropy conservation	

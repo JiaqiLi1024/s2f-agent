@@ -1,0 +1,530 @@
+
+--- PAGE 1 ---
+S2F-agent: Skill-grounded agent for 
+Sequence-to-Function computational 
+genomics workflows 
+Jiaqi Li1,*, Zhiwei Bao2 
+ 
+ 
+1Centre for Evolutionary and Organismal Biology, Liangzhu Laboratory, Zhejiang University 
+School of Medicine, Hangzhou, China. 
+2College of Biomedical Engineering and Instrument Science, Ministry of Education Key 
+Laboratory of Biomedical Engineering, Zhejiang University, Hangzhou, China. 
+ 
+*Correspondence author. Email: jiaqili1024@gmail.com 
+ 
+ 
+Abstract 
+Sequence-to-Function (S2F) foundation models are revolutionizing genomic research, yet their 
+fragmented ecosystem severely bottlenecks practical application by incompatible inputs, outputs, 
+and runtime environments. General-purpose coding agents lack the strict domain constraints 
+necessary to resolve these biological intricacies safely. Here, we present s2f-agent, a 
+skill-grounded agent orchestration system that translates open-ended genomics queries into 
+reproducible, executable analysis. By integrating canonical input keys, task-specific playbooks, 
+and normalized contracts, s2f-agent unifies workflows across 11 state-of-the-art models, 
+including AlphaGenome, Borzoi, and Evo 2. Validated through rigorous routing and 
+groundedness evaluations, s2f-agent bridges the critical gap between complex model 
+architectures and practical utility, effectively transforming an unwieldy ecosystem into an 
+accessible operational layer for researchers. 
+ 
+(which was not certified by peer review) is the author/funder. All rights reserved. No reuse allowed without permission. 
+The copyright holder for this preprintthis version posted May 15, 2026. ; https://doi.org/10.64898/2026.05.13.724757doi: bioRxiv preprint 
+
+
+--- PAGE 2 ---
+Introduction 
+A central goal of modern genomics is to explain how DNA sequence gives rise to molecular 
+function, especially within the non-coding genome where many trait- and disease-associated 
+variants reside1. Sequence-to-function (S2F) models were developed to address this problem by 
+learning from sequence signals that are informative about downstream biology2. In a broad 
+operational sense, S2F models include both direct predictive models that map sequence to 
+molecular phenotypes and genomic language or foundation models (gLMs) that learn reusable 
+functional representations from large unlabeled sequence corpora and support downstream 
+inference through embeddings, zero-shot prediction, fine-tuning, or generative design3. Under 
+this broader view, the purpose of S2F modeling is not only predictive accuracy in isolation, but 
+also the recovery of usable regulatory hypotheses from sequence alone: which variants are likely 
+functional, which loci may alter gene regulation, and which genomic intervals merit further 
+experimental follow-up. 
+The significance of this broadened S2F paradigm is increasingly clear. Direct predictive models 
+provide explicit readouts for chromatin accessibility, transcription, splicing, 3D genome features, 
+and variant effects, such as AlphaGenome4, Borzoi5, and SegmentNT6, whereas gLMs expand 
+the field by uncovering regulatory grammar and evolutionary constraints from multispecies or 
+genome-scale unlabeled sequence data, such as DNABERT7, Evo8, GPN9, Nucleotide 
+Transformer10. As a result, S2F systems now support non-coding variant interpretation, 
+prioritization of candidate causal variants within GWAS loci, promoter and regulatory element 
+analysis, sequence embedding workflows, cross-species functional transfer, and computational 
+guidance for downstream clinical genetics, target discovery, and precision-medicine applications. 
+That diversity is valuable, but it also creates an operational problem: each model family comes 
+with its own assumptions about assemblies, coordinate systems, sequence formatting, runtime 
+dependencies, output heads, context windows, and interpretation boundaries. As a result, even 
+relatively simple requests such as "score this variant," "embed this interval," or "run track 
+prediction on hg38" often require substantial tool-specific translation before they can become 
+reliable analysis steps. 
+Recent agentic systems have shown that large language models can assist with software 
+development and scientific workflows11,12, but open-ended assistance alone is not enough for 
+genomics. The growing importance and heterogeneity of S2F models actually raises the bar for 
+orchestration: if a system silently infers the wrong assembly, mixes 0-based and 1-based 
+coordinates, ignores output-head requirements, confuses an embedding workflow with a 
+supervised prediction workflow, or invents unsupported API symbols, the resulting analysis can 
+become scientifically misleading rather than merely inconvenient. A useful genomics agent 
+therefore needs more than a conversational interface. It needs explicit routing behavior, 
+domain-grounded constraints, task-aware input validation, and outputs that can be inspected, 
+executed, and regression-tested. 
+To overcome these operational bottlenecks, we introduce s2f-agent, a skill-grounded 
+orchestration layer that translates open-ended genomics queries into executable, normalized 
+analysis plans. Our system elegantly decouples orchestration logic from model-specific 
+intricacies using a layered architecture. By combining intelligent routing policies with canonical 
+input keys and strict task contracts, s2f-agent automatically resolves ambiguous inputs and 
+standardizes expected outputs—ensuring every generated plan includes explicit assumptions, 
+runnable steps, and predefined fallback behaviors. Our work presents three primary 
+contributions: (1) a skill-package abstraction that modularizes genomics model capabilities into 
+(which was not certified by peer review) is the author/funder. All rights reserved. No reuse allowed without permission. 
+The copyright holder for this preprintthis version posted May 15, 2026. ; https://doi.org/10.64898/2026.05.13.724757doi: bioRxiv preprint 
+
+
+--- PAGE 3 ---
+inspectable, routable units; (2) a contract-aware framework that unifies workflow generation 
+across a highly heterogeneous model landscape; and (3) comprehensive evaluation suites that 
+rigorously test routing accuracy, groundedness, and overall plan actionability. Together, these 
+elements provide a reliable blueprint for deploying S2F models without overstating the underlying 
+biological benchmarks. 
+ 
+Results 
+s2f-agent provides a layered orchestration architecture for genomics 
+To ensure reliability and inspectability, s2f-agent implements a layered runtime architecture that 
+strictly separates high-level orchestration from model-specific execution (Figure 1). This 
+architecture is organized into six functional tiers: The agent dictates the core mission, routing 
+behavior, and safety boundaries. The registry acts as the machine-readable control surface, 
+governing canonical input handling, task and output contracts, and recovery policies. The skills 
+layer encapsulates model-family-specific operational knowledge (e.g., SKILL.md, skill.yaml, 
+references, and helper scripts), while playbooks standardize reusable, task-level workflows 
+across different skills. The evals layer ensures robustness through curated behavioral and 
+structural checks. Finally, the scripts layer exposes reproducible runtime entry points for every 
+stage of the pipeline—from routing and orchestration to execution and smoke testing. 
+Crucially, this separation of concerns transforms open-ended user requests from a single opaque 
+prompt into a staged, inspectable pipeline. The workflow initiates with route_query.sh, which 
+determines the primary task and optimal lead skill, explicitly triggering a clarifying action if 
+biological inputs are dangerously underspecified. Next, run_agent.sh synthesizes the routed skill 
+with strict I/O contracts to generate a normalized plan object. Finally, execute_plan.sh dry-runs or 
+executes the runnable steps, verifying the generation of expected downstream artifacts. 
+This architectural paradigm is particularly critical in complex genetic analyses, where systems 
+that appear flexible but mask implicit biological assumptions can be actively harmful. By treating 
+standardized structure as a core feature rather than a constraint, s2f-agent avoids acting as an 
+autonomous, unconstrained scientific reasoner. Instead, it serves as a transparent orchestration 
+layer, safely translating underspecified intent into executable, rigorously defined workflow 
+contracts. 
+Unifying the S2F ecosystem via Skills and Playbooks 
+To provide comprehensive coverage of the broadened S2F landscape, s2f-agent decouples 
+specific model capabilities (Skills) from generalized biological tasks (Playbooks). This dual 
+abstraction ensures that model-specific syntax remains isolated, while a shared orchestration 
+layer coordinates complex workflows. 
+At the model level, the current registry packages 11 skills, successfully capturing the capabilities 
+of state-of-the-art S2F systems (Figure 1A). This includes stable environments for 
+AlphaGenome, Borzoi, DNABERT-2, Evo 2, GPN, Nucleotide Transformer v3, and SegmentNT. 
+By localizing model-specific syntax within the skill layer, the system seamlessly spans predictive 
+models and self-supervised genomic language models used for zero-shot functional inference or 
+downstream sequence design. 
+(which was not certified by peer review) is the author/funder. All rights reserved. No reuse allowed without permission. 
+The copyright holder for this preprintthis version posted May 15, 2026. ; https://doi.org/10.64898/2026.05.13.724757doi: bioRxiv preprint 
+
+
+--- PAGE 4 ---
+Crucially, users rarely query a repository structure; they query biological objectives. Therefore, 
+these skills are orchestrated by Playbooks across four mature workflow classes: Track Prediction 
+Normalizes requirements for species, assembly, interval, and output heads to structure 
+multi-track genomic predictions (Figure 1B). Embedding Generation Requires sequence/interval 
+and explicit embedding targets to differentiate between specific representation strategies. 
+Fine-Tuning Aligns training plans with expected artifacts by mandating dataset schemas, task 
+objectives, and compute constraints. Variant-Effect Analysis Enforces contracts for assembly, 
+interval/coordinate, and allele specification before generating execution steps for variant scoring. 
+By crossing these two layers, s2f-agent functions as a true routing engine. When a user requests 
+variant-effect analysis, the playbook enforces the required biological inputs, and the agent 
+intelligently routes the request to the most appropriate skill (e.g., AlphaGenome, GPN or Borzoi). 
+This architecture proves that s2f-agent is not a rigid wrapper for a single model, but a reusable, 
+cross-model orchestration layer for modern genomics. 
+Contract-Driven Orchestration and Validation 
+At the core of s2f-agent is a rigorous contract layer that translates free-form user intent into 
+scientifically safe, testable orchestration (Figure 1C). Grounded in a structured input schema, the 
+system normalizes essential biological context from natural language input, while establishing 
+strict task contracts that define the non-negotiable minimum inputs for distinct workflows. 
+Crucially, this structural strictness changes how the agent behaves when faced with incomplete 
+information (Figure 1D). Rather than optimistically injecting implicit assumptions to satisfy 
+ambiguous prompts, s2f-agent clarifies to a safety-first routing decision. By explicitly halting 
+execution to expose missing parameters (e.g., assembly aliases, coordinate conventions, 
+unspecified alleles or undefined output heads), the system prevents biologically invalid analyses 
+under ambiguous conditions. Concurrently, output contracts enforce uniform structural 
+guarantees across all generated plans, including explicit assumptions, reproducible steps, and 
+defined fallbacks, making highly heterogeneous tasks comparable at the orchestration level. 
+The fidelity of this contract-based architecture is validated by regression-oriented evaluation 
+suites (Supplementary Figure 1). Rather than chasing generalized conversational benchmarks 
+or leaderboard supremacy, these evaluations are designed to strictly detect biological drift. A 
+routing suite ensures stable skill invocation and ambiguity handling; a groundedness suite strictly 
+monitors against hallucination-like fabrications or unsupported API behaviors; and a 
+task-success suite verifies that the generated plans are minimally sufficient and actionable. By 
+rigorously testing routing reliability, groundedness against hallucination-like fabrications, and task 
+actionability, these curated evaluations ensure that s2f-agent operates not as an unpredictable 
+generative layer, but as a transparent, reproducible orchestration engine tailored for the strict 
+demands of computational genomics. Together, this integrated contract-and-evaluation paradigm 
+demonstrates that s2f-agent is engineered as a highly testable, reproducible orchestration layer, 
+prioritizing scientific validity over mere conversational fluency. 
+(which was not certified by peer review) is the author/funder. All rights reserved. No reuse allowed without permission. 
+The copyright holder for this preprintthis version posted May 15, 2026. ; https://doi.org/10.64898/2026.05.13.724757doi: bioRxiv preprint 
+
+
+--- PAGE 5 ---
+ 
+Figure 1. Overview of s2f-agent as a contract-driven agent system for 
+sequence-to-function model workflows. 
+The figure summarizes the major components and operating logic of s2f-agent, including the Skills 
+ecosystem (A), Playbooks (B), Agent Architecture (C), and Scientist-to-agent workflow (D).  
+(A) The Skills ecosystem panel illustrates how sequence-to-function models transform DNA sequence 
+inputs into functional genomic outputs, alongside representative modular skills exposed by the system, 
+including AlphaGenome API, Borzoi Workflows, DNABERT-2, Evo 2, GPN, Nucleotide Transformer, 
+SegmentNT, Basset, BPNet, and Skill Factory.  
+(B) The Playbooks panel shows standardized workflow controllers for common biological tasks, including 
+getting started, environment setup, troubleshooting, embedding, fine-tuning, track prediction, and 
+variant-effect analysis.  
+(C) The Architecture and validation panel depicts the central agent as a contract-driven orchestrator that 
+connects repository modules, routing logic, input schemas, task and output contracts, and recovery 
+policies. The bottom workflow indicates how user queries are routed or clarified, validated, planned, 
+executed, verified, and recovered when needed.  
+(D) The Scientist-to-agent workflow panel illustrates a representative scenario in which the scientist asks a 
+task, and the agent validates genomic inputs, selects a sequence-to-function model, runs the analysis 
+pipeline, and returns biological insight. 
+ 
+ 
+Decoding regulatory grammar through foundational model fine-tuning on 
+functional profiles 
+To evaluate the orchestration of fine-tuning workflows on continuous functional genomic profiles, 
+we constructed a real-data benchmark using ENCODE K562 ATAC-seq and H3K27ac ChIP-seq 
+assays mapped to the hg38 assembly. Active regulatory regions were defined by intersecting 
+ATAC and H3K27ac peak sets. We centered fixed 4,096-bp windows on these overlaps and 
+paired them with randomly sampled, non-overlapping negative windows of identical length. This 
+procedure yielded a balanced dataset of 64,198 total windows (32,099 positive, 32,099 
+negative). To ensure rigorous evaluation, we reserved chromosome 8 as a strict holdout test set 
+and assigned the remaining windows to training and development splits via a deterministic 
+(which was not certified by peer review) is the author/funder. All rights reserved. No reuse allowed without permission. 
+The copyright holder for this preprintthis version posted May 15, 2026. ; https://doi.org/10.64898/2026.05.13.724757doi: bioRxiv preprint 
+
+
+--- PAGE 6 ---
+hash-based partition, yielding 52,395 training, 9,283 development, and 2,520 test windows. For 
+each window, underlying genomic sequences were extracted from HG38 reference and paired 
+with assay signals summarized as the mean fold-change over control from the corresponding 
+ENCODE bigWig tracks. Consequently, each training example paired a genomic sequence with 
+two continuous regression targets: atac_fc_mean and h3k27ac_fc_mean. 
+We then evaluated a lightweight adaptation strategy utilizing the Nucleotide Transformer v3 
+(NTv3). Specifically, the pre-trained InstaDeepAI/NTv3_100M_post backbone was kept frozen, 
+and only a two-output linear regression head was trained on the pooled sequence features. A 
+baseline fine-tuning run was executed across the full training and development splits for 10 
+epochs using a learning rate of 0.01 and no weight decay. Training loss decreased monotonically 
+from 30.28 to 10.01, indicating that the regression head successfully learned a stable rescaling of 
+the frozen representations (Figure 2A). On the full chromosome 8 holdout set, this head-only 
+model achieved a mean Pearson correlation of 0.38 across both targets, performing notably 
+better for H3K27ac (Pearson 0.56) than for ATAC (Pearson 0.69) (Figure 2B, and 
+Supplementary Figure 2A). By comparison between native pre-trained outputs and our 
+fine-tuned regression head, we observed that the distribution of prediction rapidly shifted to real 
+K562 ATAC-seq and H3K27ac ChIP-seq signals after fine-tuning (Figure 2C-D, and 
+Supplementary Figure 2B-C). 
+To elucidate the non-linear regulatory relationship between chromatin accessibility (ATAC-seq) 
+and active enhancer/promoter marks (H3K27ac), we systematically analyzed the discordant 
+ATAC-seq and H3K27ac Regions of the K562 cell line. Across the held-out set of 2,520 genomic 
+intervals, we defined and isolated two distinct classes of discordant regulatory regions: 
+ATAC-high/H3K27ac-low (hereafter A-high/H-low) and H3K27ac-high/ATAC-low (H-high/A-low) 
+(Figure 2F). Subsequent Position Weight Matrix (PWM) and transcription factor (TF) enrichment 
+analysis of the H-high/A-low regions revealed a highly robust, lineage-specific regulatory 
+signature (Figure 2G). The most statistically significant enrichments were dominated by the 
+Krüppel-like factor (KLF) family, including KLF14 (q=5.76×10−11), KLF5 (q=5.16×10−10), and 
+the critical erythroid lineage master regulator KLF1 (q=2.21×10−9). Given the erythroleukemic 
+origin of K562 cells, the overrepresentation of KLF1 strongly indicates that these highly 
+acetylated, yet less accessible domains likely correspond to the nucleosome-dense flanking 
+regions of erythroid-specific super-enhancers. Furthermore, we observed a highly significant 
+enrichment of ZNF143 (q=3.66×10−10), a structural factor known to mediate active 
+enhancer-promoter looping, highlighting the 3D topological importance of these domains. 
+Conversely, the A-high/H-low regions exhibited a markedly different transcription factor binding 
+landscape. This subset was uniquely enriched for members of the ETS transcription factor family, 
+specifically ETV5::DRGX (q=0.00487) and ETV2::DRGX (q=0.00768). Because these genomic 
+loci exhibit high chromatin accessibility but lack the H3K27ac modification requisite for active 
+transcription, our analysis posits that these sites represent "primed" or "poised" enhancers. The 
+binding of ETS family members—often functioning as pioneer factors—suggests they are 
+responsible for initiating chromatin opening, pre-conditioning these loci for subsequent activation 
+events. 
+Together, these results demonstrate that automated analytical orchestration via s2f-agent 
+effectively disentangles complex, multi-modal epigenomic states, translating continuous 
+sequence-to-function predictions into a highly interpretable, biologically actionable landscape of 
+the transcription factor networks driving cell identity. 
+(which was not certified by peer review) is the author/funder. All rights reserved. No reuse allowed without permission. 
+The copyright holder for this preprintthis version posted May 15, 2026. ; https://doi.org/10.64898/2026.05.13.724757doi: bioRxiv preprint 
+
+
+--- PAGE 7 ---
+ 
+Figure 2. Case study of s2f-agent for decoding regulatory grammar through foundational 
+models. 
+(A) Training curves for the K562 frozen-backbone, head-only regression model across 10 epochs, showing 
+MSE loss for train, development, and test splits. 
+(B) Pearson correlation by split for ATAC fold-change mean, H3K27ac fold-change mean, and their 
+average. On the held-out test set, the model achieved Pearson r = 0.690 for ATAC, r = 0.564 for H3K27ac, 
+and mean r = 0.627. 
+(C-D) Genome-wide track comparison across the full chr8 test set of 2,520 intervals. True and predicted 
+fold-change means are shown as smoothed curves over genomic midpoint coordinates for ATAC (C) and 
+H3K27ac (D). Test-set performance was r = 0.690, MAE = 0.482 for ATAC and r = 0.564, MAE = 2.673 for 
+H3K27ac. 
+(E) ENCODE K562 transcription-factor support among selected top candidate regulatory intervals. Bars 
+indicate the number of candidate intervals supported by ENCODE TF ChIP-seq evidence; the strongest 
+support included KDM5B, ZBTB17, ERF, TBPL1, CHD1, TEAD1, and RAD21. 
+(F) Differential regulatory regions selected for PWM enrichment analysis. Each point represents a full-test 
+interval, plotted by observed ATAC-H3K27ac delta versus fine-tuned predicted ATAC-H3K27ac delta. 
+Highlighted points mark the top 50 ATAC-high/H3K27ac-low and top 50 H3K27ac-high/ATAC-low regions 
+with concordant observed and predicted delta direction. 
+(G) Top transcription factors enriched in PWM motif analysis for the two differential region classes. Bar 
+length represents -log10(best q value), summarizing AME enrichment over JASPAR 2026 vertebrate 
+motifs. ATAC-high/H3K27ac-low regions were enriched for ETV-family composite motifs, whereas 
+H3K27ac-high/ATAC-low regions showed strong enrichment for KLF, ZNF, SP, and related regulatory 
+motifs. 
+ 
+ 
+(which was not certified by peer review) is the author/funder. All rights reserved. No reuse allowed without permission. 
+The copyright holder for this preprintthis version posted May 15, 2026. ; https://doi.org/10.64898/2026.05.13.724757doi: bioRxiv preprint 
+
+
+--- PAGE 8 ---
+Unifying heterogeneous workflows for multi-perspective variant effect 
+inference 
+To demonstrate the practical utility of s2f-agent in standardizing sequence-to-function (S2F) 
+analysis, we implemented an end-to-end batch variant-effect pipeline. This orchestration layer 
+naturally accommodates inputs via VCF or CSV, routing tasks to targeted execution modules, 
+such as the alphagenome, GPN, and Borzoi, based on request logic. By enforcing strict task 
+contracts (which require explicit assembly, coordinate systems, and allele specifications) 
+alongside structured output contracts, s2f-agent transforms isolated, model-specific scripts into 
+reproducible, machine-checkable execution paths. For example, the variant-effect playbook 
+dynamically handles both SNPs and multibase alleles, transparently propagates VCF INFO 
+fields, and emits wide-format, per-tissue effect summaries. This operational legibility not only 
+guarantees the generation of concrete, verifiable artifacts, but exposes the underlying 
+computational assumptions, making heterogeneous genomics workflows fundamentally more 
+reproducible (Figure 3A). 
+Building upon this standardized framework, we evaluated whether multi-model orchestration 
+could improve functional prioritization in a realistic complex disease setting. We analyzed a 
+curated set of 907 fine-mapped, non-coding variants associated with coronary artery disease 
+(CAD) in hg38 coordinates. Utilizing s2f-agent, we assembled a unified variant-level table 
+integrating three complementary S2F models: AlphaGenome for tissue-specific regulatory effects 
+(extracting the Liver_mean_diff output), Borzoi for transcript-linked contact perturbation (derived 
+from the RNA-SAD mean across tracks), and GPN for evolutionary constraint (based on the 
+mean forward/reverse log-likelihood-ratio) (Figure 3B). Because reported GWAS risk alleles can 
+correspond to either the reference or alternate sequence, all raw model outputs were 
+systematically re-oriented to the risk allele using a risk_is_ref flag, ensuring that positive and 
+negative values consistently reflected the same biological directionality. Each oriented score was 
+then standardized across the 907 variants to generate z-tissue, z-contact, and z-evolutionary 
+(Figure 3C). The final joint prioritization score, defined as the arithmetic mean of these three 
+z-scores, was used to rank the variants, with the top 30 selected for focused downstream 
+interpretation (Figure 3D, and Supplementary Figure 3A). 
+Externally, the analytical pipeline executed automated queries against GTEx single-tissue eQTL 
+data and the GWAS Catalog. For GTEx analyses, the normalized effect size (nes) was converted 
+into a risk-allele-oriented metric (risk_nes), where positive and negative values indicate 
+risk-allele-associated upregulation and downregulation, respectively. Variants were statistically 
+classified as demonstrating significant expression impact if they possessed at least one GTEx 
+association meeting genome-wide significance (p<5×10−8), and as stronger eQTL candidates if 
+this association also satisfied an absolute effect size threshold of ∣risk_nes∣≥0.5. To anchor our 
+CAD interpretations, we specifically tracked peak associations within pathologically relevant 
+tissues, including liver, whole blood, and three arterial beds (Figure 3E). Concurrently, GWAS 
+Catalog associations were programmatically retrieved by rsID to determine if the prioritized 
+variants retained independent, pleiotropic support from CAD- or lipid-related phenotypes (Figure 
+3F). 
+Crucially, this joint prioritization strategy captured a robust set of regulatory candidates that would 
+be difficult to recover using any single model in isolation. Pairwise correlations among the three 
+model-specific scores approached zero, yet each maintained a moderate association with the 
+joint score, demonstrating that the final ranking integrates orthogonal biological signals rather 
+(which was not certified by peer review) is the author/funder. All rights reserved. No reuse allowed without permission. 
+The copyright holder for this preprintthis version posted May 15, 2026. ; https://doi.org/10.64898/2026.05.13.724757doi: bioRxiv preprint 
+
+
+--- PAGE 9 ---
+than redundant predictions. External validation confirmed this functional enrichment: 20 of the top 
+30 prioritized variants exhibited genome-wide significant eQTL evidence in GTEx, with 10 
+meeting the more stringent absolute effect-size threshold (Supplementary Figure 3B). Both 
+up-regulatory and down-regulatory patterns were observed across target tissues. The most 
+prominent candidates, such as rs12740374 and rs7528419, were strongly corroborated by highly 
+significant eQTLs and independent GWAS hits (Supplementary Figure 3C). 
+Together, these results demonstrate that multi-model orchestration via s2f-agent refines 
+non-coding variant prioritization, effectively filtering out model-specific noise to highlight a 
+compact, biologically interpretable subset of actionable CAD candidates with reproducible 
+external support. 
+ 
+Figure 3. Case study of s2f-agent for quantifying variant effects through multi-perspective 
+models.  
+(A) The schematic illustrates how a genetic researcher’s question is transformed into a contract-driven 
+variant-effect workflow by the s2f-agent. Given disease-associated GWAS variants, the agent validates 
+required inputs such as genome assembly, coordinates, REF/ALT alleles, and VCF records, then selects 
+the variant-effect playbook and orchestrates three complementary skills. AlphaGenome estimates 
+tissue-relevant functional effects, Borzoi evaluates long-range regulatory sequence-to-signal perturbations, 
+and GPN provides evolutionary constraint or allele-likelihood evidence. The heterogeneous model outputs 
+are standardized into a unified table and integrated to prioritize candidate disease-associated variants, 
+demonstrating how s2f-agent unifies multiple model perspectives into a reproducible biological 
+interpretation workflow. 
+(which was not certified by peer review) is the author/funder. All rights reserved. No reuse allowed without permission. 
+The copyright holder for this preprintthis version posted May 15, 2026. ; https://doi.org/10.64898/2026.05.13.724757doi: bioRxiv preprint 
+
+
+--- PAGE 10 ---
+(B) Distribution of risk-allele-oriented model z-scores across 907 CAD fine-mapped noncoding variants. 
+Scores from AlphaGenome (z_tissue), Borzoi (z_contact), and GPN (z_evolutionary) were standardized 
+across variants; red points indicate the Top30 variants ranked by the mean joint score. 
+(C) Pairwise comparison of the three model-specific z-scores. Top30 variants are highlighted and Top10 
+variants are labeled, showing that high-priority variants arise from complementary model signals rather than 
+strong pairwise model correlation. 
+(D) Manhattan-style genome-wide distribution of the joint prioritization score, defined as the arithmetic 
+mean of z_tissue, z_contact, and z_evolutionary. Top30 variants are highlighted and Top10 variants are 
+labeled, with rs12740374 showing the strongest joint score. 
+(E) External GTEx eQTL validation of the Top30 variants. Each point shows the primary gene-tissue 
+association with the minimum GTEx p value for a prioritized variant. Point size reflects eQTL significance, 
+and color indicates risk-allele-oriented normalized effect size (risk_nes), with positive values indicating 
+risk-allele-associated upregulation and negative values indicating downregulation. 
+(F) GWAS Catalog/PheWAS-style phenotype association plot for prioritized variants, showing 
+cross-phenotype support among CAD, lipid, metabolic, cardiovascular, and related traits. The dashed line 
+marks the nominal/significance threshold used in the plot, highlighting recurrent disease-relevant 
+associations among the prioritized loci. 
+ 
+ 
+(which was not certified by peer review) is the author/funder. All rights reserved. No reuse allowed without permission. 
+The copyright holder for this preprintthis version posted May 15, 2026. ; https://doi.org/10.64898/2026.05.13.724757doi: bioRxiv preprint 
+
+
+--- PAGE 11 ---
+Discussion 
+s2f-agent addresses a practical and increasingly important problem in computational genomics: 
+how to translate open-ended workflow requests into safe, structured, and executable plans 
+across heterogeneous S2F model families. In the broader framing adopted here, that family 
+includes both direct predictive models and gLM-style foundation models. This problem matters 
+because S2F systems are no longer niche benchmark tools. They are increasingly used to 
+interpret non-coding variation, prioritize candidate causal variants, reason about transcriptional 
+and splicing consequences, support embedding- or zero-shot-driven functional inference, and 
+enable downstream translational workflows in clinical genetics and therapeutic discovery. The 
+system does not try to replace AlphaGenome, Borzoi, DNABERT-2, Evo 2, GPN, NTv3, or 
+SegmentNT. Instead, it provides the orchestration layer that sits above them and standardizes 
+how requests are routed, validated, and operationalized. 
+This framing is important for two reasons. First, many real-world bottlenecks in applying S2F 
+models are not caused by a lack of predictive architectures, but by difficulty choosing among 
+direct predictors versus embedding-oriented gLM workflows, supplying the right inputs, 
+respecting model-specific constraints, and turning user intent into reproducible execution steps. 
+Second, the scientific value of an agent in this setting depends less on rhetorical fluency than on 
+whether it makes hidden assumptions visible and whether its outputs can be validated. s2f-agent 
+was designed with these priorities in mind through explicit contracts, clarification logic, packaged 
+skills, and regression-oriented evaluation. 
+At the same time, the current system has clear limits. The evaluation layer is curated and 
+case-based rather than population-scale. Skill maturity is uneven, with some workflows stabilized 
+and others still in development. The strongest current evidence lies in representative case 
+studies and normalized plan generation, not in head-to-head scientific benchmarking against 
+alternative agent frameworks. In addition, the quality of downstream execution remains 
+dependent on the correctness, availability, and maintenance status of the underlying model 
+ecosystems and external APIs. 
+These limits also suggest natural next steps. Future work could add stronger self-critique loops, 
+richer execution verifiers, and optional external knowledge augmentation for track or tissue 
+context. The system could also be extended toward broader benchmarking, larger real-world task 
+corpora, and tighter integration between generated plans and downstream artifact inspection. 
+However, those directions should be understood as extensions to the current architecture rather 
+than results already demonstrated here. 
+ 
+(which was not certified by peer review) is the author/funder. All rights reserved. No reuse allowed without permission. 
+The copyright holder for this preprintthis version posted May 15, 2026. ; https://doi.org/10.64898/2026.05.13.724757doi: bioRxiv preprint 
+
+
+--- PAGE 12 ---
+Code availability 
+https://github.com/JiaqiLiZju/s2f-agent  
+Acknowledgments 
+The authors acknowledge that ChatGPT, Gemini and Nano Banana (Google) was used for 
+assistance with language editing and drew the illustration figures of the manuscript.  
+Author contributions 
+J.L. collected the data, implemented the model, performed downstream data analyses, and wrote 
+the initial draft of the manuscript. 
+Competing interests 
+Authors declare that they have no competing interests. 
+Ethics approval 
+Not applicable. 
+ 
+(which was not certified by peer review) is the author/funder. All rights reserved. No reuse allowed without permission. 
+The copyright holder for this preprintthis version posted May 15, 2026. ; https://doi.org/10.64898/2026.05.13.724757doi: bioRxiv preprint 
+
+
+--- PAGE 13 ---
+Supplementary Figures 
+ 
+Supplementary Figure 1. Performance benchmark of s2f-agent against generalist models. 
+Micro accuracy across three benchmark suites: routing, groundedness, and task success. Bars show the 
+fraction of passed cases for s2f-agent, gpt-4o, and o3-mini; the overall score aggregates all 33 benchmark 
+cases, including 18 routing, 4 groundedness, and 11 task-success cases. s2f-agent achieved 100% 
+accuracy across all suites, whereas gpt-4o reached 22.2% routing, 0% groundedness, 36.4% task success, 
+and 24.2% overall accuracy, and o3-mini reached 27.8% routing, 0% groundedness, 27.3% task success, 
+and 24.2% overall accuracy. Bars are colored by blue, s2f-agent; orange, gpt-4o; green, o3-mini. 
+ 
+(which was not certified by peer review) is the author/funder. All rights reserved. No reuse allowed without permission. 
+The copyright holder for this preprintthis version posted May 15, 2026. ; https://doi.org/10.64898/2026.05.13.724757doi: bioRxiv preprint 
+
+
+--- PAGE 14 ---
+ 
+ 
+Supplementary Figure 2. K562 prediction with pre-trained proxy comparison. 
+(A) Scatter plots comparing observed fold-change means with post-fine-tuned head predictions across 
+2,520 held-out chr8 test intervals for ATAC and H3K27ac. Dashed lines indicate the identity line; Pearson 
+correlations were r = 0.690 for ATAC and r = 0.564 for H3K27ac. 
+(B-C) Full-test chr8 track comparisons for ATAC (B) and H3K27ac (C). Curves show observed signal, 
+pre-trained proxy output, and post-fine-tuned head prediction across genomic midpoint coordinates. The 
+ATAC proxy used ENCSR921NMD, and the H3K27ac proxy used ENCSR715CCR. Post-head performance 
+was r = 0.690, MAE = 0.482 for ATAC and r = 0.564, MAE = 2.673 for H3K27ac; corresponding pre-proxy 
+performance was r = 0.658, MAE = 5.947 for ATAC and r = 0.593, MAE = 2.591 for H3K27ac. 
+ 
+(which was not certified by peer review) is the author/funder. All rights reserved. No reuse allowed without permission. 
+The copyright holder for this preprintthis version posted May 15, 2026. ; https://doi.org/10.64898/2026.05.13.724757doi: bioRxiv preprint 
+
+
+--- PAGE 15 ---
+ 
+Supplementary Figure 3. Model-score composition and external validation of Top30 CAD 
+variants. 
+(A) Heatmap of the Top30 CAD-associated noncoding variants ranked by joint score. Columns show 
+AlphaGenome tissue-effect z-score (z_tissue), Borzoi contact-perturbation z-score (z_contact), GPN 
+evolutionary z-score (z_evolutionary), and the final joint_score; rows are ordered by decreasing joint score. 
+(B) GTEx eQTL evidence strength for the Top30 variants. The x-axis shows -log10(min GTEx p), and the 
+y-axis shows the maximum absolute risk-allele-oriented normalized effect size (max |risk_nes|). Dashed 
+and dotted reference lines mark p = 5 x 10^-8 and |risk_nes| = 0.5, respectively; points are colored by the 
+eQTL direction class. 
+(C) Joint external evidence from GWAS Catalog and GTEx. Each point represents one Top30 variant, 
+plotted by -log10(min GWAS p) versus -log10(min GTEx p). Colors indicate GTEx direction class, triangles 
+mark strong eQTLs, and Top10 variants are labeled. Overall, 20/30 variants had genome-wide significant 
+GTEx eQTL evidence and 10/30 met the stronger p < 5 x 10^-8 and |risk_nes| >= 0.5 criterion. 
+ 
+(which was not certified by peer review) is the author/funder. All rights reserved. No reuse allowed without permission. 
+The copyright holder for this preprintthis version posted May 15, 2026. ; https://doi.org/10.64898/2026.05.13.724757doi: bioRxiv preprint 
+
+
+--- PAGE 16 ---
+Reference 
+1. Collins, F. S., Green, E. D., Guttmacher, A. E., Guyer, M. S., & on behalf of the US National 
+Human Genome Research Institute. A vision for the future of genomics research. Nature 422, 
+835–847 (2003).  
+2. Sasse, A., Chikina, M. & Mostafavi, S. Unlocking gene regulation with sequence-to-function 
+models. Nat Methods 21, 1374–1377 (2024).  
+3. Benegas, G., Ye, C., Albors, C., Li, J. C. & Song, Y. S. Genomic language models: opportunities 
+and challenges. Trends in Genetics 41, 286–302 (2025).  
+4. Avsec, Ž. et al. Advancing regulatory variant effect prediction with AlphaGenome. Nature 649, 
+1206–1218 (2026).  
+5. Linder, J., Srivastava, D., Yuan, H., Agarwal, V. & Kelley, D. R. Predicting RNA-seq coverage 
+from DNA sequence as a unifying model of gene regulation. Nat Genet 57, 949–961 (2025).  
+6. de Almeida, B. P. et al. Annotating the genome at single-nucleotide resolution with DNA 
+foundation models. Nat Methods 1–15 (2025) doi:10.1038/s41592-025-02881-2.  
+7. Zhou, Z. et al. DNABERT-2: Efficient Foundation Model and Benchmark For Multi-Species 
+Genome. Preprint at https://doi.org/10.48550/arXiv.2306.15006 (2024).  
+8. Brixi, G. et al. Genome modeling and design across all domains of life with Evo 2. Preprint at 
+https://doi.org/10.1101/2025.02.18.638918 (2025).  
+9. Benegas, G., Batra, S. S. & Song, Y. S. DNA language models are powerful predictors of 
+genome-wide variant effects. PNAS 120, e2311219120 (2023).  
+10. Dalla-Torre, H. et al. Nucleotide Transformer: building and evaluating robust foundation models 
+for human genomics. Nat Methods 22, 287–297 (2025).  
+11. Huang, K. et al. Biomni: A General-Purpose Biomedical AI Agent. bioRxiv 2025.05.30.656746 
+(2025) doi:10.1101/2025.05.30.656746.  
+12. Xu, W. et al. PantheonOS: An Evolvable Multi-Agent Framework for Automatic Genomics 
+Discovery. bioRxiv 2026.02.26.707870 (2026) doi:10.64898/2026.02.26.707870.  
+ 
+(which was not certified by peer review) is the author/funder. All rights reserved. No reuse allowed without permission. 
+The copyright holder for this preprintthis version posted May 15, 2026. ; https://doi.org/10.64898/2026.05.13.724757doi: bioRxiv preprint 

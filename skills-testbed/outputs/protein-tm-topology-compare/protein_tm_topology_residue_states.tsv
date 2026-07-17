@@ -1,0 +1,97 @@
+query_id	source	position	residue	state	state_detail	feature_type	feature_id	score	attributes
+tm_test	DeepTMHMM	1	M	inside	inside	inside	tm_test.inside1		ID=tm_test.inside1;Name=inside
+tm_test	DeepTMHMM	2	A	inside	inside	inside	tm_test.inside1		ID=tm_test.inside1;Name=inside
+tm_test	DeepTMHMM	3	A	inside	inside	inside	tm_test.inside1		ID=tm_test.inside1;Name=inside
+tm_test	DeepTMHMM	4	A	inside	inside	inside	tm_test.inside1		ID=tm_test.inside1;Name=inside
+tm_test	DeepTMHMM	5	A	inside	inside	inside	tm_test.inside1		ID=tm_test.inside1;Name=inside
+tm_test	DeepTMHMM	6	A	inside	inside	inside	tm_test.inside1		ID=tm_test.inside1;Name=inside
+tm_test	DeepTMHMM	7	A	inside	inside	inside	tm_test.inside1		ID=tm_test.inside1;Name=inside
+tm_test	DeepTMHMM	8	L	TMhelix	TMhelix	TMhelix	tm_test.tm1		ID=tm_test.tm1;Name=TMhelix
+tm_test	DeepTMHMM	9	V	TMhelix	TMhelix	TMhelix	tm_test.tm1		ID=tm_test.tm1;Name=TMhelix
+tm_test	DeepTMHMM	10	V	TMhelix	TMhelix	TMhelix	tm_test.tm1		ID=tm_test.tm1;Name=TMhelix
+tm_test	DeepTMHMM	11	V	TMhelix	TMhelix	TMhelix	tm_test.tm1		ID=tm_test.tm1;Name=TMhelix
+tm_test	DeepTMHMM	12	V	TMhelix	TMhelix	TMhelix	tm_test.tm1		ID=tm_test.tm1;Name=TMhelix
+tm_test	DeepTMHMM	13	V	TMhelix	TMhelix	TMhelix	tm_test.tm1		ID=tm_test.tm1;Name=TMhelix
+tm_test	DeepTMHMM	14	V	TMhelix	TMhelix	TMhelix	tm_test.tm1		ID=tm_test.tm1;Name=TMhelix
+tm_test	DeepTMHMM	15	V	TMhelix	TMhelix	TMhelix	tm_test.tm1		ID=tm_test.tm1;Name=TMhelix
+tm_test	DeepTMHMM	16	V	TMhelix	TMhelix	TMhelix	tm_test.tm1		ID=tm_test.tm1;Name=TMhelix
+tm_test	DeepTMHMM	17	V	TMhelix	TMhelix	TMhelix	tm_test.tm1		ID=tm_test.tm1;Name=TMhelix
+tm_test	DeepTMHMM	18	V	TMhelix	TMhelix	TMhelix	tm_test.tm1		ID=tm_test.tm1;Name=TMhelix
+tm_test	DeepTMHMM	19	V	TMhelix	TMhelix	TMhelix	tm_test.tm1		ID=tm_test.tm1;Name=TMhelix
+tm_test	DeepTMHMM	20	V	TMhelix	TMhelix	TMhelix	tm_test.tm1		ID=tm_test.tm1;Name=TMhelix
+tm_test	DeepTMHMM	21	V	TMhelix	TMhelix	TMhelix	tm_test.tm1		ID=tm_test.tm1;Name=TMhelix
+tm_test	DeepTMHMM	22	V	TMhelix	TMhelix	TMhelix	tm_test.tm1		ID=tm_test.tm1;Name=TMhelix
+tm_test	DeepTMHMM	23	V	TMhelix	TMhelix	TMhelix	tm_test.tm1		ID=tm_test.tm1;Name=TMhelix
+tm_test	DeepTMHMM	24	V	TMhelix	TMhelix	TMhelix	tm_test.tm1		ID=tm_test.tm1;Name=TMhelix
+tm_test	DeepTMHMM	25	V	TMhelix	TMhelix	TMhelix	tm_test.tm1		ID=tm_test.tm1;Name=TMhelix
+tm_test	DeepTMHMM	26	V	TMhelix	TMhelix	TMhelix	tm_test.tm1		ID=tm_test.tm1;Name=TMhelix
+tm_test	DeepTMHMM	27	V	TMhelix	TMhelix	TMhelix	tm_test.tm1		ID=tm_test.tm1;Name=TMhelix
+tm_test	DeepTMHMM	28	G	TMhelix	TMhelix	TMhelix	tm_test.tm1		ID=tm_test.tm1;Name=TMhelix
+tm_test	DeepTMHMM	29	G	TMhelix	TMhelix	TMhelix	tm_test.tm1		ID=tm_test.tm1;Name=TMhelix
+tm_test	DeepTMHMM	30	G	outside	outside	outside	tm_test.outside1		ID=tm_test.outside1;Name=outside
+tm_test	DeepTMHMM	31	G	outside	outside	outside	tm_test.outside1		ID=tm_test.outside1;Name=outside
+tm_test	DeepTMHMM	32	G	outside	outside	outside	tm_test.outside1		ID=tm_test.outside1;Name=outside
+tm_test	DeepTMHMM	33	G	outside	outside	outside	tm_test.outside1		ID=tm_test.outside1;Name=outside
+tm_test	DeepTMHMM	34	G	outside	outside	outside	tm_test.outside1		ID=tm_test.outside1;Name=outside
+tm_test	DeepTMHMM	35	G	outside	outside	outside	tm_test.outside1		ID=tm_test.outside1;Name=outside
+tm_test	DeepTMHMM	36	G	outside	outside	outside	tm_test.outside1		ID=tm_test.outside1;Name=outside
+tm_test	DeepTMHMM	37	G	outside	outside	outside	tm_test.outside1		ID=tm_test.outside1;Name=outside
+tm_test	DeepTMHMM	38	K	outside	outside	outside	tm_test.outside1		ID=tm_test.outside1;Name=outside
+tm_test	DeepTMHMM	39	K	outside	outside	outside	tm_test.outside1		ID=tm_test.outside1;Name=outside
+tm_test	DeepTMHMM	40	K	outside	outside	outside	tm_test.outside1		ID=tm_test.outside1;Name=outside
+tm_test	DeepTMHMM	41	K	outside	outside	outside	tm_test.outside1		ID=tm_test.outside1;Name=outside
+tm_test	DeepTMHMM	42	K	outside	outside	outside	tm_test.outside1		ID=tm_test.outside1;Name=outside
+tm_test	DeepTMHMM	43	K	outside	outside	outside	tm_test.outside1		ID=tm_test.outside1;Name=outside
+tm_test	DeepTMHMM	44	K	outside	outside	outside	tm_test.outside1		ID=tm_test.outside1;Name=outside
+tm_test	DeepTMHMM	45	K	outside	outside	outside	tm_test.outside1		ID=tm_test.outside1;Name=outside
+tm_test	DeepTMHMM	46	K	outside	outside	outside	tm_test.outside1		ID=tm_test.outside1;Name=outside
+tm_test	DeepTMHMM	47	K	outside	outside	outside	tm_test.outside1		ID=tm_test.outside1;Name=outside
+tm_test	DeepTMHMM	48		outside	outside	outside	tm_test.outside1		ID=tm_test.outside1;Name=outside
+tm_test	TMHMM	1	M	inside	inside	inside	inside:1-7		
+tm_test	TMHMM	2	A	inside	inside	inside	inside:1-7		
+tm_test	TMHMM	3	A	inside	inside	inside	inside:1-7		
+tm_test	TMHMM	4	A	inside	inside	inside	inside:1-7		
+tm_test	TMHMM	5	A	inside	inside	inside	inside:1-7		
+tm_test	TMHMM	6	A	inside	inside	inside	inside:1-7		
+tm_test	TMHMM	7	A	inside	inside	inside	inside:1-7		
+tm_test	TMHMM	8	L	TMhelix	TMhelix	TMhelix	TMhelix:8-29		
+tm_test	TMHMM	9	V	TMhelix	TMhelix	TMhelix	TMhelix:8-29		
+tm_test	TMHMM	10	V	TMhelix	TMhelix	TMhelix	TMhelix:8-29		
+tm_test	TMHMM	11	V	TMhelix	TMhelix	TMhelix	TMhelix:8-29		
+tm_test	TMHMM	12	V	TMhelix	TMhelix	TMhelix	TMhelix:8-29		
+tm_test	TMHMM	13	V	TMhelix	TMhelix	TMhelix	TMhelix:8-29		
+tm_test	TMHMM	14	V	TMhelix	TMhelix	TMhelix	TMhelix:8-29		
+tm_test	TMHMM	15	V	TMhelix	TMhelix	TMhelix	TMhelix:8-29		
+tm_test	TMHMM	16	V	TMhelix	TMhelix	TMhelix	TMhelix:8-29		
+tm_test	TMHMM	17	V	TMhelix	TMhelix	TMhelix	TMhelix:8-29		
+tm_test	TMHMM	18	V	TMhelix	TMhelix	TMhelix	TMhelix:8-29		
+tm_test	TMHMM	19	V	TMhelix	TMhelix	TMhelix	TMhelix:8-29		
+tm_test	TMHMM	20	V	TMhelix	TMhelix	TMhelix	TMhelix:8-29		
+tm_test	TMHMM	21	V	TMhelix	TMhelix	TMhelix	TMhelix:8-29		
+tm_test	TMHMM	22	V	TMhelix	TMhelix	TMhelix	TMhelix:8-29		
+tm_test	TMHMM	23	V	TMhelix	TMhelix	TMhelix	TMhelix:8-29		
+tm_test	TMHMM	24	V	TMhelix	TMhelix	TMhelix	TMhelix:8-29		
+tm_test	TMHMM	25	V	TMhelix	TMhelix	TMhelix	TMhelix:8-29		
+tm_test	TMHMM	26	V	TMhelix	TMhelix	TMhelix	TMhelix:8-29		
+tm_test	TMHMM	27	V	TMhelix	TMhelix	TMhelix	TMhelix:8-29		
+tm_test	TMHMM	28	G	TMhelix	TMhelix	TMhelix	TMhelix:8-29		
+tm_test	TMHMM	29	G	TMhelix	TMhelix	TMhelix	TMhelix:8-29		
+tm_test	TMHMM	30	G	outside	outside	outside	outside:30-48		
+tm_test	TMHMM	31	G	outside	outside	outside	outside:30-48		
+tm_test	TMHMM	32	G	outside	outside	outside	outside:30-48		
+tm_test	TMHMM	33	G	outside	outside	outside	outside:30-48		
+tm_test	TMHMM	34	G	outside	outside	outside	outside:30-48		
+tm_test	TMHMM	35	G	outside	outside	outside	outside:30-48		
+tm_test	TMHMM	36	G	outside	outside	outside	outside:30-48		
+tm_test	TMHMM	37	G	outside	outside	outside	outside:30-48		
+tm_test	TMHMM	38	K	outside	outside	outside	outside:30-48		
+tm_test	TMHMM	39	K	outside	outside	outside	outside:30-48		
+tm_test	TMHMM	40	K	outside	outside	outside	outside:30-48		
+tm_test	TMHMM	41	K	outside	outside	outside	outside:30-48		
+tm_test	TMHMM	42	K	outside	outside	outside	outside:30-48		
+tm_test	TMHMM	43	K	outside	outside	outside	outside:30-48		
+tm_test	TMHMM	44	K	outside	outside	outside	outside:30-48		
+tm_test	TMHMM	45	K	outside	outside	outside	outside:30-48		
+tm_test	TMHMM	46	K	outside	outside	outside	outside:30-48		
+tm_test	TMHMM	47	K	outside	outside	outside	outside:30-48		
+tm_test	TMHMM	48		outside	outside	outside	outside:30-48		

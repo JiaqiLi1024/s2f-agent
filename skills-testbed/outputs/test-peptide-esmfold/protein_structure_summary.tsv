@@ -1,0 +1,2 @@
+query_gene	query_uniprot	query_sequence_name	organism_query	accession	entry_name	protein_name	gene_name	organism	seq_length	sequence_sha256	esmfold_pdb	esmfold_mean_confidence_raw	esmfold_confidence_scale	esmfold_mean_confidence_0_100	status
+		test_peptide							40	3f58c67c36a585628d33015ae2cd0a227b34f8cbb0e7fcdfaa4c4b3de45c415d	skills-testbed/outputs/test-peptide-esmfold/test_peptide.esmfold.pdb	0.501	0-1	50.12	ok

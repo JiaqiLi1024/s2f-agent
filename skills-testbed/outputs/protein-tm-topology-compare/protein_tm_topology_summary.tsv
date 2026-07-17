@@ -1,0 +1,2 @@
+query_id	length	sources	topology_class	n_tm_helices	n_beta_strands	n_signal_peptides	n_inside_regions	n_outside_regions	n_periplasmic_regions	n_other_regions	topology_string	warnings
+tm_test	48	DeepTMHMM;TMHMM	alpha_helical_tm	2	0	0	2	2	0	0	DeepTMHMM:inside:1-7|DeepTMHMM:TMhelix:8-29|DeepTMHMM:outside:30-48|TMHMM:inside:1-7|TMHMM:TMhelix:8-29|TMHMM:outside:30-48	

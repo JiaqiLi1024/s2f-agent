@@ -1,0 +1,15 @@
+name	version	path	default	order	complex	motif	taxonomy	status
+AlphaFold/Proteome	v4	afdb-proteome_folddisco	True	0	False	True	True	COMPLETE
+AlphaFold/UniProt50	v6	afdb50	True	0	False	False	True	COMPLETE
+AlphaFold/UniProt50	v4	afdb50_folddisco	True	0	False	True	True	COMPLETE
+BFVD	v2	BFVD_folddisco	True	0	False	True	True	COMPLETE
+ESM30	v0	esm30_folddisco	True	0	False	True	False	COMPLETE
+PDB	20250930	pdb_folddisco	True	0	False	True	False	COMPLETE
+AlphaFold/Swiss-Prot	v6	afdb-swissprot	True	1	False	False	True	COMPLETE
+AlphaFold/Proteome	v6	afdb-proteome	True	2	False	False	True	COMPLETE
+BFVD	2023_02	BFVD	True	3	False	False	True	COMPLETE
+CATH50	4.3.0	cath50	True	3	False	False	True	COMPLETE
+MGnify-ESM30	v1	mgnify_esm30	True	3	False	False	False	COMPLETE
+PDB100	20240101	pdb100	True	3	True	False	True	COMPLETE
+BFMD	20240623	bfmd	True	4	True	False	True	COMPLETE
+GMGCL	2204	gmgcl_id	True	4	False	False	False	COMPLETE

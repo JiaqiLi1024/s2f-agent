@@ -1,0 +1,59 @@
+{
+  "finished_at": "2026-06-28T05:57:18Z",
+  "outputs": {
+    "conservation": [
+      "skills-testbed/outputs/TP53-conservation-fixed/AF_P04637.conservation.html",
+      "skills-testbed/outputs/TP53-conservation-fixed/AF_P04637.conservation.pdf",
+      "skills-testbed/outputs/TP53-conservation-fixed/AF_P04637.conservation.png",
+      "skills-testbed/outputs/TP53-conservation-fixed/AF_P04637.conservation_scores.tsv"
+    ],
+    "structure": [
+      "skills-testbed/outputs/TP53-conservation-fixed/AF_P04637.pdb"
+    ],
+    "summary": [
+      "skills-testbed/outputs/TP53-conservation-fixed/structure_summary.tsv",
+      "skills-testbed/outputs/TP53-conservation-fixed/summary.txt"
+    ]
+  },
+  "query": {
+    "chain": null,
+    "color_scheme": "bfactor",
+    "contact_threshold_A": 8.0,
+    "gene": null,
+    "modules": [
+      "conservation"
+    ],
+    "pdb_file": null,
+    "pdb_id": null,
+    "probe_radius_A": 1.4,
+    "top_pockets": 5,
+    "uniprot": "P04637",
+    "zoom_end": null,
+    "zoom_start": null
+  },
+  "skill": "protein-structure-visualize",
+  "started_at": "2026-06-28T05:56:45Z",
+  "status": "success",
+  "structure": {
+    "available_chains": [
+      "A"
+    ],
+    "chain_used": "A",
+    "is_alphafold": true,
+    "n_residues": 393,
+    "pdb_path": "skills-testbed/outputs/TP53-conservation-fixed/AF_P04637.pdb",
+    "source": "alphafold_db",
+    "structure_id": "AF_P04637"
+  },
+  "summary": {
+    "chain_used": "A",
+    "conservation_residues": 393,
+    "is_alphafold": true,
+    "mean_conservation": 0.9126,
+    "modules": "conservation",
+    "n_residues": 393,
+    "pdb_path": "skills-testbed/outputs/TP53-conservation-fixed/AF_P04637.pdb",
+    "structure_id": "AF_P04637"
+  },
+  "warnings": []
+}

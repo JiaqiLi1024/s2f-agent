@@ -1,0 +1,3 @@
+query_id	input_type	protein_length	sequence_sha256	n_peptides_generated	n_predictions	n_strong_binder_peptides	n_weak_binder_peptides	n_high_confidence_candidates	n_weak_candidates	n_unlikely_candidates	alleles	peptide_lengths	predictors	warnings
+toy1	fasta	42	40ed21049389d7529f6dde79eadfc3150709c9242f0c5de92a6b12bc954f5fca	34	0	0	0	0	0	34	HLA-A*02:01	9	netmhcpan_el,netmhcpan_ba	
+toy2	fasta	29	a3d7cb82d66abf34b959de0b6a305af0e71a2648651af0fbdf30882aa9ce0656	21	0	0	0	0	0	21	HLA-A*02:01	9	netmhcpan_el,netmhcpan_ba	

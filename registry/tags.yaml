@@ -10,6 +10,7 @@ tags:
     - nucleotide-transformer
     - nucleotide-transformer-v3
     - evo2-inference
+    - protein-embedding
   fine-tuning:
     - dnabert2
     - nucleotide-transformer-v3
@@ -27,16 +28,29 @@ tags:
     - nucleotide-transformer-v3
     - borzoi-workflows
     - evo2-inference
+    - protein-domain-motif-annotation
+    - protein-conservation-assessment
+    - protein-degron-annotation
+    - protein-idr-disorder-annotation
+    - protein-embedding
   troubleshooting:
     - alphagenome-api
     - dnabert2
     - nucleotide-transformer-v3
     - segment-nt
     - evo2-inference
+    - protein-structure-get
+    - protein-domain-motif-annotation
+    - protein-conservation-assessment
+    - protein-degron-annotation
+    - protein-idr-disorder-annotation
+    - protein-embedding
   framework-selection:
     - gpn-models
     - nucleotide-transformer
     - nucleotide-transformer-v3
+  model-selection:
+    - protein-embedding
   interpretation:
     - basset-workflows
     - bpnet
@@ -87,6 +101,165 @@ tags:
     - segment-nt
   rescaling-factor:
     - segment-nt
+  protein-structure-lookup:
+    - protein-structure-get
+  protein-feature-annotation:
+    - protein-structure-get
+  pdb-structure-lookup:
+    - protein-structure-get
+  alphafold-db-lookup:
+    - protein-structure-get
+  domain-map:
+    - protein-structure-get
+  esmfold-structure-prediction:
+    - protein-structure-get
+  protein-pymol-visualization-setup:
+    - protein-structure-get
+  protein-structure-visualization:
+    - protein-structure-visualize
+  protein-contact-map:
+    - protein-structure-visualize
+  protein-pocket-detection:
+    - protein-structure-visualize
+  protein-structure-confidence:
+    - protein-structure-visualize
+  protein-secondary-structure:
+    - protein-structure-visualize
+  protein-structure-highlight:
+    - protein-structure-visualize
+  protein-conservation:
+    - protein-conservation-assessment
+    - protein-structure-visualize
+  protein-ppi-network:
+    - protein-structure-visualize
+  protein-structure-alignment:
+    - protein-structure-align
+  protein-rmsd-comparison:
+    - protein-structure-align
+  protein-tm-score:
+    - protein-structure-align
+  protein-pae-analysis:
+    - protein-structure-align
+  protein-contact-map-comparison:
+    - protein-structure-align
+  protein-interface-contact-map:
+    - protein-structure-align
+  protein-structure-similarity-search:
+    - protein-structure-align
+  protein-structure-clustering:
+    - protein-structure-align
+  protein-conformation-comparison:
+    - protein-structure-align
+  protein-domain-motif-annotation:
+    - protein-domain-motif-annotation
+  protein-family-annotation:
+    - protein-domain-motif-annotation
+  protein-orthology-annotation:
+    - protein-domain-motif-annotation
+  protein-go-pathway-annotation:
+    - protein-domain-motif-annotation
+  protein-conservation-assessment:
+    - protein-conservation-assessment
+  protein-homolog-search:
+    - protein-conservation-assessment
+  protein-msa-conservation:
+    - protein-conservation-assessment
+  protein-conserved-region-annotation:
+    - protein-conservation-assessment
+  protein-conservation-report:
+    - protein-conservation-assessment
+  protein-degron-annotation:
+    - protein-degron-annotation
+  protein-degradation-signal-annotation:
+    - protein-degron-annotation
+  protein-elm-degron-scan:
+    - protein-degron-annotation
+  protein-degronopedia-annotation:
+    - protein-degron-annotation
+  protein-qcdpred-degron-prediction:
+    - protein-degron-annotation
+  protein-degron-report:
+    - protein-degron-annotation
+    - protein-annotation-report
+  protein-immunopresentation-annotation:
+    - protein-immunopresentation-annotation
+  protein-mhci-peptide-prediction:
+    - protein-immunopresentation-annotation
+  protein-iedb-mhci-annotation:
+    - protein-immunopresentation-annotation
+  protein-hla-binder-annotation:
+    - protein-immunopresentation-annotation
+  protein-immunogenicity-candidate-annotation:
+    - protein-immunopresentation-annotation
+  protein-epitope-candidate-report:
+    - protein-immunopresentation-annotation
+  protein-annotation-summary:
+    - protein-domain-motif-annotation
+    - protein-annotation-report
+  protein-annotation-report:
+    - protein-annotation-report
+  protein-uniprot-annotation:
+    - protein-annotation-report
+  protein-functional-annotation:
+    - protein-annotation-report
+  protein-sequence-embedding:
+    - protein-embedding
+  protein-residue-embedding:
+    - protein-embedding
+  protein-layer-embedding:
+    - protein-embedding
+  esmc-forge-embedding:
+    - protein-embedding
+  esmc-sae-feature-extraction:
+    - protein-embedding
+  embedding-layer-sweep:
+    - protein-embedding
+  protein-embedding-cache:
+    - protein-embedding
+  protein-llps-report:
+    - protein-annotation-report
+  protein-aggregation-report:
+    - protein-annotation-report
+  protein-idr-disorder-annotation:
+    - protein-idr-disorder-annotation
+  protein-disorder-composition:
+    - protein-idr-disorder-annotation
+  protein-idr-region-calling:
+    - protein-idr-disorder-annotation
+  protein-disordered-binding-annotation:
+    - protein-idr-disorder-annotation
+  protein-linker-annotation:
+    - protein-idr-disorder-annotation
+  protein-redox-disorder-annotation:
+    - protein-idr-disorder-annotation
+  protein-llps-annotation:
+    - protein-idr-disorder-annotation
+  protein-aggregation-prone-region-annotation:
+    - protein-idr-disorder-annotation
+  protein-disorder-visualization:
+    - protein-idr-disorder-annotation
+  protein-localization-signal-annotation:
+    - protein-localization-signal-annotation
+  protein-subcellular-localization:
+    - protein-localization-signal-annotation
+  protein-signal-peptide-annotation:
+    - protein-localization-signal-annotation
+  protein-targeting-peptide-annotation:
+    - protein-localization-signal-annotation
+  protein-secretory-pathway-annotation:
+    - protein-localization-signal-annotation
+  protein-tm-topology-annotation:
+    - protein-tm-topology-annotation
+  protein-transmembrane-region-annotation:
+    - protein-tm-topology-annotation
+  protein-topology-annotation:
+    - protein-tm-topology-annotation
+  protein-localization-topology:
+    - protein-tm-topology-annotation
+  protein-tm-residue-state-annotation:
+    - protein-tm-topology-annotation
+  protein-tm-plot:
+    - protein-tm-topology-annotation
   skill-scaffold:
     - skill-factory
   skill-registry-update:

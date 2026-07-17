@@ -1,0 +1,5 @@
+query_id	source	feature_type	start	end	length	score	threshold	evidence	note
+fuz_test	FuzDrop	droplet_promoting_region	5	16	12	0.8200		detected_regions_DPR	DPR_1
+fuz_test	FuzDrop	fuzdrop_hotspot	8	12	5	0.9100		detected_regions_hotspots	hotspot_1
+fuz_test	FuzDrop	context_dependent_region	22	28	7	0.6100		detected_regions_CDR	CDR_1
+agg_test	AggrescanAI	aggregation_prone_region	4	11	8	0.5437	0.3000	aggregation	Threshold-derived aggregation_prone_region; max_score=0.7000.

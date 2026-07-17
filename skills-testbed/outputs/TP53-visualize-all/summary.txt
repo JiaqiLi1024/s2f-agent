@@ -1,0 +1,11 @@
+structure_id: AF_P04637
+pdb_path: skills-testbed/outputs/TP53-visualize-all/AF_P04637.pdb
+is_alphafold: True
+chain_used: A
+n_residues: 393
+modules: bfactor,conservation,contact_map,pocket,ppi,secondary,view
+n_pockets_found: 5
+top_pocket_residues: 12
+conservation_residues: 393
+mean_conservation: 0.5
+n_ppi_partners: 100

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Protein Degron Annotation"
+  short_description: "ELM, DEGRONOPEDIA, and QCDPred degron reports"
+  default_prompt: "Use $protein-degron-annotation to identify degron candidates from protein sequences, FASTA, UniProt IDs, ELM, DEGRONOPEDIA, and QCDPred."

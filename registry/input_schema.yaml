@@ -1,5 +1,5 @@
 schema_version: 1
-updated_at: "2026-03-29"
+updated_at: "2026-07-06"
 
 coordinate_conventions:
   interval:
@@ -69,6 +69,21 @@ inputs:
       - "single A100"
       - "cpu only"
 
+  - key: cpu-count
+    type: integer
+    query_tokens:
+      - cpu
+      - cpus
+      - thread
+      - threads
+      - maxWorkers
+      - parallel
+      - 并行
+      - 线程
+    examples:
+      - "4"
+      - "32"
+
   - key: sequence-or-interval
     type: union
     subtypes:
@@ -112,6 +127,1095 @@ inputs:
     examples:
       - "human"
       - "mouse"
+
+  - key: gene-symbol
+    type: string
+    query_tokens:
+      - gene
+      - gene symbol
+      - gene name
+      - 基因
+      - 基因名
+    examples:
+      - "TP53"
+      - "EGFR"
+
+  - key: uniprot-accession
+    type: string
+    query_tokens:
+      - uniprot
+      - accession
+      - primary accession
+      - 蛋白编号
+    examples:
+      - "P04637"
+      - "P00533"
+
+  - key: amino-acid-sequence
+    type: string
+    query_tokens:
+      - amino acid sequence
+      - protein sequence
+      - aa sequence
+      - fasta
+      - esmfold
+      - 氨基酸序列
+    examples:
+      - "ACDEFGHIKLMNPQRSTVWY"
+      - "FASTA file with 15-400 aa sequence"
+
+  - key: protein-fasta
+    type: path
+    query_tokens:
+      - fasta
+      - proteins.fa
+      - protein fasta
+      - proteome
+      - translated proteins
+      - amino acid fasta
+      - 蛋白序列
+      - 蛋白fasta
+    examples:
+      - "./01_translation/M_caribbica.longest.table12.proteins.fa"
+      - "proteins.fa"
+
+  - key: annotation-tool-selection
+    type: enum
+    query_tokens:
+      - interproscan6
+      - interproscan
+      - eggnog
+      - eggnog-mapper
+      - emapper.py
+      - pfam
+      - go
+      - kegg
+      - orthology
+    examples:
+      - "InterProScan6 and eggNOG-mapper"
+      - "eggnog only with DIAMOND"
+
+  - key: interproscan-version
+    type: string
+    query_tokens:
+      - interproscan version
+      - ips6 version
+      - interproscan6 revision
+      - interpro release
+      - nextflow revision
+      - "-r"
+    examples:
+      - "6.0.1"
+
+  - key: interproscan-profile
+    type: enum
+    query_tokens:
+      - nextflow profile
+      - singularity
+      - apptainer
+      - docker
+      - test profile
+      - interproscan profile
+    examples:
+      - "singularity"
+      - "singularity,test"
+
+  - key: interproscan-datadir
+    type: path
+    query_tokens:
+      - interproscan data
+      - interpro data
+      - datadir
+      - IPS6_HOME
+      - interproscan6 data
+    examples:
+      - "$HOME/interproscan6/data"
+
+  - key: interproscan-workdir
+    type: path
+    query_tokens:
+      - interproscan work
+      - nextflow work
+      - workdir
+      - work directory
+      - "-w"
+    examples:
+      - "$HOME/interproscan6/work/query1"
+
+  - key: eggnog-data-dir
+    type: path
+    query_tokens:
+      - eggnog data
+      - eggnog_data
+      - data_dir
+      - EGGNOG_DATA_DIR
+      - eggnog database
+    examples:
+      - "$HOME/biodata/eggnog_data"
+
+  - key: protein-name
+    type: string
+    query_tokens:
+      - protein name
+      - protein 名称
+      - 蛋白名
+      - 蛋白名称
+    examples:
+      - "tumor protein p53"
+      - "epidermal growth factor receptor"
+
+  - key: annotation-output-files
+    type: union
+    subtypes:
+      - name: interproscan-tsv
+        query_tokens: [interproscan tsv, interpro tsv]
+      - name: eggnog-annotations
+        query_tokens: [eggnog annotations, emapper annotations]
+      - name: protein-domain-result-json
+        query_tokens: [protein_domain_motif_annotation.result.json, result json]
+      - name: protein-idr-result-json
+        query_tokens: [protein_idr_disorder_annotation.result.json, idr result json, disorder result json]
+      - name: protein-degron-result-json
+        query_tokens: [protein_degron_annotation.result.json, degron result json]
+      - name: protein-idr-tsv
+        query_tokens: [protein_idr_summary.tsv, protein_idr_regions.tsv, idr summary, idr regions, disorder summary]
+      - name: protein-llps-tsv
+        query_tokens: [protein_llps_summary.tsv, protein_llps_features.tsv, llps summary, llps features, fuzdrop regions, aggrescanai regions]
+      - name: protein-degron-tsv
+        query_tokens: [protein_degron_summary.tsv, protein_degron_features.tsv, degron summary, degron features]
+      - name: feature-or-motif-tsv
+        query_tokens: [features.tsv, motifs.tsv, feature table, motif table]
+    query_tokens:
+      - interproscan tsv
+      - eggnog annotations
+      - emapper annotations
+      - features.tsv
+      - motifs.tsv
+      - protein_idr_summary.tsv
+      - protein_idr_regions.tsv
+      - protein_llps_summary.tsv
+      - protein_llps_features.tsv
+      - protein_degron_summary.tsv
+      - protein_degron_features.tsv
+      - idr output
+      - disorder output
+      - llps output
+      - aggregation output
+      - degron output
+      - annotation output
+      - 注释结果
+    examples:
+      - "results/interproscan6/proteins.tsv"
+      - "results/eggnog/proteins.emapper.annotations"
+      - "output/protein-domain-motif-annotation/protein_domain_motif_annotation.result.json"
+      - "output/protein-idr-disorder-annotation/protein_idr_disorder_annotation.result.json"
+      - "output/protein-idr-disorder-annotation/protein_llps_summary.tsv"
+      - "output/protein-degron-annotation/protein_degron_annotation.result.json"
+      - "output/protein-degron-annotation/protein_degron_features.tsv"
+
+  - key: protein-annotation-query
+    type: union
+    subtypes:
+      - name: amino-acid-sequence
+        query_tokens: [amino acid sequence, protein sequence, unknown sequence, 氨基酸序列]
+      - name: protein-fasta
+        query_tokens: [protein fasta, proteins.fa, proteome, 蛋白fasta]
+      - name: gene-symbol
+        query_tokens: [gene, gene symbol, gene name, 基因]
+      - name: protein-name
+        query_tokens: [protein name, 蛋白名]
+      - name: uniprot-accession
+        query_tokens: [uniprot, accession, primary accession]
+      - name: annotation-output-files
+        query_tokens: [interproscan tsv, eggnog annotations, idr summary, idr regions, llps summary, llps features, degron summary, degron features, features.tsv, motifs.tsv]
+    query_tokens:
+      - protein annotation
+      - protein annotation report
+      - functional annotation
+      - annotation tsv
+      - amino acid sequence
+      - protein fasta
+      - gene
+      - protein name
+      - uniprot
+      - interproscan
+      - eggnog
+      - idr report
+      - disorder report
+      - llps report
+      - aggregation report
+      - degron report
+      - 注释报告
+    examples:
+      - "TP53"
+      - "P04637"
+      - "ACDEFGHIKLMNPQRSTVWY"
+      - "proteins.fa plus eggNOG/InterProScan outputs"
+      - "summarize LLPS report from protein_idr_disorder_annotation.result.json"
+      - "summarize degron report from protein_degron_annotation.result.json"
+      - "merge protein_llps_summary.tsv and protein_llps_features.tsv into annotation report"
+      - "merge protein_degron_features.tsv into annotation report"
+
+  - key: protein-conservation-query
+    type: union
+    subtypes:
+      - name: amino-acid-sequence
+        query_tokens: [amino acid sequence, protein sequence, unknown sequence, 氨基酸序列]
+      - name: protein-fasta
+        query_tokens: [protein fasta, proteins.fa, proteome, 蛋白fasta]
+      - name: protein-homolog-fasta
+        query_tokens: [homolog fasta, homologs.fasta, homologous sequences, ortholog fasta, 同源序列]
+      - name: protein-msa-file
+        query_tokens: [msa, alignment, aligned fasta, stockholm, sto, multiple sequence alignment, 多序列比对]
+      - name: conservation-search-backend
+        query_tokens: [jackhmmer, hmmer, mmseqs, mmseqs2, ebi hmmer, local hmmer, homolog search]
+      - name: conservation-database-choice
+        query_tokens: [uniref90, uniref50, swissprot, reference proteomes, protein database, download database]
+    query_tokens:
+      - protein conservation
+      - protein conservation assessment
+      - evolutionary conservation
+      - sequence conservation
+      - conserved residues
+      - conserved region
+      - conserved regions
+      - variable residues
+      - homolog search
+      - homologous sequences
+      - jackhmmer
+      - HMMER
+      - MMseqs2
+      - MAFFT
+      - Biotite
+      - MSA conservation
+      - conservation report
+      - 保守性
+      - 蛋白保守性
+      - 进化保守性
+      - 同源序列
+      - 多序列比对
+    examples:
+      - "assess evolutionary conservation for this unknown protein sequence"
+      - "find homologs with jackhmmer, build MSA, and report conserved residues"
+      - "use homologs.fasta and Biotite/MAFFT to make conservation plots"
+      - "score conservation from query_homologs.sto"
+
+  - key: protein-homolog-fasta
+    type: path
+    query_tokens:
+      - homolog fasta
+      - homologs.fasta
+      - homologous sequences
+      - ortholog fasta
+      - protein family fasta
+      - 同源序列
+      - 同源蛋白
+    examples:
+      - "homologs.fasta"
+      - "orthologs_for_query.fa"
+
+  - key: protein-msa-file
+    type: path
+    query_tokens:
+      - msa
+      - alignment
+      - aligned fasta
+      - stockholm
+      - sto
+      - multiple sequence alignment
+      - mafft output
+      - jackhmmer stockholm
+      - 多序列比对
+      - 比对文件
+    examples:
+      - "query_homologs.aligned.fasta"
+      - "query_homologs.sto"
+
+  - key: conservation-search-backend
+    type: enum
+    query_tokens:
+      - jackhmmer
+      - HMMER
+      - local HMMER
+      - EBI HMMER
+      - MMseqs2
+      - homolog search
+      - hmmer iterations
+      - evalue
+    examples:
+      - "local-hmmer against UniRef90"
+      - "mmseqs2 search then MAFFT"
+
+  - key: conservation-database-choice
+    type: enum
+    query_tokens:
+      - Swiss-Prot
+      - swissprot
+      - UniRef90
+      - UniRef50
+      - Reference Proteomes
+      - protein database
+      - target-db
+      - download database
+      - db-dir
+      - 数据库
+    examples:
+      - "Swiss-Prot in $HOME/biodata/protein_conservation"
+      - "custom proteins.fa from related species"
+
+  - key: protein-degron-query
+    type: union
+    subtypes:
+      - name: amino-acid-sequence
+        query_tokens: [amino acid sequence, protein sequence, unknown sequence, 氨基酸序列]
+      - name: protein-fasta
+        query_tokens: [protein fasta, proteins.fa, proteome, 蛋白fasta]
+      - name: uniprot-accession
+        query_tokens: [uniprot, accession, primary accession]
+      - name: degron-tool-selection
+        query_tokens: [ELM, DEGRONOPEDIA, QCDPred, QCDpred, gget elm, custom degron, ELM DEG motif]
+      - name: degron-database-files
+        query_tokens: [elms_classes.tsv, DEGRONOPEDIA_degron_dataset.xlsx, degron database]
+      - name: qcdpred-output
+        query_tokens: [qcdpred output, QCDpred.py output, idr_qcdpred.txt, qcdpred profile]
+    query_tokens:
+      - degron
+      - degron annotation
+      - degron recognition
+      - degron prediction
+      - degradation signal
+      - degradation motif
+      - protein degradation signal
+      - ELM degron
+      - ELM DEG motif
+      - DEGRONOPEDIA
+      - QCDPred
+      - QCDpred
+      - quality-control degron
+      - QCAP degron
+      - N-degron
+      - C-degron
+      - phosphodegron
+      - destruction box
+      - KEN box
+      - D-box
+      - E3 ligase degron
+      - 降解信号
+      - 降解子
+      - 蛋白降解
+    examples:
+      - "find degrons in this unknown protein sequence"
+      - "scan proteins.fa with ELM DEG motifs and DEGRONOPEDIA"
+      - "predict quality-control degrons with QCDPred"
+      - "import protein_degron_features.tsv into an annotation report"
+
+  - key: degron-tool-selection
+    type: enum
+    query_tokens:
+      - ELM
+      - ELM DEG motif
+      - gget elm
+      - DEGRONOPEDIA
+      - QCDPred
+      - quality-control degron
+      - QCAP degron
+      - custom degron
+      - N-degron
+      - C-degron
+      - phosphodegron
+      - D-box
+      - KEN box
+    examples:
+      - "ELM and DEGRONOPEDIA"
+      - "QCDPred only"
+      - "custom degron regex only"
+
+  - key: qcdpred-output
+    type: file
+    query_tokens:
+      - qcdpred output
+      - QCDpred.py output
+      - idr_qcdpred.txt
+      - qcdpred profile
+      - qcdpred_profile.tsv
+    examples:
+      - "QCDpred.py raw table with name seq score aa resi columns"
+      - "output/protein-degron-annotation/query1/qcdpred_profile.tsv"
+
+  - key: degron-database-files
+    type: union
+    subtypes:
+      - name: elm-classes-tsv
+        query_tokens: [elms_classes.tsv, elms_index.tsv, ELM classes]
+      - name: degronopedia-xlsx
+        query_tokens: [DEGRONOPEDIA_degron_dataset.xlsx, degronopedia xlsx, degron dataset]
+      - name: degronopedia-tsv
+        query_tokens: [degronopedia tsv, degron motifs tsv]
+    query_tokens:
+      - elms_classes.tsv
+      - elms_index.tsv
+      - ELM classes
+      - DEGRONOPEDIA_degron_dataset.xlsx
+      - degronopedia xlsx
+      - degron dataset
+      - data dir
+      - database download
+    examples:
+      - "$HOME/biodata/protein_degron/elms_classes.tsv"
+      - "$HOME/biodata/protein_degron/DEGRONOPEDIA_degron_dataset.xlsx"
+
+  - key: protein-degron-output-files
+    type: union
+    subtypes:
+      - name: protein-degron-result-json
+        query_tokens: [protein_degron_annotation.result.json, degron result json]
+      - name: protein-degron-summary-tsv
+        query_tokens: [protein_degron_summary.tsv, degron summary]
+      - name: protein-degron-features-tsv
+        query_tokens: [protein_degron_features.tsv, degron features]
+      - name: qcdpred-profile-tsv
+        query_tokens: [qcdpred_profile.tsv, qcdpred profile]
+    query_tokens:
+      - protein_degron_annotation.result.json
+      - protein_degron_summary.tsv
+      - protein_degron_features.tsv
+      - qcdpred_profile.tsv
+      - degron output
+      - degron report
+    examples:
+      - "output/protein-degron-annotation/query1/protein_degron_annotation.result.json"
+      - "output/protein-degron-annotation/query1/protein_degron_features.tsv"
+
+  - key: protein-immunopresentation-query
+    type: union
+    subtypes:
+      - name: amino-acid-sequence
+        query_tokens: [amino acid sequence, protein sequence, unknown sequence, 氨基酸序列]
+      - name: protein-fasta
+        query_tokens: [protein fasta, proteins.fa, multiple proteins, 蛋白fasta]
+      - name: hla-allele-list
+        query_tokens: [HLA, HLA allele, HLA-A, HLA-B, HLA-C, genotype]
+      - name: iedb-result-files
+        query_tokens: [IEDB result, IEDB TSV, aggregated_result.json, IEDB_predict, NetMHCpan output, local IEDB]
+      - name: local-iedb-tools-dir
+        query_tokens: [IEDB_NG_TC1, src/tcell_mhci.py, qinti2023/IEDB, IEDB wrapper repo]
+      - name: protein-context-feature-files
+        query_tokens: [signal peptide, TM, transmembrane, IDR, domain, conserved region, feature TSV]
+    query_tokens:
+      - immunopresentation
+      - immune presentation
+      - MHC-I peptide
+      - MHC class I
+      - HLA binder
+      - IEDB
+      - IEDB Class I
+      - IEDB Next-Generation Tools
+      - qinti2023/IEDB
+      - local IEDB
+      - NetMHCpan
+      - eluted ligand
+      - binding affinity
+      - immunogenicity score
+      - antigen processing
+      - TAP transport
+      - proteasomal cleavage
+      - epitope candidate
+      - 表位候选
+      - 免疫呈递
+      - MHC-I
+      - HLA结合
+    examples:
+      - "predict MHC-I immunopresentation candidates from proteins.fa"
+      - "run IEDB Class I for HLA-A*02:01 and HLA-B*07:02"
+      - "import qinti2023/IEDB aggregate/aggregated_result.json"
+      - "merge NetMHCpan EL/BA results with IDR and TM feature TSVs"
+
+  - key: hla-allele-list
+    type: list
+    query_tokens:
+      - HLA
+      - HLA allele
+      - allele list
+      - HLA-A
+      - HLA-B
+      - HLA-C
+      - genotype
+    examples:
+      - "HLA-A*02:01,HLA-B*07:02"
+      - "27-allele reference set"
+
+  - key: mhci-peptide-lengths
+    type: list
+    query_tokens:
+      - peptide length
+      - MHC-I peptide length
+      - 8mer
+      - 9mer
+      - 10mer
+      - 11mer
+    examples:
+      - "8,9,10,11"
+      - "8,9,10,11,12,13,14"
+
+  - key: iedb-result-files
+    type: union
+    subtypes:
+      - name: iedb-binding-tsv
+        query_tokens: [IEDB MHC-I TSV, mhci binding, NetMHCpan output, binding predictions]
+      - name: iedb-processing-tsv
+        query_tokens: [IEDB processing TSV, TAP, proteasome, processing output]
+      - name: iedb-immunogenicity-tsv
+        query_tokens: [IEDB immunogenicity TSV, immunogenicity score]
+      - name: iedb-aggregated-json
+        query_tokens: [aggregated_result.json, IEDB_predict json, local IEDB json, qinti2023/IEDB aggregate]
+    query_tokens:
+      - IEDB result
+      - IEDB TSV
+      - IEDB JSON
+      - NetMHCpan output
+      - processing output
+      - immunogenicity output
+      - aggregated_result.json
+    examples:
+      - "results/iedb_mhci.tsv"
+      - "aggregate/aggregated_result.json"
+      - "aggregated_result.json"
+
+  - key: local-iedb-tools-dir
+    type: path
+    query_tokens:
+      - IEDB_NG_TC1
+      - src/tcell_mhci.py
+      - qinti2023/IEDB
+      - IEDB wrapper repo
+      - local IEDB
+    examples:
+      - "/path/to/IEDB_NG_TC1"
+      - "/path/to/qinti2023/IEDB"
+
+  - key: protein-context-feature-files
+    type: union
+    subtypes:
+      - name: localization-features
+        query_tokens: [protein_localization_features.tsv, signal peptide]
+      - name: tm-features
+        query_tokens: [protein_tm_topology_features.tsv, TM, transmembrane]
+      - name: idr-regions
+        query_tokens: [protein_idr_regions.tsv, IDR, disorder]
+      - name: domain-features
+        query_tokens: [domain features, InterPro, Pfam]
+      - name: conservation-regions
+        query_tokens: [conserved regions, conservation regions]
+    query_tokens:
+      - signal peptide
+      - TM
+      - transmembrane
+      - IDR
+      - domain
+      - conserved region
+      - feature TSV
+    examples:
+      - "output/protein-idr-disorder-annotation/proteins/protein_idr_regions.tsv"
+      - "output/protein-tm-topology-annotation/proteins/protein_tm_topology_features.tsv"
+
+  - key: protein-disorder-query
+    type: union
+    subtypes:
+      - name: amino-acid-sequence
+        query_tokens: [amino acid sequence, protein sequence, unknown sequence, 氨基酸序列]
+      - name: protein-fasta
+        query_tokens: [protein fasta, proteins.fa, proteome, 蛋白fasta]
+      - name: uniprot-accession
+        query_tokens: [uniprot, accession, iupred3 accession]
+      - name: disorder-tool-selection
+        query_tokens: [metapredict, aiupred, iupred, iupred3, anchor2, linker, redox, fuzdrop, aggrescanai, llps, aggregation]
+    query_tokens:
+      - IDR
+      - IDRs
+      - intrinsically disordered region
+      - intrinsically disordered regions
+      - disorder
+      - disordered region
+      - protein disorder
+      - metapredict
+      - AIUPred
+      - IUPred
+      - IUPred3
+      - ANCHOR2
+      - flexible linker
+      - redox disorder
+      - liquid-liquid phase separation
+      - LLPS
+      - FuzDrop
+      - AggrescanAI
+      - aggregation prone region
+      - APR
+      - disorder visualization
+      - IDR plot
+      - 无序区
+      - 内在无序
+    examples:
+      - "ACDEFGHIKLMNPQRSTVWY"
+      - "proteins.fa"
+      - "P04637 with IUPred3 long disorder"
+      - "predict LLPS features with FuzDrop and AggrescanAI"
+
+  - key: disorder-tool-selection
+    type: enum
+    query_tokens:
+      - metapredict
+      - AIUPred
+      - IUPred
+      - IUPred3
+      - ANCHOR2
+      - binding
+      - linker
+      - redox
+      - gget elm
+      - FuzDrop
+      - AggrescanAI
+      - LLPS
+      - aggregation prone region
+      - APR
+    examples:
+      - "metapredict and AIUPred"
+      - "IUPred3 long plus ANCHOR2"
+
+  - key: llps-tool-selection
+    type: enum
+    query_tokens:
+      - FuzDrop
+      - AggrescanAI
+      - LLPS
+      - pLLPS
+      - aggregation prone region
+      - APR
+      - droplet promoting region
+      - FuzDrop hotspot
+    examples:
+      - "FuzDrop JSON plus AggrescanAI CSV"
+      - "LLPS and APR prediction"
+
+  - key: protein-localization-query
+    type: union
+    subtypes:
+      - name: amino-acid-sequence
+        query_tokens: [amino acid sequence, protein sequence, unknown sequence, 氨基酸序列]
+      - name: protein-fasta
+        query_tokens: [protein fasta, proteins.fa, proteome, 蛋白fasta]
+      - name: localization-tool-selection
+        query_tokens: [deeploc, signalp, targetp, subcellular localization, signal peptide, targeting peptide]
+      - name: localization-output-files
+        query_tokens: [deeploc output, signalp output, signalp gff3, targetp output, prediction_results.txt]
+    query_tokens:
+      - protein localization annotation
+      - protein subcellular localization
+      - subcellular localization
+      - DeepLoc
+      - DeepLoc 2.1
+      - SignalP
+      - SignalP 6.0
+      - TargetP
+      - TargetP 2.0
+      - signal peptide
+      - cleavage site
+      - targeting peptide
+      - mitochondrial transit peptide
+      - chloroplast transit peptide
+      - thylakoid transit peptide
+      - secretory pathway
+      - protein_localization_summary.tsv
+      - protein_localization_features.tsv
+      - 亚细胞定位
+      - 预测亚细胞定位
+      - 信号肽
+      - 是否有信号肽
+      - 蛋白信号肽
+      - 定位信号
+    examples:
+      - "predict DeepLoc, SignalP, and TargetP localization for proteins.fa"
+      - "does this unknown protein have a signal peptide and where is it localized?"
+
+  - key: localization-tool-selection
+    type: enum
+    query_tokens:
+      - DeepLoc
+      - DeepLoc 2.1
+      - SignalP
+      - SignalP 6.0
+      - TargetP
+      - TargetP 2.0
+      - subcellular localization
+      - signal peptide
+      - cleavage site
+      - targeting peptide
+      - secretory pathway
+      - mitochondrial transit peptide
+      - chloroplast transit peptide
+    examples:
+      - "DeepLoc plus SignalP"
+      - "TargetP plant mode"
+
+  - key: localization-output-files
+    type: union
+    subtypes:
+      - name: deeploc-output
+        query_tokens: [deeploc output, deeploc results, deeploc table]
+      - name: signalp-output
+        query_tokens: [signalp output, signalp results, signalp table, signalp gff3]
+      - name: targetp-output
+        query_tokens: [targetp output, targetp results, targetp table]
+    query_tokens:
+      - deeploc output
+      - signalp output
+      - signalp gff3
+      - targetp output
+      - prediction_results.txt
+      - protein_localization_summary.tsv
+    examples:
+      - "results/signalp/prediction_results.txt"
+      - "results/targetp/prediction_results.txt"
+
+  - key: protein-tm-query
+    type: union
+    subtypes:
+      - name: amino-acid-sequence
+        query_tokens: [amino acid sequence, protein sequence, unknown sequence, 氨基酸序列]
+      - name: protein-fasta
+        query_tokens: [protein fasta, proteins.fa, proteome, 蛋白fasta]
+      - name: tm-output-files
+        query_tokens: [tmhmm output, tmhmm long output, deeptmhmm gff3, tmhmm gff3, TMRs.gff3, topology gff3]
+      - name: tm-tool-selection
+        query_tokens: [tmhmm, deeptmhmm, deppTMHMM, transmembrane, tm helix, beta barrel]
+    query_tokens:
+      - transmembrane topology
+      - transmembrane region
+      - transmembrane helix
+      - TM helix
+      - TMHMM
+      - DeepTMHMM
+      - DeppTMHMM
+      - membrane protein topology
+      - inside outside topology
+      - per residue topology state
+      - topology plot
+      - beta barrel topology
+      - protein_tm_topology_summary.tsv
+      - protein_tm_topology_regions.tsv
+      - protein_tm_topology_residue_states.tsv
+    examples:
+      - "predict TMHMM and DeepTMHMM topology for proteins.fa"
+      - "convert DeepTMHMM GFF3 to per-residue topology states and plots"
+
+  - key: tm-tool-selection
+    type: enum
+    query_tokens:
+      - TMHMM
+      - TMHMM2.0
+      - DeepTMHMM
+      - DeppTMHMM
+      - transmembrane topology
+      - beta barrel topology
+      - TM helix
+    examples:
+      - "TMHMM and DeepTMHMM"
+      - "DeepTMHMM only"
+
+  - key: tm-output-files
+    type: union
+    subtypes:
+      - name: topology-gff3
+        query_tokens: [gff3, topology gff3, TMRs.gff3, deeptmhmm gff3, tmhmm gff3]
+      - name: tmhmm-long-output
+        query_tokens: [tmhmm output, tmhmm long output, TMHMM2.0 long]
+      - name: native-topology-plot
+        query_tokens: [native plot, tmhmm plot, deeptmhmm plot, topology plot]
+    query_tokens:
+      - gff3
+      - topology gff3
+      - TMRs.gff3
+      - tmhmm.long.txt
+      - tmhmm output
+      - native topology plot
+    examples:
+      - "results/deeptmhmm/TMRs.gff3"
+      - "results/tmhmm/tmhmm.long.txt"
+
+  - key: protein-structure-query
+    type: union
+    subtypes:
+      - name: gene-symbol
+        query_tokens: [gene, gene symbol, 基因]
+      - name: uniprot-accession
+        query_tokens: [uniprot, accession, 蛋白编号]
+      - name: amino-acid-sequence
+        query_tokens: [amino acid sequence, protein sequence, esmfold, fasta, 氨基酸序列]
+    query_tokens:
+      - gene
+      - gene symbol
+      - uniprot
+      - accession
+      - amino acid sequence
+      - protein sequence
+    examples:
+      - "TP53"
+      - "P04637"
+      - "ACDEFGHIKLMNPQRSTVWY"
+
+  - key: protein-structure-source
+    type: union
+    subtypes:
+      - name: pdb-id
+        query_tokens: [pdb, pdb id, rcsb]
+      - name: alphafold-uniprot-accession
+        query_tokens: [alphafold, uniprot, accession]
+      - name: local-pdb-file
+        query_tokens: [pdb-file, local pdb, structure file]
+    query_tokens:
+      - pdb
+      - pdb id
+      - rcsb
+      - alphafold
+      - uniprot
+      - pdb-file
+      - local pdb
+      - structure file
+      - protein structure
+      - 结构文件
+    examples:
+      - "1TUP"
+      - "P04637"
+      - "output/protein-structure/TP53/TP53.P04637.alphafold_model.pdb"
+
+  - key: protein-structure-pair
+    type: union
+    subtypes:
+      - name: pdb-id-pair
+        query_tokens: [two pdb ids, pdb1, pdb2, rcsb pair]
+      - name: alphafold-or-uniprot-pair
+        query_tokens: [alphafold, uniprot1, uniprot2, experimental vs alphafold]
+      - name: local-structure-file-pair
+        query_tokens: [file1, file2, local pdb pair, local structure pair]
+    query_tokens:
+      - two structures
+      - structure pair
+      - compare structures
+      - structure alignment
+      - align structures
+      - superimpose
+      - rmsd
+      - apo holo
+      - wt mutant
+    examples:
+      - "1AKE vs 4AKE"
+      - "1TIM vs AlphaFold P00940"
+      - "wt.pdb vs mutant.pdb"
+
+  - key: foldseek-query
+    type: string
+    query_tokens:
+      - foldseek query
+      - query structure
+      - query pdb
+      - search this structure
+      - similar structures
+      - structure similarity search
+    examples:
+      - "query.pdb"
+      - "output/protein-structure/query/"
+
+  - key: foldseek-target
+    type: string
+    query_tokens:
+      - foldseek target
+      - target database
+      - target folder
+      - search database
+      - pdb database
+      - alphafold database
+    examples:
+      - "output/protein-structure/database/"
+      - "foldseek PDB database"
+
+  - key: foldseek-api-base
+    type: string
+    query_tokens:
+      - foldseek api
+      - foldseek web api
+      - search.foldseek.com
+      - online foldseek
+      - remote foldseek
+    examples:
+      - "https://search.foldseek.com/api"
+
+  - key: foldseek-web-database
+    type: string
+    query_tokens:
+      - foldseek web database
+      - afdb50
+      - afdb-swissprot
+      - afdb-proteome
+      - pdb100
+      - online database
+    examples:
+      - "afdb50"
+      - "pdb100"
+      - "afdb-swissprot"
+
+  - key: remote-upload-consent
+    type: boolean
+    query_tokens:
+      - confirm remote upload
+      - ok to upload
+      - public structure
+      - upload to foldseek web
+      - remote submission approved
+    examples:
+      - "this structure is public and can be uploaded"
+      - "confirm remote upload"
+
+  - key: foldseek-database-choice
+    type: enum
+    query_tokens:
+      - pdb database
+      - alphafold database
+      - uniprot database
+      - local structure database
+      - download database
+      - target database choice
+    examples:
+      - "PDB experimental structures"
+      - "AlphaFold/UniProt predicted structures"
+      - "local directory of PDB/mmCIF files"
+
+  - key: installation-approval
+    type: boolean
+    query_tokens:
+      - install foldseek
+      - download foldseek database
+      - create foldseek database
+      - build foldseek index
+      - approve installation
+    examples:
+      - "install Foldseek if needed"
+      - "download the PDB database"
+
+  - key: structure-set
+    type: string
+    query_tokens:
+      - structure set
+      - structure folder
+      - cluster structures
+      - cluster protein structures
+      - all-vs-all structures
+    examples:
+      - "output/protein-structure/structure_set/"
+      - "a directory of PDB/mmCIF files"
+
+  - key: chain-id
+    type: string
+    query_tokens:
+      - chain
+      - chain id
+      - protein chain
+      - 链
+    examples:
+      - "A"
+      - "B"
+
+  - key: residue-range
+    type: string
+    query_tokens:
+      - residue
+      - residue range
+      - resseq
+      - zoom
+      - domain
+      - 位点范围
+    examples:
+      - "90-290"
+      - "chain A residues 100-180"
+
+  - key: protein-residue-selection
+    type: string
+    query_tokens:
+      - residue highlight
+      - highlight residues
+      - residue site
+      - amino acid site
+      - mutation site
+      - 位点
+      - 高亮位点
+    examples:
+      - "A:110-R,A:120-K"
+      - "3-D,10-K"
+
+  - key: interface-chain-pair
+    type: string
+    query_tokens:
+      - interface chain
+      - chain interface
+      - ppi chain
+      - protein-protein interface
+      - interface contact map
+      - ppi contact map
+      - hypothetical complex
+      - 互作界面
+    examples:
+      - "output protein 1 as chain A and aligned protein 2 as chain B"
+      - "align first structure chain A and second structure chain A, then label them A/B in the complex"
+
+  - key: pymol-visualization
+    type: string
+    query_tokens:
+      - pymol
+      - pymol script
+      - pymol session
+      - pymol visualization
+      - pymol highlight
+    examples:
+      - "--pymol --pymol-color-mode confidence"
+      - "highlight residues A:175,A:248 in PyMOL"
+
+  - key: secondary-structure-selection
+    type: enum
+    query_tokens:
+      - secondary structure highlight
+      - highlight helix
+      - highlight sheet
+      - highlight coil
+      - helix
+      - sheet
+      - coil
+      - 二级结构
+    examples:
+      - "helix,sheet"
+      - "H,E"
+
+  - key: structure-pairing-mode
+    type: enum
+    query_tokens:
+      - pairing
+      - residue numbering
+      - by residue
+      - by order
+      - renumbered
+      - numbering differs
+    examples:
+      - "auto"
+      - "order"
+
+  - key: pae-source
+    type: string
+    query_tokens:
+      - pae
+      - predicted aligned error
+      - pae json
+      - pae plot
+      - alphafold confidence
+    examples:
+      - "AF_P00940_pae.json"
+      - "https://alphafold.ebi.ac.uk/files/AF-P00940-F1-predicted_aligned_error_v6.json"
 
   - key: assembly
     type: enum

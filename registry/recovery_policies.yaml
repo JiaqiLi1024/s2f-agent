@@ -1,5 +1,5 @@
 schema_version: 1
-updated_at: "2026-04-17"
+updated_at: "2026-07-06"
 policies:
   variant-effect:
     retry_policy: adaptive-window-fallback-with-timeout-proxy-retry
@@ -24,3 +24,49 @@ policies:
       - nucleotide-transformer-v3
       - borzoi-workflows
       - segment-nt
+  protein-structure-lookup:
+    retry_policy: clarify-organism-or-accession-then-network-retry-once
+    fallback_skills: []
+  protein-structure-visualization:
+    retry_policy: clarify-structure-source-then-network-module-retry-once
+    fallback_skills:
+      - protein-structure-get
+  protein-structure-alignment:
+    retry_policy: clarify-structure-pair-or-foldseek-query-target-then-retry-once
+    fallback_skills:
+      - protein-structure-get
+      - protein-structure-visualize
+  protein-domain-motif-annotation:
+    retry_policy: clarify-fasta-tool-selection-and-database-paths-then-dry-run-once
+    fallback_skills:
+      - protein-structure-get
+  protein-conservation-assessment:
+    retry_policy: clarify-sequence-homologs-msa-or-database-then-dry-run-once
+    fallback_skills:
+      - protein-domain-motif-annotation
+      - protein-structure-visualize
+  protein-degron-annotation:
+    retry_policy: clarify-sequence-database-files-qcdpred-output-or-custom-motifs-then-dry-run-once
+    fallback_skills:
+      - protein-idr-disorder-annotation
+      - protein-conservation-assessment
+      - protein-annotation-report
+  protein-immunopresentation-annotation:
+    retry_policy: clarify-sequence-HLA-alleles-local-IEDB-tools-aggregate-json-or-remote-submission-policy-then-dry-run-once
+    fallback_skills:
+      - protein-localization-signal-annotation
+      - protein-tm-topology-annotation
+      - protein-idr-disorder-annotation
+      - protein-domain-motif-annotation
+      - protein-conservation-assessment
+  protein-annotation-report:
+    retry_policy: clarify-query-or-source-files-then-run-report-once
+    fallback_skills:
+      - protein-domain-motif-annotation
+      - protein-degron-annotation
+      - protein-structure-get
+  protein-idr-disorder-annotation:
+    retry_policy: clarify-sequence-or-accession-and-tool-selection-then-dry-run-once
+    fallback_skills:
+      - protein-annotation-report
+      - protein-domain-motif-annotation

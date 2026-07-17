@@ -1,5 +1,5 @@
 schema_version: 1
-updated_at: "2026-04-17"
+updated_at: "2026-07-06"
 cases:
   - id: task_success_001
     query: "Need variant-effect guidance for hg38 chr12 REF ALT with output summary."
@@ -123,3 +123,81 @@ cases:
     required_selected_skill: "alphagenome-api"
     required_step_contains: "run_alphagenome_track_prediction_bed_batch.py --interval"
     required_expected_output_contains: "alphagenome_track_chr19_6700000_6732768_trackplot.png"
+  - id: task_success_020
+    query: "Compare protein structures 1AKE and 4AKE by RMSD and superimpose chain A."
+    task: protein-structure-alignment
+    min_runnable_steps: 1
+    min_expected_outputs: 4
+    required_selected_skill: "protein-structure-align"
+    required_step_contains: "protein_structure_align.py"
+    required_expected_output_contains: "protein_structure_align.result.json"
+  - id: task_success_021
+    query: "Align two local protein structures as a hypothetical complex and generate an interface contact map with protein 1 as chain A and protein 2 as chain B."
+    task: protein-structure-alignment
+    min_runnable_steps: 1
+    min_expected_outputs: 4
+    required_selected_skill: "protein-structure-align"
+    required_step_contains: "--interface-chain1"
+    required_expected_output_contains: "aligned_complex_interface_contacts.tsv"
+  - id: task_success_022
+    query: "Use Foldseek to search similar protein structures for query.pdb against structures/ and save the top hits."
+    task: protein-structure-alignment
+    min_runnable_steps: 1
+    min_expected_outputs: 4
+    required_selected_skill: "protein-structure-align"
+    required_step_contains: "protein_structure_foldseek.py --mode search"
+    required_expected_output_contains: "protein_structure_foldseek.result.json"
+    required_assumption_contains: "ask-before-installing-foldseek-or-downloading-large-foldseek-databases"
+  - id: task_success_023
+    query: "Cluster protein structures in structures/ by structural similarity with Foldseek."
+    task: protein-structure-alignment
+    min_runnable_steps: 1
+    min_expected_outputs: 4
+    required_selected_skill: "protein-structure-align"
+    required_step_contains: "protein_structure_foldseek.py --mode cluster"
+    required_expected_output_contains: "foldseek_cluster_clu.tsv"
+  - id: task_success_024
+    query: "Assess evolutionary conservation for an unknown protein sequence using local HMMER homolog search, MAFFT/Biotite MSA, and standardized conservation TSV reports."
+    task: protein-conservation-assessment
+    min_runnable_steps: 1
+    min_expected_outputs: 4
+    required_selected_skill: "protein-conservation-assessment"
+    required_step_contains: "protein_conservation_assessment.py"
+    required_expected_output_contains: "protein_conservation_summary.tsv"
+    required_assumption_contains: "local-database-downloads-must-be-user-approved-before-execution"
+  - id: task_success_025
+    query: "Identify degron degradation-signal candidates in an unknown protein sequence using ELM DEG classes and the DEGRONOPEDIA motif dataset, then write standardized TSV reports."
+    task: protein-degron-annotation
+    min_runnable_steps: 1
+    min_expected_outputs: 4
+    required_selected_skill: "protein-degron-annotation"
+    required_step_contains: "protein_degron_annotation.py"
+    required_expected_output_contains: "protein_degron_features.tsv"
+    required_assumption_contains: "database-downloads-must-be-approved-by-user-before-execution"
+  - id: task_success_026
+    query: "Use the Foldseek web API to search public query.pdb against afdb50, remote upload is approved, and return local HTML results."
+    task: protein-structure-alignment
+    min_runnable_steps: 1
+    min_expected_outputs: 4
+    required_selected_skill: "protein-structure-align"
+    required_step_contains: "protein_structure_foldseek_web.py --query"
+    required_expected_output_contains: "foldseek_web_results.html"
+    required_assumption_contains: "foldseek-web-api-uploads-query-structure-to-remote-server"
+  - id: task_success_027
+    query: "Use QCDPred to score quality-control degron candidates from an unknown protein sequence and write the raw profile plus standardized TSV reports."
+    task: protein-degron-annotation
+    min_runnable_steps: 1
+    min_expected_outputs: 4
+    required_selected_skill: "protein-degron-annotation"
+    required_step_contains: "protein_degron_annotation.py"
+    required_expected_output_contains: "qcdpred_profile.tsv"
+    required_assumption_contains: "QCDPred-scoring-uses-the-published-17-aa-quality-control-degron-logistic-model"
+  - id: task_success_028
+    query: "From a multi-protein FASTA, generate MHC-I peptides, use IEDB Class I / NetMHCpan EL and BA outputs, add processing and immunogenicity scores, overlap signal peptide/TM/IDR/domain/conservation features, and write candidate TSV reports."
+    task: protein-immunopresentation-annotation
+    min_runnable_steps: 1
+    min_expected_outputs: 4
+    required_selected_skill: "protein-immunopresentation-annotation"
+    required_step_contains: "protein_immunopresentation_annotation.py"
+    required_expected_output_contains: "immunopresentation_candidates.tsv"
+    required_assumption_contains: "immunopresentation-results-are-candidate-annotations-not-confirmed-immunogenicity"

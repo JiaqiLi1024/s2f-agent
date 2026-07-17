@@ -1,0 +1,9 @@
+# tm_test Length: 48
+# tm_test Number of predicted TMHs:  1
+# tm_test Exp number of AAs in TMHs: 22.0
+# tm_test Exp number, first 60 AAs:  22.0
+# tm_test Total prob of N-in:        0.99000
+# tm_test POSSIBLE N-term signal sequence
+tm_test        TMHMM2.0       inside       1     7
+tm_test        TMHMM2.0       TMhelix      8    29
+tm_test        TMHMM2.0       outside     30    48

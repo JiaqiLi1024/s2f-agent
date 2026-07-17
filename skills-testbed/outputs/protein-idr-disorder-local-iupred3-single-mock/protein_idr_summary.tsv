@@ -1,0 +1,3 @@
+query_id	length	sources	mean_disorder_score	fraction_disordered	n_disordered_residues	n_idr_regions	longest_idr	n_binding_regions	n_linker_regions	warnings
+seq_one	20	IUPred3-local	0.3960	0.4000	8	1	8	1	0	
+seq_two	20	IUPred3-local	0.3960	0.4000	8	1	8	1	0	

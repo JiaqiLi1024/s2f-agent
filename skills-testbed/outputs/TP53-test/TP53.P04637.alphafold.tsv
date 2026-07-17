@@ -1,0 +1,2 @@
+alphafold_id	uniprot_accession	gene	organism	seq_length	model_created	latest_version	pdb_url	cif_url	pae_image_url	alphafold_page
+AF-P04637-F1	P04637	TP53	Homo sapiens		2025-08-01T00:00:00Z	6	https://alphafold.ebi.ac.uk/files/AF-P04637-F1-model_v6.pdb	https://alphafold.ebi.ac.uk/files/AF-P04637-F1-model_v6.cif	https://alphafold.ebi.ac.uk/files/AF-P04637-F1-predicted_aligned_error_v6.png	https://alphafold.ebi.ac.uk/entry/P04637

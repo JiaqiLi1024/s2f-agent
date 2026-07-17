@@ -1,0 +1,93 @@
+schema_version: 1
+id: protein-structure-get
+title: Protein Structure Get
+path: skills/protein-structure-get
+status: active
+family: protein-structure-retrieval
+tasks:
+  - protein-structure-lookup
+  - protein-feature-annotation
+  - pdb-structure-lookup
+  - alphafold-db-lookup
+  - domain-map
+  - esmfold-structure-prediction
+  - protein-pymol-visualization-setup
+  - troubleshooting
+triggers:
+  - protein-structure-get
+  - protein structure
+  - alphafold db
+  - alphafold structure database
+  - esmfold
+  - fold amino acid sequence
+  - sequence to structure
+  - pymol
+  - pymol visualization
+  - uniprot structure
+  - rcsb pdb
+  - pdb structures
+  - domain map
+required_inputs:
+  - protein-structure-query
+optional_inputs:
+  - species
+  - uniprot-accession
+  - amino-acid-sequence
+  - requested-outputs
+  - output-dir
+  - runtime-context
+  - network-proxy-endpoint
+input_mappings:
+  - protein-structure-query|query_tokens=gene,symbol,uniprot,accession,amino acid sequence,protein sequence|script_flags=--gene,--uniprot,--sequence,--sequence-file
+  - gene-symbol|query_tokens=gene,symbol,gene name,基因,基因名|script_flags=--gene
+  - uniprot-accession|query_tokens=uniprot,accession,primary accession,蛋白编号|script_flags=--uniprot
+  - amino-acid-sequence|query_tokens=sequence,amino acid sequence,protein sequence,fasta,esmfold,氨基酸序列|script_flags=--sequence,--sequence-file,--sequence-name,--esmfold-min-length,--esmfold-max-length,--allow-ambiguous-aa
+  - species|query_tokens=organism,species,human,mouse,rat,taxon,物种|script_flags=--organism
+  - requested-outputs|query_tokens=features,domains,pdb,alphafold,domain map,download,cif,pdb file,esmfold,folded pdb,pymol,pymol script,visualize in pymol|script_flags=--modules,--download-structure,--download-format,--pymol,--run-pymol,--pymol-bin,--pymol-color-mode,--pymol-highlight-residues
+  - output-dir|query_tokens=output,outdir,目录|script_flags=--outdir
+  - runtime-context|query_tokens=python,matplotlib,network,api,runtime|script_flags=runtime-precheck
+  - network-proxy-endpoint|query_tokens=proxy,http_proxy,https_proxy,代理|script_flags=environment-proxy
+constraints:
+  - retrieval-not-de-novo-structure-prediction
+  - default-organism-human-unless-user-states-otherwise
+  - prefer-reviewed-uniprot-entry-then-relax-to-unreviewed
+  - pdb-results-depend-on-uniprot-to-rcsb-cross-reference-mapping
+  - alphafold-db-404-means-no-public-entry-not-a-script-failure
+  - esmfold-hosted-api-sequence-length-15-to-400
+  - esmfold-defaults-to-canonical-amino-acid-alphabet
+  - runtime-requires-matplotlib-numpy-pandas-requests
+  - pymol-binary-optional-only-required-for-run-pymol
+tools:
+  - scripts/protein_structure_get.py
+tool_contracts:
+  - tool: scripts/protein_structure_get.py
+    inputs:
+      - gene-symbol-or-uniprot-accession-or-amino-acid-sequence
+      - organism
+      - module-selection
+      - output-dir
+    outputs:
+      - protein-structure-result-json
+      - summary-tsv
+      - optional-features-tsv
+      - optional-pdb-structures-tsv
+      - optional-alphafold-tsv
+      - optional-domain-map
+      - optional-downloaded-structure
+      - optional-esmfold-pdb
+      - optional-esmfold-metadata-tsv
+      - optional-normalized-sequence-fasta
+      - optional-pymol-script
+      - optional-pymol-session-and-png
+    side_effects:
+      - writes-output-artifacts
+      - performs-public-api-requests
+    failure_codes:
+      - 1
+      - 2
+      - 3
+priority_rules:
+  - prefer-when-user-asks-for-gene-to-protein-structure-context
+  - prefer-when-user-explicitly-mentions-uniprot-alphafold-db-rcsb-pdb-or-domain-map
+  - prefer-when-user-explicitly-mentions-esmfold-or-sequence-to-structure
+  - do-not-use-for-local-folding-structure-alignment-or-docking

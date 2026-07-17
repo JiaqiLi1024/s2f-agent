@@ -1,0 +1,4 @@
+interface:
+  display_name: "Protein Embedding"
+  short_description: "Extract PLM, layer, and ESMC SAE embeddings"
+  default_prompt: "Use $protein-embedding to choose a protein language model, validate FASTA inputs, and generate standardized per-protein, per-residue, layer-specific, or ESMC SAE embedding artifacts."

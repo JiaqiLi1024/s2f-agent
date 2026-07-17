@@ -1,0 +1,7 @@
+query_id	tile_sequence	score	central_aa	residue	profile_source
+qcdtoy	CALLQSRLLLSAPRRAA	0.87015	L	9	native_python_qcdpred_model
+qcdtoy	ALLQSRLLLSAPRRAAA	0.83666	L	10	native_python_qcdpred_model
+qcdtoy	LLQSRLLLSAPRRAAAT	0.80842	S	11	native_python_qcdpred_model
+qcdtoy	LQSRLLLSAPRRAAATA	0.73379	A	12	native_python_qcdpred_model
+qcdtoy	QSRLLLSAPRRAAATAR	0.61286	P	13	native_python_qcdpred_model
+qcdtoy	SRLLLSAPRRAAATARY	0.74813	R	14	native_python_qcdpred_model

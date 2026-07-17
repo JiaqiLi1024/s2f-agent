@@ -1,0 +1,100 @@
+schema_version: 1
+id: protein-annotation-report
+title: Protein Annotation Report
+path: skills/protein-annotation-report
+status: active
+family: protein-sequence-annotation
+tasks:
+  - protein-annotation-report
+  - protein-uniprot-annotation
+  - protein-functional-annotation
+  - protein-annotation-summary
+  - protein-llps-report
+  - protein-aggregation-report
+  - protein-degron-report
+triggers:
+  - protein-annotation-report
+  - protein annotation report
+  - protein annotation tsv
+  - functional annotation table
+  - annotation summary table
+  - uniprot annotation
+  - gene to protein annotation
+  - protein name annotation
+  - unknown protein annotation
+  - unknown amino acid sequence annotation
+  - summarize interproscan
+  - summarize eggnog
+  - summarize idr
+  - summarize disorder
+  - summarize llps
+  - summarize fuzdrop
+  - summarize aggrescanai
+  - summarize degron
+  - degron report
+  - protein degron report
+  - protein_degron_features.tsv
+  - protein_degron_summary.tsv
+  - llps report
+  - aggregation report
+required_inputs:
+  - protein-annotation-query
+optional_inputs:
+  - amino-acid-sequence
+  - protein-fasta
+  - gene-symbol
+  - protein-name
+  - uniprot-accession
+  - annotation-output-files
+  - output-dir
+  - species
+  - requested-outputs
+  - runtime-context
+input_mappings:
+  - protein-annotation-query|query_tokens=amino acid sequence,protein fasta,gene,protein name,uniprot,interproscan,eggnog,idr,disorder,llps,aggregation,fuzdrop,aggrescanai,degron,features.tsv,motifs.tsv|script_flags=--sequence,--fasta,--gene,--protein-name,--uniprot,--annotation-result-json,--interpro-tsv,--eggnog-annotations,--idr-result-json,--idr-summary-tsv,--idr-regions-tsv,--llps-summary-tsv,--llps-features-tsv,--degron-result-json,--degron-features-tsv,--features-tsv,--motifs-tsv
+  - amino-acid-sequence|query_tokens=sequence,amino acid sequence,protein sequence,unknown sequence,氨基酸序列|script_flags=--sequence,--sequence-name,--allow-ambiguous-aa
+  - protein-fasta|query_tokens=fasta,proteins.fa,protein fasta,proteome,translated proteins,蛋白fasta|script_flags=--fasta
+  - gene-symbol|query_tokens=gene,gene symbol,gene name,基因,基因名|script_flags=--gene
+  - protein-name|query_tokens=protein name,protein 名称,蛋白名|script_flags=--protein-name
+  - uniprot-accession|query_tokens=uniprot,accession,primary accession,蛋白编号|script_flags=--uniprot
+  - annotation-output-files|query_tokens=interproscan tsv,eggnog annotations,emapper annotations,idr summary,idr regions,disorder summary,llps summary,llps features,protein_llps_summary.tsv,protein_llps_features.tsv,degron summary,degron features,protein_degron_summary.tsv,protein_degron_features.tsv,features.tsv,motifs.tsv,result json|script_flags=--annotation-result-json,--interpro-tsv,--eggnog-annotations,--idr-result-json,--idr-summary-tsv,--idr-regions-tsv,--llps-summary-tsv,--llps-features-tsv,--degron-result-json,--degron-features-tsv,--features-tsv,--motifs-tsv
+  - output-dir|query_tokens=output,outdir,report,tsv,json,保存,输出目录|script_flags=--outdir
+  - species|query_tokens=organism,species,human,mouse,rat,taxon,物种|script_flags=--organism
+  - runtime-context|query_tokens=python,network,api,offline,no internet,uniprot|script_flags=--no-uniprot,--timeout-sec,--save-raw-uniprot
+  - requested-outputs|query_tokens=all uniprot features,variants,sequence conflicts,natural variants|script_flags=--all-uniprot-features
+required_env_any: []
+constraints:
+  - standard-output-includes-summary-tsv-features-tsv-and-report-json
+  - unknown-sequences-need-interproscan6-or-eggnog-for-strong-domain-and-function-evidence
+  - local-regex-motif-hits-are-candidates-not-confirmed-functional-sites
+  - uniprot-gene-and-protein-name-resolution-requires-organism-context-when-ambiguous
+  - normalized-residue-coordinates-are-1-based-closed-when-source-convention-is-known
+  - eggnog-annotations-are-orthology-based-functional-transfer
+  - idr-annotations-are-threshold-derived-predicted-sequence-features
+  - llps-and-aggregation-annotations-are-predicted-sequence-features
+  - degron-matches-are-candidates-not-confirmed-degradation-sites
+  - uniprot-variant-and-sequence-conflict-features-require-all-uniprot-features-flag
+tools:
+  - scripts/protein_annotation_report.py
+tool_contracts:
+  - tool: scripts/protein_annotation_report.py
+    inputs:
+      - protein-annotation-query
+      - optional-local-annotation-output-files
+      - optional-uniprot-lookup
+      - output-dir
+    outputs:
+      - protein-annotation-summary-tsv
+      - protein-annotation-features-tsv
+      - protein-annotation-report-json
+      - optional-raw-uniprot-json
+    side_effects:
+      - writes-output-artifacts
+      - may-perform-public-uniprot-api-requests
+    failure_codes:
+      - 1
+priority_rules:
+  - prefer-when-user-asks-to-create-a-report-summary-table-tsv-or-merge-annotation-outputs
+  - prefer-when-user-provides-gene-protein-name-or-uniprot-id-and-asks-for-functional-annotation
+  - prefer-when-user-has-interproscan6-eggnog-idr-llps-features-or-motif-output-files-to-summarize
+  - do-not-use-as-the-primary-runner-for-interproscan6-or-eggnog-workloads

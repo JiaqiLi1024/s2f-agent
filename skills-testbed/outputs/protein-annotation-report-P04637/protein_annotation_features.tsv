@@ -1,0 +1,113 @@
+query_id	source	feature_type	start	end	length	accession	name	description	database	interpro_accession	interpro_description	go_terms	pathways	score	evalue	evidence	note
+P04637	local_motif_scan	motif_candidate	319	321	3		NLS_basic_cluster	KKK								regex_scan	Heuristic motif candidate; validate with domain databases or experiments.
+P04637	local_motif_scan	motif_candidate	194	203	10		NES_leucine_rich	LIRVEGNLRV								regex_scan	Heuristic motif candidate; validate with domain databases or experiments.
+P04637	local_motif_scan	motif_candidate	338	348	11		NES_leucine_rich	FEMFRELNEAL								regex_scan	Heuristic motif candidate; validate with domain databases or experiments.
+P04637	local_motif_scan	motif_candidate	239	241	3		N_glycosylation	NSS								regex_scan	Heuristic motif candidate; validate with domain databases or experiments.
+P04637	local_motif_scan	motif_candidate	310	312	3		N_glycosylation	NNT								regex_scan	Heuristic motif candidate; validate with domain databases or experiments.
+P04637	local_motif_scan	motif_candidate	234	237	4		SH2_binding_candidate	YNYM								regex_scan	Heuristic motif candidate; validate with domain databases or experiments.
+P04637	local_motif_scan	motif_candidate	327	330	4		SH2_binding_candidate	YFTL								regex_scan	Heuristic motif candidate; validate with domain databases or experiments.
+P04637	local_motif_scan	motif_candidate	64	67	4		SH3_binding_candidate	PRMP								regex_scan	Heuristic motif candidate; validate with domain databases or experiments.
+P04637	local_motif_scan	motif_candidate	72	75	4		SH3_binding_candidate	PVAP								regex_scan	Heuristic motif candidate; validate with domain databases or experiments.
+P04637	local_motif_scan	motif_candidate	77	80	4		SH3_binding_candidate	PAAP								regex_scan	Heuristic motif candidate; validate with domain databases or experiments.
+P04637	local_motif_scan	motif_candidate	82	85	4		SH3_binding_candidate	PAAP								regex_scan	Heuristic motif candidate; validate with domain databases or experiments.
+P04637	local_motif_scan	motif_candidate	89	92	4		SH3_binding_candidate	PSWP								regex_scan	Heuristic motif candidate; validate with domain databases or experiments.
+P04637	local_motif_scan	motif_candidate	219	222	4		SH3_binding_candidate	PYEP								regex_scan	Heuristic motif candidate; validate with domain databases or experiments.
+P04637	UniProtKB	Chain	1	393	393	PRO_0000185703	Cellular tumor antigen p53	Cellular tumor antigen p53	UniProtKB								UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	DNA binding	102	292	191		DNA binding	DNA binding	UniProtKB							ECO:0000269:PubMed	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Region	1	320	320		Interaction with CCAR2	Interaction with CCAR2	UniProtKB							ECO:0000269:PubMed	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Region	1	83	83		Interaction with HRMT1L2	Interaction with HRMT1L2	UniProtKB							ECO:0000269:PubMed	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Region	1	44	44		Transcription activation (acidic)	Transcription activation (acidic)	UniProtKB								UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Region	50	96	47		Disordered	Disordered	UniProtKB							ECO:0000269:PubMed	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Region	66	110	45		Interaction with WWOX	Interaction with WWOX	UniProtKB								UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Region	100	370	271		Interaction with HIPK1	Interaction with HIPK1	UniProtKB							ECO:0000250	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Region	100	300	201		Required for interaction with ZNF385A	Required for interaction with ZNF385A	UniProtKB							ECO:0000269:PubMed	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Region	113	236	124		Required for interaction with FBXO42	Required for interaction with FBXO42	UniProtKB							ECO:0000269:PubMed	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Region	116	292	177		Interaction with AXIN1	Interaction with AXIN1	UniProtKB							ECO:0000250	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Region	241	248	8		Interaction with the 53BP2 SH3 domain	Interaction with the 53BP2 SH3 domain	UniProtKB								UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Region	256	294	39		Interaction with E4F1	Interaction with E4F1	UniProtKB							ECO:0000269:PubMed	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Region	273	280	8		Interaction with DNA	Interaction with DNA	UniProtKB								UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Region	282	325	44		Disordered	Disordered	UniProtKB							ECO:0000256:SAM	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Region	300	393	94		Interaction with CARM1	Interaction with CARM1	UniProtKB							ECO:0000269:PubMed	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Region	319	360	42		Interaction with HIPK2	Interaction with HIPK2	UniProtKB								UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Region	325	356	32		Oligomerization	Oligomerization	UniProtKB								UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Region	351	393	43		Disordered	Disordered	UniProtKB							ECO:0000269:PubMed	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Region	359	363	5		Interaction with USP7	Interaction with USP7	UniProtKB								UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Region	368	387	20		Basic (repression of DNA-binding)	Basic (repression of DNA-binding)	UniProtKB								UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Region	374	393	20		Interaction with MORN3	Interaction with MORN3	UniProtKB							ECO:0000269:PubMed	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Motif	17	25	9		TADI	TADI	UniProtKB								UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Motif	48	56	9		TADII	TADII	UniProtKB								UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Motif	305	321	17		Bipartite nuclear localization signal	Bipartite nuclear localization signal	UniProtKB								UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Motif	339	350	12		Nuclear export signal	Nuclear export signal	UniProtKB								UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Motif	370	372	3		[KR]-[STA]-K motif	[KR]-[STA]-K motif	UniProtKB								UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Compositional bias	69	90	22		Pro residues	Pro residues	UniProtKB							ECO:0000256:SAM	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Compositional bias	282	299	18		Basic and acidic residues	Basic and acidic residues	UniProtKB							ECO:0000256:SAM	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Compositional bias	365	384	20		Basic residues	Basic residues	UniProtKB							ECO:0000256:SAM	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Binding site	176	176	1		Binding site	Binding site	UniProtKB							ECO:0000269:PubMed	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Binding site	179	179	1		Binding site	Binding site	UniProtKB							ECO:0000269:PubMed	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Binding site	238	238	1		Binding site	Binding site	UniProtKB							ECO:0000269:PubMed	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Binding site	242	242	1		Binding site	Binding site	UniProtKB							ECO:0000269:PubMed	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Site	120	120	1		Interaction with DNA	Interaction with DNA	UniProtKB							ECO:0000269:PubMed	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Modified residue	9	9	1		Phosphoserine; by HIPK4	Phosphoserine; by HIPK4	UniProtKB							ECO:0000269:PubMed	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Modified residue	15	15	1		Phosphoserine; by CDK5, PRPK, AMPK, NUAK1 and ATM	Phosphoserine; by CDK5, PRPK, AMPK, NUAK1 and ATM	UniProtKB							ECO:0000269:PubMed	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Modified residue	18	18	1		Phosphothreonine; by CK1, VRK1 and VRK2	Phosphothreonine; by CK1, VRK1 and VRK2	UniProtKB							ECO:0000269:PubMed	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Modified residue	20	20	1		Phosphoserine; by CHEK2, CK1 and PLK3	Phosphoserine; by CHEK2, CK1 and PLK3	UniProtKB							ECO:0000269:PubMed	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Modified residue	33	33	1		Phosphoserine; by CDK5 and CDK7	Phosphoserine; by CDK5 and CDK7	UniProtKB							ECO:0000269:PubMed	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Modified residue	37	37	1		Phosphoserine; by MAPKAPK5	Phosphoserine; by MAPKAPK5	UniProtKB							ECO:0000269:PubMed	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Modified residue	46	46	1		Phosphoserine; by CDK5, DYRK2, HIPK2 and PKC/PRKCG	Phosphoserine; by CDK5, DYRK2, HIPK2 and PKC/PRKCG	UniProtKB							ECO:0000269:PubMed	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Modified residue	55	55	1		Phosphothreonine; by TAF1 and GRK5	Phosphothreonine; by TAF1 and GRK5	UniProtKB							ECO:0000269:PubMed	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Modified residue	120	120	1		N6-acetyllysine	N6-acetyllysine	UniProtKB							ECO:0000269:PubMed	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Modified residue	120	120	1		N6-lactoyllysine	N6-lactoyllysine	UniProtKB							ECO:0000269:PubMed	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Modified residue	139	139	1		N6-lactoyllysine	N6-lactoyllysine	UniProtKB							ECO:0000269:PubMed	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Modified residue	183	183	1		Phosphoserine; by AURKB	Phosphoserine; by AURKB	UniProtKB							ECO:0000269:PubMed	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Modified residue	269	269	1		Phosphoserine; by AURKB	Phosphoserine; by AURKB	UniProtKB							ECO:0000269:PubMed	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Modified residue	284	284	1		Phosphothreonine; by AURKB	Phosphothreonine; by AURKB	UniProtKB							ECO:0000269:PubMed	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Modified residue	305	305	1		N6-acetyllysine	N6-acetyllysine	UniProtKB							ECO:0000269:PubMed	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Modified residue	315	315	1		Phosphoserine; by AURKA, CDK1 and CDK2	Phosphoserine; by AURKA, CDK1 and CDK2	UniProtKB							ECO:0000269:PubMed	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Modified residue	321	321	1		N6-acetyllysine	N6-acetyllysine	UniProtKB							ECO:0000250:UniProtKB	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Modified residue	333	333	1		Omega-N-methylarginine; by PRMT5	Omega-N-methylarginine; by PRMT5	UniProtKB							ECO:0000269:PubMed	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Modified residue	335	335	1		Symmetric dimethylarginine; by PRMT5	Symmetric dimethylarginine; by PRMT5	UniProtKB							ECO:0000269:PubMed	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Modified residue	337	337	1		Symmetric dimethylarginine; by PRMT5	Symmetric dimethylarginine; by PRMT5	UniProtKB							ECO:0000269:PubMed	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Modified residue	370	370	1		N6,N6-dimethyllysine; alternate	N6,N6-dimethyllysine; alternate	UniProtKB							ECO:0000269:PubMed	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Modified residue	370	370	1		N6-methyllysine; by SMYD2; alternate	N6-methyllysine; by SMYD2; alternate	UniProtKB							ECO:0000269:PubMed	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Modified residue	372	372	1		N6-methyllysine; by SETD7	N6-methyllysine; by SETD7	UniProtKB							ECO:0000269:PubMed	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Modified residue	373	373	1		N6,N6-dimethyllysine; by EHMT1 and EHMT2; alternate	N6,N6-dimethyllysine; by EHMT1 and EHMT2; alternate	UniProtKB							ECO:0000269:PubMed	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Modified residue	373	373	1		N6-acetyllysine; alternate	N6-acetyllysine; alternate	UniProtKB							ECO:0000269:PubMed	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Modified residue	381	381	1		N6-acetyllysine	N6-acetyllysine	UniProtKB							ECO:0000269:PubMed;ECO:0007744:PubMed	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Modified residue	382	382	1		N6,N6-dimethyllysine; alternate	N6,N6-dimethyllysine; alternate	UniProtKB							ECO:0000269:PubMed	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Modified residue	382	382	1		N6-acetyllysine; alternate	N6-acetyllysine; alternate	UniProtKB							ECO:0000269:PubMed;ECO:0007744:PubMed	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Modified residue	382	382	1		N6-methyllysine; by KMT5A; alternate	N6-methyllysine; by KMT5A; alternate	UniProtKB							ECO:0000269:PubMed	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Modified residue	392	392	1		Phosphoserine; by CK2, CDK2 and NUAK1	Phosphoserine; by CK2, CDK2 and NUAK1	UniProtKB							ECO:0000269:PubMed	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Cross-link	24	24	1		Glycyl lysine isopeptide (Lys-Gly) (interchain with G-Cter in ubiquitin)	Glycyl lysine isopeptide (Lys-Gly) (interchain with G-Cter in ubiquitin)	UniProtKB							ECO:0000269:PubMed	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Cross-link	291	291	1		Glycyl lysine isopeptide (Lys-Gly) (interchain with G-Cter in ubiquitin)	Glycyl lysine isopeptide (Lys-Gly) (interchain with G-Cter in ubiquitin)	UniProtKB							ECO:0000269:PubMed	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Cross-link	292	292	1		Glycyl lysine isopeptide (Lys-Gly) (interchain with G-Cter in ubiquitin)	Glycyl lysine isopeptide (Lys-Gly) (interchain with G-Cter in ubiquitin)	UniProtKB							ECO:0000269:PubMed	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Cross-link	351	351	1		Glycyl lysine isopeptide (Lys-Gly) (interchain with G-Cter in ubiquitin)	Glycyl lysine isopeptide (Lys-Gly) (interchain with G-Cter in ubiquitin)	UniProtKB							ECO:0000269:PubMed	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Cross-link	357	357	1		Glycyl lysine isopeptide (Lys-Gly) (interchain with G-Cter in ubiquitin)	Glycyl lysine isopeptide (Lys-Gly) (interchain with G-Cter in ubiquitin)	UniProtKB							ECO:0000269:PubMed	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Cross-link	386	386	1		Glycyl lysine isopeptide (Lys-Gly) (interchain with G-Cter in SUMO)	Glycyl lysine isopeptide (Lys-Gly) (interchain with G-Cter in SUMO)	UniProtKB							ECO:0000269:PubMed;ECO:0000269:Reference	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Helix	3	6	4		Helix	Helix	UniProtKB							ECO:0007829:PDB	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Turn	8	10	3		Turn	Turn	UniProtKB							ECO:0007829:PDB	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Helix	19	29	11		Helix	Helix	UniProtKB							ECO:0007829:PDB	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Helix	30	32	3		Helix	Helix	UniProtKB							ECO:0007829:PDB	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Helix	36	38	3		Helix	Helix	UniProtKB							ECO:0007829:PDB	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Helix	41	44	4		Helix	Helix	UniProtKB							ECO:0007829:PDB	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Helix	47	55	9		Helix	Helix	UniProtKB							ECO:0007829:PDB	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Helix	92	94	3		Helix	Helix	UniProtKB							ECO:0007829:PDB	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Helix	97	99	3		Helix	Helix	UniProtKB							ECO:0007829:PDB	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Turn	105	108	4		Turn	Turn	UniProtKB							ECO:0007829:PDB	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Turn	128	131	4		Turn	Turn	UniProtKB							ECO:0007829:PDB	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Helix	150	152	3		Helix	Helix	UniProtKB							ECO:0007829:PDB	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Helix	166	168	3		Helix	Helix	UniProtKB							ECO:0007829:PDB	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Helix	174	176	3		Helix	Helix	UniProtKB							ECO:0007829:PDB	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Helix	177	180	4		Helix	Helix	UniProtKB							ECO:0007829:PDB	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Turn	209	211	3		Turn	Turn	UniProtKB							ECO:0007829:PDB	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Helix	222	224	3		Helix	Helix	UniProtKB							ECO:0007829:PDB	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Turn	225	227	3		Turn	Turn	UniProtKB							ECO:0007829:PDB	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Helix	240	242	3		Helix	Helix	UniProtKB							ECO:0007829:PDB	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Turn	243	248	6		Turn	Turn	UniProtKB							ECO:0007829:PDB	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Helix	278	287	10		Helix	Helix	UniProtKB							ECO:0007829:PDB	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Helix	288	290	3		Helix	Helix	UniProtKB							ECO:0007829:PDB	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Helix	322	324	3		Helix	Helix	UniProtKB							ECO:0007829:PDB	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Helix	335	349	15		Helix	Helix	UniProtKB							ECO:0007829:PDB	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Turn	353	355	3		Turn	Turn	UniProtKB							ECO:0007829:PDB	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Helix	375	380	6		Helix	Helix	UniProtKB							ECO:0007829:PDB	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Helix	381	383	3		Helix	Helix	UniProtKB							ECO:0007829:PDB	UniProt feature coordinates are 1-based closed.
+P04637	UniProtKB	Helix	384	386	3		Helix	Helix	UniProtKB							ECO:0007829:PDB	UniProt feature coordinates are 1-based closed.

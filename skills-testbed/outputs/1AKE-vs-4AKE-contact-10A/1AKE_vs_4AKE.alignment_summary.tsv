@@ -1,0 +1,2 @@
+label1	label2	pairing_used	n_ca_pairs	global_rmsd_A	close_threshold_A	divergence_threshold_A	n_close	n_medium	n_divergent	pct_divergent	max_ca_dist_A	median_ca_dist_A	contact_threshold_A	n_contacts_structure1	n_contacts_structure2	n_contacts_gained	n_contacts_lost
+1AKE	4AKE	resseq	214	7.1307	1.0	3.0	2	57	155	72.43	18.336173	4.502284	10.0	1735	1669	134	200

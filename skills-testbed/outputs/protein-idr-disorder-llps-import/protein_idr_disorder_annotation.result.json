@@ -1,0 +1,40 @@
+{
+  "commands_file": "skills-testbed/outputs/protein-idr-disorder-llps-import/commands.sh",
+  "counts": {
+    "llps_features": 4,
+    "llps_summary_rows": 2,
+    "plots": 4,
+    "records": 0,
+    "regions": 0,
+    "residue_score_rows": 12
+  },
+  "created_utc": "2026-07-01T09:22:13Z",
+  "errors": [],
+  "execute": true,
+  "execution": {},
+  "input_fasta": "skills-testbed/outputs/protein-idr-disorder-llps-import/normalized_input.fasta",
+  "iupred3_table_input": "",
+  "outputs": {
+    "llps_features_tsv": "skills-testbed/outputs/protein-idr-disorder-llps-import/protein_llps_features.tsv",
+    "llps_summary_tsv": "skills-testbed/outputs/protein-idr-disorder-llps-import/protein_llps_summary.tsv",
+    "plots": [
+      "skills-testbed/outputs/protein-idr-disorder-llps-import/plots/agg_test.AggrescanAI.aggregation.svg",
+      "skills-testbed/outputs/protein-idr-disorder-llps-import/plots/agg_test.AggrescanAI.aggregation.html",
+      "skills-testbed/outputs/protein-idr-disorder-llps-import/plots/fuz_test.llps_features.svg",
+      "skills-testbed/outputs/protein-idr-disorder-llps-import/plots/fuz_test.llps_features.html"
+    ],
+    "regions_tsv": "skills-testbed/outputs/protein-idr-disorder-llps-import/protein_idr_regions.tsv",
+    "residue_scores_tsv": "skills-testbed/outputs/protein-idr-disorder-llps-import/protein_idr_residue_scores.tsv",
+    "result_json": "skills-testbed/outputs/protein-idr-disorder-llps-import/protein_idr_disorder_annotation.result.json",
+    "summary_tsv": "skills-testbed/outputs/protein-idr-disorder-llps-import/protein_idr_summary.tsv"
+  },
+  "plans": {},
+  "run_id": "query_sequence",
+  "skill": "protein-idr-disorder-annotation",
+  "status": "success",
+  "tools": [
+    "aggrescanai",
+    "fuzdrop"
+  ],
+  "warnings": []
+}

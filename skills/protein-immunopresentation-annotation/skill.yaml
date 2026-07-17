@@ -1,0 +1,106 @@
+schema_version: 1
+id: protein-immunopresentation-annotation
+title: Protein Immunopresentation Annotation
+path: skills/protein-immunopresentation-annotation
+status: active
+family: protein-sequence-annotation
+tasks:
+  - protein-immunopresentation-annotation
+  - protein-mhci-peptide-prediction
+  - protein-iedb-mhci-annotation
+  - protein-hla-binder-annotation
+  - protein-immunogenicity-candidate-annotation
+  - protein-epitope-candidate-report
+  - environment-setup
+  - troubleshooting
+triggers:
+  - protein-immunopresentation-annotation
+  - immunopresentation
+  - immune presentation
+  - MHC-I peptide
+  - MHC class I
+  - HLA binder
+  - IEDB
+  - IEDB Class I
+  - IEDB Next-Generation Tools
+  - qinti2023/IEDB
+  - local IEDB
+  - NetMHCpan
+  - eluted ligand
+  - binding affinity
+  - immunogenicity score
+  - antigen processing
+  - TAP transport
+  - proteasomal cleavage
+  - epitope candidate
+  - 表位候选
+  - 免疫呈递
+  - MHC-I
+  - HLA结合
+required_inputs:
+  - protein-immunopresentation-query
+optional_inputs:
+  - amino-acid-sequence
+  - protein-fasta
+  - hla-allele-list
+  - mhci-peptide-lengths
+  - iedb-result-files
+  - local-iedb-tools-dir
+  - protein-context-feature-files
+  - output-dir
+  - runtime-context
+input_mappings:
+  - protein-immunopresentation-query|query_tokens=immunopresentation,MHC-I,MHC class I,HLA binder,IEDB,NetMHCpan,epitope candidate,免疫呈递,表位候选|script_flags=--sequence,--fasta,--api-result-tsv,--api-result-json
+  - amino-acid-sequence|query_tokens=amino acid sequence,protein sequence,unknown sequence,氨基酸序列|script_flags=--sequence,--sequence-name,--allow-ambiguous-aa
+  - protein-fasta|query_tokens=fasta,proteins.fa,protein fasta,multiple proteins,蛋白fasta|script_flags=--fasta
+  - hla-allele-list|query_tokens=HLA,HLA allele,allele,HLA-A,HLA-B,HLA-C,genotype|script_flags=--alleles,--allele
+  - mhci-peptide-lengths|query_tokens=peptide length,MHC-I peptide,8mer,9mer,10mer,11mer|script_flags=--peptide-lengths
+  - iedb-result-files|query_tokens=IEDB result,IEDB TSV,aggregated_result.json,IEDB_predict,NetMHCpan output,processing output,immunogenicity output|script_flags=--api-result-tsv,--processing-result-tsv,--immunogenicity-result-tsv,--api-result-json,--local-result-json
+  - local-iedb-tools-dir|query_tokens=IEDB_NG_TC1,src/tcell_mhci.py,qinti2023/IEDB,local IEDB,IEDB wrapper repo|script_flags=--iedb-local-tools-dir,--iedb-wrapper-repo,--execute-local,--local-workdir,--local-python,--local-max-workers
+  - protein-context-feature-files|query_tokens=signal peptide,TM,transmembrane,IDR,domain,conserved region,feature TSV|script_flags=--localization-features-tsv,--tm-features-tsv,--idr-regions-tsv,--domain-features-tsv,--conservation-features-tsv,--context-features-tsv
+  - output-dir|query_tokens=output,outdir,results,tsv,json,保存,输出目录|script_flags=--outdir
+  - runtime-context|query_tokens=execute api,IEDB API,conda,mamba,local IEDB,next-generation tools,tcsh,gawk|script_flags=--execute-api,--api-url,--processing-api-url,--iedb-local-tools-dir,--execute-local
+constraints:
+  - immunopresentation-results-are-candidate-annotations-not-confirmed-immunogenicity
+  - remote-IEDB-submission-must-be-user-approved-for-private-or-unpublished-sequences
+  - coordinates-are-1-based-closed-query-residue-positions
+  - default-27-HLA-reference-set-is-used-only-when-user-HLA-genotype-is-not-provided
+  - binding-rank-thresholds-default-to-strong-0.5-and-weak-2.0-percentile
+  - IC50-thresholds-default-to-strong-50nM-and-weak-500nM
+  - processing-scores-support-but-do-not-replace-MHC-binding-evidence
+  - local-IEDB-execution-requires-official-IEDB-NG-TC1-src-tcell-mhci-py
+  - qinti2023-IEDB-wrapper-repo-does-not-bundle-official-IEDB-tools
+  - IEDB-NG-TC1-split-aggregate-is-experimental-and-logs-must-be-preserved
+tools:
+  - scripts/protein_immunopresentation_annotation.py
+tool_contracts:
+  - tool: scripts/protein_immunopresentation_annotation.py
+    inputs:
+      - protein-immunopresentation-query
+      - optional-hla-allele-list
+      - optional-iedb-result-files
+      - optional-protein-context-feature-files
+      - output-dir
+    outputs:
+      - mhci-peptides-tsv
+      - mhci-binding-predictions-tsv
+      - mhci-processing-predictions-tsv
+      - mhci-immunogenicity-predictions-tsv
+      - immunopresentation-candidates-tsv
+      - protein-immunopresentation-summary-tsv
+      - protein-immunopresentation-result-json
+      - api-request-payloads
+      - local-iedb-input-json
+      - local-iedb-command-plan
+      - command-plan-shell-script
+    side_effects:
+      - writes-output-artifacts
+      - may-run-local-IEDB-jobs-when-execute-local-is-set
+      - may-submit-sequences-to-IEDB-when-execute-api-is-set
+    failure_codes:
+      - 1
+priority_rules:
+  - prefer-when-user-asks-for-MHC-I-HLA-IEDB-NetMHCpan-antigen-processing-immunogenicity-score-or-epitope-candidate-annotation
+  - prefer-when-task-needs-peptide-level-MHC-I-candidate-report-from-protein-sequence-or-fasta
+  - prefer-local-IEDB-NG-TC1-workflow-when-API-stability-or-sequence-privacy-is-a-concern
+  - do-not-use-for-confirming-immunogenicity-or-natural-presentation-without-experimental-evidence

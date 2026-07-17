@@ -1,0 +1,4 @@
+interface:
+  display_name: "Protein TM Topology Annotation"
+  short_description: "Annotate transmembrane topology from protein sequences"
+  default_prompt: "Use $protein-tm-topology-annotation to predict TM regions, residue topology states, and plots from protein FASTA files."

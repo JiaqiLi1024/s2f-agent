@@ -1,0 +1,107 @@
+{
+  "alignment": {
+    "close_threshold_A": 1.0,
+    "divergence_threshold_A": 3.0,
+    "global_rmsd_A": 7.1307,
+    "html_viewer": "skills-testbed/outputs/1AKE-vs-4AKE/1AKE_vs_4AKE.superimposed.html",
+    "label1": "1AKE",
+    "label2": "4AKE",
+    "max_ca_dist_A": 18.336173,
+    "median_ca_dist_A": 4.502284,
+    "n_ca_pairs": 214,
+    "n_close": 2,
+    "n_divergent": 155,
+    "n_medium": 57,
+    "pairing_used": "resseq",
+    "pct_divergent": 72.43,
+    "rotation_matrix": [
+      [
+        -0.14468732204624254,
+        -0.9837948405184579,
+        -0.10589282604760558
+      ],
+      [
+        -0.022293017439255238,
+        0.11023287299803554,
+        -0.993655742741948
+      ],
+      [
+        0.9892262634061735,
+        -0.14140871783543138,
+        -0.037881054731876446
+      ]
+    ],
+    "superimposed_pdb": "skills-testbed/outputs/1AKE-vs-4AKE/1AKE_vs_4AKE.superimposed.pdb",
+    "translation_vector": [
+      36.63958464812814,
+      42.25829188887875,
+      15.566522695554537
+    ]
+  },
+  "finished_at": "2026-06-28T12:11:42Z",
+  "outputs": {
+    "html": [
+      "skills-testbed/outputs/1AKE-vs-4AKE/1AKE_vs_4AKE.superimposed.html"
+    ],
+    "per_residue": [
+      "skills-testbed/outputs/1AKE-vs-4AKE/1AKE_vs_4AKE.per_residue_rmsd.tsv"
+    ],
+    "plots": [
+      "skills-testbed/outputs/1AKE-vs-4AKE/1AKE_vs_4AKE.per_residue_rmsd.png",
+      "skills-testbed/outputs/1AKE-vs-4AKE/1AKE_vs_4AKE.per_residue_rmsd.pdf"
+    ],
+    "result": [
+      "skills-testbed/outputs/1AKE-vs-4AKE/protein_structure_align.result.json"
+    ],
+    "structures": [
+      "skills-testbed/outputs/1AKE-vs-4AKE/1AKE_vs_4AKE.superimposed.pdb"
+    ],
+    "summary": [
+      "skills-testbed/outputs/1AKE-vs-4AKE/summary.txt",
+      "skills-testbed/outputs/1AKE-vs-4AKE/1AKE_vs_4AKE.alignment_summary.tsv"
+    ]
+  },
+  "query": {
+    "chain1": "A",
+    "chain2": "A",
+    "close_threshold_A": 1.0,
+    "divergence_threshold_A": 3.0,
+    "file1": null,
+    "file2": null,
+    "pairing": "auto",
+    "pdb1": "1AKE",
+    "pdb2": "4AKE",
+    "prefix": "1AKE_vs_4AKE",
+    "res_end": null,
+    "res_start": null,
+    "uniprot1": null,
+    "uniprot2": null,
+    "viewer": true
+  },
+  "skill": "protein-structure-align",
+  "sources": {
+    "structure1": {
+      "available_chains": [
+        "A",
+        "B"
+      ],
+      "kind": "rcsb_pdb",
+      "label": "1AKE",
+      "path": "skills-testbed/outputs/1AKE-vs-4AKE/1AKE.pdb",
+      "requested": "1AKE"
+    },
+    "structure2": {
+      "available_chains": [
+        "A",
+        "B"
+      ],
+      "kind": "rcsb_pdb",
+      "label": "4AKE",
+      "path": "skills-testbed/outputs/1AKE-vs-4AKE/4AKE.pdb",
+      "requested": "4AKE"
+    }
+  },
+  "started_at": "2026-06-28T12:11:39Z",
+  "status": "success",
+  "warnings": []
+}

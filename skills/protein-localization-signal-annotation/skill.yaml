@@ -1,0 +1,90 @@
+schema_version: 1
+id: protein-localization-signal-annotation
+title: Protein Localization Signal Annotation
+path: skills/protein-localization-signal-annotation
+status: active
+family: protein-sequence-annotation
+tasks:
+  - protein-localization-signal-annotation
+  - protein-subcellular-localization
+  - protein-signal-peptide-annotation
+  - protein-targeting-peptide-annotation
+  - protein-secretory-pathway-annotation
+  - environment-setup
+  - troubleshooting
+triggers:
+  - protein-localization-signal-annotation
+  - protein localization annotation
+  - protein subcellular localization
+  - subcellular localization
+  - DeepLoc
+  - DeepLoc 2.1
+  - SignalP
+  - SignalP 6.0
+  - TargetP
+  - TargetP 2.0
+  - signal peptide
+  - 是否有信号肽
+  - 蛋白信号肽
+  - cleavage site
+  - targeting peptide
+  - 定位信号
+  - mitochondrial transit peptide
+  - chloroplast transit peptide
+  - thylakoid transit peptide
+  - secretory pathway
+  - 亚细胞定位
+  - 预测亚细胞定位
+required_inputs:
+  - protein-localization-query
+optional_inputs:
+  - amino-acid-sequence
+  - protein-fasta
+  - localization-tool-selection
+  - localization-output-files
+  - output-dir
+  - species
+  - runtime-context
+input_mappings:
+  - protein-localization-query|query_tokens=amino acid sequence,protein sequence,protein fasta,subcellular localization,deeploc,signalp,targetp,signal peptide,targeting peptide,secretory pathway|script_flags=--sequence,--fasta,--deeploc-output,--signalp-output,--signalp-gff3,--targetp-output
+  - amino-acid-sequence|query_tokens=sequence,amino acid sequence,protein sequence,unknown sequence,氨基酸序列|script_flags=--sequence,--sequence-name,--allow-ambiguous-aa,--sanitize-invalid-to-x
+  - protein-fasta|query_tokens=fasta,proteins.fa,protein fasta,proteome,translated proteins,蛋白fasta|script_flags=--fasta
+  - localization-tool-selection|query_tokens=deeploc,deeploc 2.1,signalp,signalp 6.0,targetp,targetp 2.0,plant,non-plant,eukarya,other,fast,slow|script_flags=--tools,--deeploc-model,--signalp-mode,--signalp-organism,--targetp-organism
+  - localization-output-files|query_tokens=deeploc output,signalp output,signalp gff3,targetp output,prediction_results.txt,result table|script_flags=--deeploc-output,--signalp-output,--signalp-gff3,--targetp-output
+  - output-dir|query_tokens=output,outdir,results,tsv,json,plots,保存,输出目录|script_flags=--outdir,--no-plots
+  - species|query_tokens=organism,species,plant,eukarya,bacteria,archaea,物种|script_flags=--signalp-organism,--targetp-organism
+  - runtime-context|query_tokens=python,local runner,licensed software,dtu web,web submission,no internet,command template|script_flags=--execute,--deeploc-command-template,--signalp-command-template,--targetp-command-template
+required_env_any: []
+constraints:
+  - standard-output-includes-localization-summary-features-scores-and-result-json
+  - sequence-input-must-be-protein-not-nucleotide
+  - minimum-sequence-length-defaults-to-10-aa
+  - deeploc-is-eukaryotic-subcellular-localization-and-membrane-association
+  - signalp-predicts-signal-peptides-and-cleavage-sites-not-final-localization
+  - targetp-predicts-n-terminal-targeting-presequences-and-needs-plant-vs-non-plant-context
+  - dtu-local-downloads-may-require-license-and-should-not-be-auto-downloaded
+tools:
+  - scripts/protein_localization_signal_annotation.py
+tool_contracts:
+  - tool: scripts/protein_localization_signal_annotation.py
+    inputs:
+      - protein-localization-query
+      - localization-tool-selection
+      - optional-localization-output-files
+      - output-dir
+    outputs:
+      - protein-localization-summary-tsv
+      - protein-localization-features-tsv
+      - protein-localization-scores-tsv
+      - protein-localization-result-json
+      - optional-summary-plots-html-svg
+      - command-plan-shell-script
+    side_effects:
+      - writes-output-artifacts
+      - may-run-local-licensed-deeploc-signalp-targetp-commands-when-provided
+    failure_codes:
+      - 1
+priority_rules:
+  - prefer-when-user-mentions-deeploc-signalp-targetp-subcellular-localization-signal-peptide-cleavage-site-targeting-peptide-or-secretory-pathway
+  - prefer-when-task-needs-localization-or-n-terminal-sorting-signal-tables-from-protein-sequence
+  - do-not-use-for-transmembrane-topology-as-the-primary-task-use-protein-tm-topology-annotation

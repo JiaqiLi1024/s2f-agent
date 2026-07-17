@@ -1,0 +1,21 @@
+{
+  "input_sequence_text": ">toy1\nMKTIIALSYIFCLVFADYKDDDDKSLYNTVATLYCVHQRIDV\n>toy2\nACDEFGHIKLMNPQRSTVWYACDEFGHIK\n",
+  "alleles": [
+    "HLA-A*02:01",
+    "HLA-B*07:02"
+  ],
+  "peptide_length_range": [
+    9,
+    9
+  ],
+  "predictors": [
+    "netmhcpan_el",
+    "netmhcpan_ba"
+  ],
+  "processing": {
+    "predictor": "basic_processing",
+    "mhc_binding_method": "netmhcpan_ba",
+    "proteasome": "immuno"
+  },
+  "metadata_url": "https://api-nextgen-tools.iedb.org/api/v1/mhci"
+}

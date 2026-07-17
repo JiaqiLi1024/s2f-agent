@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Foldseek Web Databases</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: #17202a;
+      background: #f7f8fa;
+    }
+    main {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 28px 22px 44px;
+    }
+    h1 {
+      margin: 0 0 18px;
+      font-size: 28px;
+      font-weight: 650;
+    }
+    h2 {
+      margin-top: 28px;
+      font-size: 19px;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      background: white;
+    }
+    th, td {
+      border: 1px solid #d9dee7;
+      padding: 7px 9px;
+      text-align: left;
+      vertical-align: top;
+      font-size: 13px;
+    }
+    th {
+      background: #eef1f6;
+      font-weight: 650;
+    }
+    .summary {
+      max-width: 880px;
+      margin-bottom: 22px;
+    }
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid #d9dee7;
+      background: white;
+    }
+    a {
+      color: #0b5cad;
+    }
+    code {
+      background: #edf0f5;
+      padding: 2px 5px;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Foldseek Web Databases</h1>
+  <table class="summary">
+    <tbody>
+<tr><th>API</th><td>https://search.foldseek.com/api</td></tr>
+<tr><th>database_count</th><td>14</td></tr>
+    </tbody>
+  </table>
+<table border="1" class="dataframe hits">
+  <thead>
+    <tr style="text-align: right;">
+      <th>name</th>
+      <th>version</th>
+      <th>path</th>
+      <th>default</th>
+      <th>order</th>
+      <th>complex</th>
+      <th>motif</th>
+      <th>taxonomy</th>
+      <th>status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>AlphaFold/Proteome</td>
+      <td>v4</td>
+      <td>afdb-proteome_folddisco</td>
+      <td>True</td>
+      <td>0</td>
+      <td>False</td>
+      <td>True</td>
+      <td>True</td>
+      <td>COMPLETE</td>
+    </tr>
+    <tr>
+      <td>AlphaFold/UniProt50</td>
+      <td>v6</td>
+      <td>afdb50</td>
+      <td>True</td>
+      <td>0</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>COMPLETE</td>
+    </tr>
+    <tr>
+      <td>AlphaFold/UniProt50</td>
+      <td>v4</td>
+      <td>afdb50_folddisco</td>
+      <td>True</td>
+      <td>0</td>
+      <td>False</td>
+      <td>True</td>
+      <td>True</td>
+      <td>COMPLETE</td>
+    </tr>
+    <tr>
+      <td>BFVD</td>
+      <td>v2</td>
+      <td>BFVD_folddisco</td>
+      <td>True</td>
+      <td>0</td>
+      <td>False</td>
+      <td>True</td>
+      <td>True</td>
+      <td>COMPLETE</td>
+    </tr>
+    <tr>
+      <td>ESM30</td>
+      <td>v0</td>
+      <td>esm30_folddisco</td>
+      <td>True</td>
+      <td>0</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>COMPLETE</td>
+    </tr>
+    <tr>
+      <td>PDB</td>
+      <td>20250930</td>
+      <td>pdb_folddisco</td>
+      <td>True</td>
+      <td>0</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>COMPLETE</td>
+    </tr>
+    <tr>
+      <td>AlphaFold/Swiss-Prot</td>
+      <td>v6</td>
+      <td>afdb-swissprot</td>
+      <td>True</td>
+      <td>1</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>COMPLETE</td>
+    </tr>
+    <tr>
+      <td>AlphaFold/Proteome</td>
+      <td>v6</td>
+      <td>afdb-proteome</td>
+      <td>True</td>
+      <td>2</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>COMPLETE</td>
+    </tr>
+    <tr>
+      <td>BFVD</td>
+      <td>2023_02</td>
+      <td>BFVD</td>
+      <td>True</td>
+      <td>3</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>COMPLETE</td>
+    </tr>
+    <tr>
+      <td>CATH50</td>
+      <td>4.3.0</td>
+      <td>cath50</td>
+      <td>True</td>
+      <td>3</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>COMPLETE</td>
+    </tr>
+    <tr>
+      <td>MGnify-ESM30</td>
+      <td>v1</td>
+      <td>mgnify_esm30</td>
+      <td>True</td>
+      <td>3</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>COMPLETE</td>
+    </tr>
+    <tr>
+      <td>PDB100</td>
+      <td>20240101</td>
+      <td>pdb100</td>
+      <td>True</td>
+      <td>3</td>
+      <td>True</td>
+      <td>False</td>
+      <td>True</td>
+      <td>COMPLETE</td>
+    </tr>
+    <tr>
+      <td>BFMD</td>
+      <td>20240623</td>
+      <td>bfmd</td>
+      <td>True</td>
+      <td>4</td>
+      <td>True</td>
+      <td>False</td>
+      <td>True</td>
+      <td>COMPLETE</td>
+    </tr>
+    <tr>
+      <td>GMGCL</td>
+      <td>2204</td>
+      <td>gmgcl_id</td>
+      <td>True</td>
+      <td>4</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>COMPLETE</td>
+    </tr>
+  </tbody>
+</table>
+</main>
+</body>
+</html>

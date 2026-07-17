@@ -1,0 +1,203 @@
+{
+  "alignment": {
+    "close_threshold_A": 1.0,
+    "contact_maps": {
+      "n_contacts_gained": 26,
+      "n_contacts_lost": 54,
+      "n_contacts_structure1": 446,
+      "n_contacts_structure2": 418,
+      "outputs": {
+        "delta_contacts_png": "skills-testbed/outputs/AF-P04637-vs-Q00987/AF_P04637_vs_AF_Q00987.contact_map_delta.png",
+        "delta_contacts_tsv": "skills-testbed/outputs/AF-P04637-vs-Q00987/AF_P04637_vs_AF_Q00987.contact_map_delta.tsv",
+        "structure1_contacts_png": "skills-testbed/outputs/AF-P04637-vs-Q00987/AF_P04637_vs_AF_Q00987.contact_map_structure1.png",
+        "structure1_contacts_tsv": "skills-testbed/outputs/AF-P04637-vs-Q00987/AF_P04637_vs_AF_Q00987.contact_map_structure1.tsv",
+        "structure2_contacts_png": "skills-testbed/outputs/AF-P04637-vs-Q00987/AF_P04637_vs_AF_Q00987.contact_map_structure2.png",
+        "structure2_contacts_tsv": "skills-testbed/outputs/AF-P04637-vs-Q00987/AF_P04637_vs_AF_Q00987.contact_map_structure2.tsv"
+      },
+      "threshold_A": 5.0
+    },
+    "contact_threshold_A": 5.0,
+    "divergence_threshold_A": 3.0,
+    "global_rmsd_A": 42.041137,
+    "html_viewer": "skills-testbed/outputs/AF-P04637-vs-Q00987/AF_P04637_vs_AF_Q00987.superimposed.html",
+    "interface_contact_maps": null,
+    "label1": "AF_P04637",
+    "label2": "AF_Q00987",
+    "max_ca_dist_A": 83.395953,
+    "median_ca_dist_A": 38.28266,
+    "n_ca_pairs": 393,
+    "n_close": 0,
+    "n_contacts_gained": 26,
+    "n_contacts_lost": 54,
+    "n_contacts_structure1": 446,
+    "n_contacts_structure2": 418,
+    "n_divergent": 393,
+    "n_medium": 0,
+    "n_pae_plots": 2,
+    "pae": [
+      {
+        "json": "skills-testbed/outputs/AF-P04637-vs-Q00987/AF_P04637_vs_AF_Q00987.pae_structure1.json",
+        "label": "AF_P04637",
+        "matrix_shape": [
+          393,
+          393
+        ],
+        "max_predicted_aligned_error_A": 31.75,
+        "pdf": "skills-testbed/outputs/AF-P04637-vs-Q00987/AF_P04637_vs_AF_Q00987.pae_structure1.pdf",
+        "png": "skills-testbed/outputs/AF-P04637-vs-Q00987/AF_P04637_vs_AF_Q00987.pae_structure1.png",
+        "side": "structure1",
+        "source": "https://alphafold.ebi.ac.uk/files/AF-P04637-F1-predicted_aligned_error_v6.json",
+        "tsv": "skills-testbed/outputs/AF-P04637-vs-Q00987/AF_P04637_vs_AF_Q00987.pae_structure1.tsv"
+      },
+      {
+        "json": "skills-testbed/outputs/AF-P04637-vs-Q00987/AF_P04637_vs_AF_Q00987.pae_structure2.json",
+        "label": "AF_Q00987",
+        "matrix_shape": [
+          491,
+          491
+        ],
+        "max_predicted_aligned_error_A": 31.75,
+        "pdf": "skills-testbed/outputs/AF-P04637-vs-Q00987/AF_P04637_vs_AF_Q00987.pae_structure2.pdf",
+        "png": "skills-testbed/outputs/AF-P04637-vs-Q00987/AF_P04637_vs_AF_Q00987.pae_structure2.png",
+        "side": "structure2",
+        "source": "https://alphafold.ebi.ac.uk/files/AF-Q00987-F1-predicted_aligned_error_v6.json",
+        "tsv": "skills-testbed/outputs/AF-P04637-vs-Q00987/AF_P04637_vs_AF_Q00987.pae_structure2.tsv"
+      }
+    ],
+    "pairing_used": "resseq",
+    "pct_divergent": 100.0,
+    "rotation_matrix": [
+      [
+        -0.9073970382412565,
+        0.09008307149180925,
+        -0.4105065836519505
+      ],
+      [
+        -0.41501328482624256,
+        -0.03799155407289576,
+        0.9090217902981521
+      ],
+      [
+        0.0662916918529479,
+        0.9952093659375034,
+        0.07185909505098143
+      ]
+    ],
+    "superimposed_pdb": "skills-testbed/outputs/AF-P04637-vs-Q00987/AF_P04637_vs_AF_Q00987.superimposed.pdb",
+    "tmalign": null,
+    "translation_vector": [
+      -2.8759547901266624,
+      -6.329230454779755,
+      -10.41326736032365
+    ]
+  },
+  "finished_at": "2026-06-29T02:38:50Z",
+  "outputs": {
+    "contact_maps": [
+      "skills-testbed/outputs/AF-P04637-vs-Q00987/AF_P04637_vs_AF_Q00987.contact_map_structure1.tsv",
+      "skills-testbed/outputs/AF-P04637-vs-Q00987/AF_P04637_vs_AF_Q00987.contact_map_structure2.tsv",
+      "skills-testbed/outputs/AF-P04637-vs-Q00987/AF_P04637_vs_AF_Q00987.contact_map_delta.tsv"
+    ],
+    "html": [
+      "skills-testbed/outputs/AF-P04637-vs-Q00987/AF_P04637_vs_AF_Q00987.superimposed.html"
+    ],
+    "interface_contact_maps": [],
+    "pae": [
+      "skills-testbed/outputs/AF-P04637-vs-Q00987/AF_P04637_vs_AF_Q00987.pae_structure1.json",
+      "skills-testbed/outputs/AF-P04637-vs-Q00987/AF_P04637_vs_AF_Q00987.pae_structure1.tsv",
+      "skills-testbed/outputs/AF-P04637-vs-Q00987/AF_P04637_vs_AF_Q00987.pae_structure1.png",
+      "skills-testbed/outputs/AF-P04637-vs-Q00987/AF_P04637_vs_AF_Q00987.pae_structure1.pdf",
+      "skills-testbed/outputs/AF-P04637-vs-Q00987/AF_P04637_vs_AF_Q00987.pae_structure2.json",
+      "skills-testbed/outputs/AF-P04637-vs-Q00987/AF_P04637_vs_AF_Q00987.pae_structure2.tsv",
+      "skills-testbed/outputs/AF-P04637-vs-Q00987/AF_P04637_vs_AF_Q00987.pae_structure2.png",
+      "skills-testbed/outputs/AF-P04637-vs-Q00987/AF_P04637_vs_AF_Q00987.pae_structure2.pdf"
+    ],
+    "per_residue": [
+      "skills-testbed/outputs/AF-P04637-vs-Q00987/AF_P04637_vs_AF_Q00987.per_residue_rmsd.tsv"
+    ],
+    "plots": [
+      "skills-testbed/outputs/AF-P04637-vs-Q00987/AF_P04637_vs_AF_Q00987.per_residue_rmsd.png",
+      "skills-testbed/outputs/AF-P04637-vs-Q00987/AF_P04637_vs_AF_Q00987.per_residue_rmsd.pdf",
+      "skills-testbed/outputs/AF-P04637-vs-Q00987/AF_P04637_vs_AF_Q00987.contact_map_structure1.png",
+      "skills-testbed/outputs/AF-P04637-vs-Q00987/AF_P04637_vs_AF_Q00987.contact_map_structure1.pdf",
+      "skills-testbed/outputs/AF-P04637-vs-Q00987/AF_P04637_vs_AF_Q00987.contact_map_structure2.png",
+      "skills-testbed/outputs/AF-P04637-vs-Q00987/AF_P04637_vs_AF_Q00987.contact_map_structure2.pdf",
+      "skills-testbed/outputs/AF-P04637-vs-Q00987/AF_P04637_vs_AF_Q00987.contact_map_delta.png",
+      "skills-testbed/outputs/AF-P04637-vs-Q00987/AF_P04637_vs_AF_Q00987.contact_map_delta.pdf",
+      "skills-testbed/outputs/AF-P04637-vs-Q00987/AF_P04637_vs_AF_Q00987.pae_structure1.png",
+      "skills-testbed/outputs/AF-P04637-vs-Q00987/AF_P04637_vs_AF_Q00987.pae_structure1.pdf",
+      "skills-testbed/outputs/AF-P04637-vs-Q00987/AF_P04637_vs_AF_Q00987.pae_structure2.png",
+      "skills-testbed/outputs/AF-P04637-vs-Q00987/AF_P04637_vs_AF_Q00987.pae_structure2.pdf"
+    ],
+    "result": [
+      "skills-testbed/outputs/AF-P04637-vs-Q00987/protein_structure_align.result.json"
+    ],
+    "structures": [
+      "skills-testbed/outputs/AF-P04637-vs-Q00987/AF_P04637_vs_AF_Q00987.superimposed.pdb"
+    ],
+    "summary": [
+      "skills-testbed/outputs/AF-P04637-vs-Q00987/summary.txt",
+      "skills-testbed/outputs/AF-P04637-vs-Q00987/AF_P04637_vs_AF_Q00987.alignment_summary.tsv"
+    ],
+    "tmalign": []
+  },
+  "query": {
+    "chain1": "A",
+    "chain2": "A",
+    "close_threshold_A": 1.0,
+    "contact_maps": true,
+    "contact_threshold_A": 5.0,
+    "divergence_threshold_A": 3.0,
+    "file1": null,
+    "file2": null,
+    "interface_chain1": null,
+    "interface_chain2": null,
+    "interface_contact_threshold_A": 5.0,
+    "pae": true,
+    "pae1": null,
+    "pae2": null,
+    "pairing": "auto",
+    "pdb1": null,
+    "pdb2": null,
+    "prefix": "AF_P04637_vs_AF_Q00987",
+    "res_end": null,
+    "res_start": null,
+    "tmalign": false,
+    "tmalign_bin": "TMalign",
+    "uniprot1": "P04637",
+    "uniprot2": "Q00987",
+    "viewer": true
+  },
+  "skill": "protein-structure-align",
+  "sources": {
+    "structure1": {
+      "available_chains": [
+        "A"
+      ],
+      "kind": "alphafold_db",
+      "label": "AF_P04637",
+      "model_version": "",
+      "pae_doc_url": "https://alphafold.ebi.ac.uk/files/AF-P04637-F1-predicted_aligned_error_v6.json",
+      "pae_image_url": "https://alphafold.ebi.ac.uk/files/AF-P04637-F1-predicted_aligned_error_v6.png",
+      "path": "skills-testbed/outputs/AF-P04637-vs-Q00987/AF_P04637.pdb",
+      "requested": "P04637"
+    },
+    "structure2": {
+      "available_chains": [
+        "A"
+      ],
+      "kind": "alphafold_db",
+      "label": "AF_Q00987",
+      "model_version": "",
+      "pae_doc_url": "https://alphafold.ebi.ac.uk/files/AF-Q00987-F1-predicted_aligned_error_v6.json",
+      "pae_image_url": "https://alphafold.ebi.ac.uk/files/AF-Q00987-F1-predicted_aligned_error_v6.png",
+      "path": "skills-testbed/outputs/AF-P04637-vs-Q00987/AF_Q00987.pdb",
+      "requested": "Q00987"
+    }
+  },
+  "started_at": "2026-06-29T02:38:37Z",
+  "status": "completed_with_warnings",
+  "warnings": [
+    "TMalign skipped because --no-tmalign was set"
+  ]
+}

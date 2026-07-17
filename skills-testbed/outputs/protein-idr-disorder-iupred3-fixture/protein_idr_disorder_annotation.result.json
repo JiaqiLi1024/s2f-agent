@@ -1,0 +1,28 @@
+{
+  "commands_file": "skills-testbed/outputs/protein-idr-disorder-iupred3-fixture/commands.sh",
+  "counts": {
+    "records": 0,
+    "regions": 2,
+    "residue_score_rows": 40
+  },
+  "created_utc": "2026-07-01T08:08:50Z",
+  "errors": [],
+  "execute": true,
+  "execution": {},
+  "input_fasta": "skills-testbed/outputs/protein-idr-disorder-iupred3-fixture/normalized_input.fasta",
+  "iupred3_table_input": "",
+  "outputs": {
+    "regions_tsv": "skills-testbed/outputs/protein-idr-disorder-iupred3-fixture/protein_idr_regions.tsv",
+    "residue_scores_tsv": "skills-testbed/outputs/protein-idr-disorder-iupred3-fixture/protein_idr_residue_scores.tsv",
+    "result_json": "skills-testbed/outputs/protein-idr-disorder-iupred3-fixture/protein_idr_disorder_annotation.result.json",
+    "summary_tsv": "skills-testbed/outputs/protein-idr-disorder-iupred3-fixture/protein_idr_summary.tsv"
+  },
+  "plans": {},
+  "run_id": "query_sequence",
+  "skill": "protein-idr-disorder-annotation",
+  "status": "success",
+  "tools": [
+    "iupred3"
+  ],
+  "warnings": []
+}

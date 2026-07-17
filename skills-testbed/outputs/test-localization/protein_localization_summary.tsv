@@ -1,0 +1,2 @@
+query_id	length	sources	deeploc_top_localization	deeploc_localizations	deeploc_membrane_association	deeploc_signals	signalp_prediction	signalp_signal_peptide	signalp_cleavage_site	signalp_probability	targetp_prediction	targetp_presequence	targetp_cleavage_site	targetp_probability	integrated_localization	secretory_pathway_evidence	warnings
+test_secreted_protein	24														no_localization_prediction		

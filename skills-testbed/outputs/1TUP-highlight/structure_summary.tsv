@@ -1,0 +1,2 @@
+structure_id	pdb_path	is_alphafold	chain_used	n_residues	modules	highlight_html	n_highlighted_residues	n_missing_highlight_residues	highlight_secondary	n_highlighted_secondary_residues
+1TUP	skills-testbed/outputs/1TUP-highlight/1TUP.pdb	False	A	585	highlight	skills-testbed/outputs/1TUP-highlight/1TUP.highlight.html	2	0		0

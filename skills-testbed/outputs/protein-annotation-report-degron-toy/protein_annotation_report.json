@@ -1,0 +1,23 @@
+{
+  "counts": {
+    "feature_rows": 12,
+    "summary_rows": 1
+  },
+  "created_utc": "2026-07-06T02:51:48Z",
+  "errors": [],
+  "outputs": {
+    "features_tsv": "skills-testbed/outputs/protein-annotation-report-degron-toy/protein_annotation_features.tsv",
+    "raw_uniprot_json": [],
+    "report_json": "skills-testbed/outputs/protein-annotation-report-degron-toy/protein_annotation_report.json",
+    "summary_tsv": "skills-testbed/outputs/protein-annotation-report-degron-toy/protein_annotation_summary.tsv"
+  },
+  "run_id": "toy_degron",
+  "skill": "protein-annotation-report",
+  "source_files": [
+    "skills-testbed/inputs/protein-degron-annotation/toy_degron.fasta",
+    "skills-testbed/outputs/protein-degron-annotation-toy/protein_degron_annotation.result.json",
+    "skills-testbed/outputs/protein-degron-annotation-toy/protein_degron_features.tsv"
+  ],
+  "status": "success",
+  "warnings": []
+}

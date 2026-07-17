@@ -1,0 +1,15 @@
+Protein Structure Foldseek Web/API
+status: ok
+ticket: _uJvpCCEvjnjQzKNa20-qhiXQ3VFQyRhPBYvwA
+api_base: https://search.foldseek.com/api
+query: /Users/qinti/Project/S2F_agent/skills-testbed/outputs/1AKE-foldseek-api-search/query/1AKE_A.pdb
+databases: pdb100,afdb50
+mode: 3diaa
+hits: 1613
+top_hit: AF-A0A0P9V876-F1-model_v6 Adenylate kinase
+outputs:
+- api_result_json: /Users/qinti/Project/S2F_agent/skills-testbed/outputs/1AKE-foldseek-api-search/1AKE_A_foldseek_api.foldseek_web_result.json
+- hits_tsv: /Users/qinti/Project/S2F_agent/skills-testbed/outputs/1AKE-foldseek-api-search/1AKE_A_foldseek_api.foldseek_web_hits.tsv
+- protein_structure_foldseek_web.result.json: /Users/qinti/Project/S2F_agent/skills-testbed/outputs/1AKE-foldseek-api-search/protein_structure_foldseek_web.result.json
+- results_html: /Users/qinti/Project/S2F_agent/skills-testbed/outputs/1AKE-foldseek-api-search/1AKE_A_foldseek_api.foldseek_web_results.html
+- top_hits_tsv: /Users/qinti/Project/S2F_agent/skills-testbed/outputs/1AKE-foldseek-api-search/1AKE_A_foldseek_api.foldseek_web_top_hits.tsv

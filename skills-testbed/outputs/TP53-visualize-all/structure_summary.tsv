@@ -1,0 +1,2 @@
+structure_id	pdb_path	is_alphafold	chain_used	n_residues	modules	n_pockets_found	top_pocket_residues	conservation_residues	mean_conservation	n_ppi_partners
+AF_P04637	skills-testbed/outputs/TP53-visualize-all/AF_P04637.pdb	True	A	393	bfactor,conservation,contact_map,pocket,ppi,secondary,view	5	12	393	0.5	100

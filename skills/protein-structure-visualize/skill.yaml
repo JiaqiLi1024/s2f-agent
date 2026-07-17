@@ -1,0 +1,99 @@
+schema_version: 1
+id: protein-structure-visualize
+title: Protein Structure Visualize
+path: skills/protein-structure-visualize
+status: active
+family: protein-structure-visualization
+tasks:
+  - protein-structure-visualization
+  - protein-contact-map
+  - protein-pocket-detection
+  - protein-structure-confidence
+  - protein-secondary-structure
+  - protein-structure-highlight
+  - protein-conservation
+  - protein-ppi-network
+  - troubleshooting
+triggers:
+  - protein-structure-visualize
+  - protein visualizer
+  - protein structure viewer
+  - protein 3d viewer
+  - 3d structure
+  - contact map
+  - bfactor
+  - plddt
+  - secondary structure
+  - highlight residues
+  - residue highlight
+  - secondary structure highlight
+  - binding pocket
+  - pocket detection
+  - conservation
+  - color by conservation
+  - conservation coloring
+  - structure conservation coloring
+  - string ppi
+required_inputs:
+  - protein-structure-source
+optional_inputs:
+  - gene-symbol
+  - uniprot-accession
+  - chain-id
+  - residue-range
+  - protein-residue-selection
+  - secondary-structure-selection
+  - requested-outputs
+  - output-dir
+  - compute-constraints
+  - runtime-context
+input_mappings:
+  - protein-structure-source|query_tokens=pdb id,pdb-file,local pdb,alphafold,structure file,3d structure|script_flags=--pdb-id,--uniprot,--pdb-file
+  - gene-symbol|query_tokens=gene,symbol,gene name,ppi,string,基因,基因名|script_flags=--gene
+  - uniprot-accession|query_tokens=uniprot,accession,alphafold,plddt,conservation,蛋白编号|script_flags=--uniprot,--uniprot-for-conservation
+  - chain-id|query_tokens=chain,chain id,链|script_flags=--chain
+  - residue-range|query_tokens=residue range,zoom,start,end,domain,位点范围|script_flags=--zoom-start,--zoom-end
+  - protein-residue-selection|query_tokens=residue highlight,highlight residues,site,position,mutation site,位点,高亮位点|script_flags=--highlight-residues,--highlight-color,--no-highlight-labels
+  - secondary-structure-selection|query_tokens=highlight helix,highlight sheet,highlight coil,secondary highlight,helix,sheet,coil|script_flags=--highlight-secondary
+  - requested-outputs|query_tokens=viewer,highlight,contact map,bfactor,plddt,secondary,pocket,conservation,ppi,plot,html|script_flags=--modules,--color-scheme,--contact-threshold,--top-pockets
+  - output-dir|query_tokens=output,outdir,save,输出目录|script_flags=--outdir
+constraints:
+  - exactly-one-structure-source-required
+  - runtime-requires-biopython-matplotlib-networkx-numpy-pandas-py3dmol-requests
+  - dssp-mkdssp-optional-secondary-structure-fallback
+  - conservation-and-ppi-call-public-network-services
+  - pocket-detection-is-heuristic-not-docking
+tools:
+  - scripts/protein_structure_visualize.py
+tool_contracts:
+  - tool: scripts/protein_structure_visualize.py
+    inputs:
+      - protein-structure-source
+    optional:
+      - gene-symbol
+      - uniprot-accession
+      - chain-id
+      - residue-range
+      - protein-residue-selection
+      - secondary-structure-selection
+      - requested-outputs
+      - output-dir
+    outputs:
+      - protein-structure-visualization-result-json
+      - html-viewer
+      - highlight-html-viewer
+      - static-structure-plots
+      - residue-level-tables
+      - ppi-network-table
+    side_effects:
+      - writes-output-directory
+      - performs-public-api-requests-for-remote-sources
+    failure_codes:
+      - 1
+      - 2
+      - 3
+priority_rules:
+  - use-after-protein-structure-get-when-only-gene-symbol-is-provided
+  - prefer-when-user-asks-for-visualization-contact-map-plddt-pocket-conservation-or-ppi
+  - prefer-when-user-asks-to-highlight-residue-sites-or-secondary-structure
+  - do-not-use-for-de-novo-structure-prediction-docking-or-molecular-dynamics

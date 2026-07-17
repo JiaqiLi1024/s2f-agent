@@ -1,0 +1,66 @@
+{
+  "commands_file": "skills-testbed/outputs/protein-idr-disorder-dryrun/commands.sh",
+  "counts": {
+    "records": 1,
+    "regions": 0,
+    "residue_score_rows": 0
+  },
+  "created_utc": "2026-07-01T08:08:50Z",
+  "errors": [],
+  "execute": false,
+  "execution": {},
+  "input_fasta": "skills-testbed/outputs/protein-idr-disorder-dryrun/normalized_input.fasta",
+  "iupred3_table_input": "",
+  "outputs": {
+    "regions_tsv": "skills-testbed/outputs/protein-idr-disorder-dryrun/protein_idr_regions.tsv",
+    "residue_scores_tsv": "skills-testbed/outputs/protein-idr-disorder-dryrun/protein_idr_residue_scores.tsv",
+    "result_json": "skills-testbed/outputs/protein-idr-disorder-dryrun/protein_idr_disorder_annotation.result.json",
+    "summary_tsv": "skills-testbed/outputs/protein-idr-disorder-dryrun/protein_idr_summary.tsv"
+  },
+  "plans": {
+    "aiupred": {
+      "commands": [
+        [
+          "aiupred",
+          "-i",
+          "skills-testbed/outputs/protein-idr-disorder-dryrun/normalized_input.fasta",
+          "-o",
+          "skills-testbed/outputs/protein-idr-disorder-dryrun/aiupred/aiupred.tsv"
+        ]
+      ],
+      "expected_files": [
+        "skills-testbed/outputs/protein-idr-disorder-dryrun/aiupred/aiupred.tsv"
+      ],
+      "outdir": "skills-testbed/outputs/protein-idr-disorder-dryrun/aiupred"
+    },
+    "metapredict": {
+      "commands": [
+        [
+          "metapredict-predict-disorder",
+          "skills-testbed/outputs/protein-idr-disorder-dryrun/normalized_input.fasta",
+          "-o",
+          "skills-testbed/outputs/protein-idr-disorder-dryrun/metapredict/metapredict_disorder.tsv"
+        ],
+        [
+          "metapredict-predict-idrs",
+          "skills-testbed/outputs/protein-idr-disorder-dryrun/normalized_input.fasta",
+          "-o",
+          "skills-testbed/outputs/protein-idr-disorder-dryrun/metapredict/metapredict_idrs.tsv"
+        ]
+      ],
+      "expected_files": [
+        "skills-testbed/outputs/protein-idr-disorder-dryrun/metapredict/metapredict_disorder.tsv",
+        "skills-testbed/outputs/protein-idr-disorder-dryrun/metapredict/metapredict_idrs.tsv"
+      ],
+      "outdir": "skills-testbed/outputs/protein-idr-disorder-dryrun/metapredict"
+    }
+  },
+  "run_id": "test_idr",
+  "skill": "protein-idr-disorder-annotation",
+  "status": "planned",
+  "tools": [
+    "metapredict",
+    "aiupred"
+  ],
+  "warnings": []
+}

@@ -1,0 +1,54 @@
+{
+  "counts": {
+    "plots": 4,
+    "regions": 6,
+    "residue_states": 96,
+    "summary_rows": 1
+  },
+  "execution": {},
+  "inputs": {
+    "fasta": [
+      "skills-testbed/inputs/protein-tm-topology/tm_test.fasta"
+    ],
+    "gff3": [
+      "skills-testbed/inputs/protein-tm-topology/deeptmhmm_minimal.gff3"
+    ],
+    "normalized_fasta": "skills-testbed/outputs/protein-tm-topology-compare/normalized_input.fasta",
+    "sequence_count": 0,
+    "sequence_sha256": "ff7eb0a602eee6a815102baf078874684d87813669825ba662ab252c708e73f0",
+    "tmhmm_output": [
+      "skills-testbed/inputs/protein-tm-topology/tmhmm_minimal.long.txt"
+    ]
+  },
+  "outputs": {
+    "commands": "skills-testbed/outputs/protein-tm-topology-compare/commands.sh",
+    "native_plots": [],
+    "plots": [
+      "skills-testbed/outputs/protein-tm-topology-compare/plots/tm_test.DeepTMHMM.tm_topology.svg",
+      "skills-testbed/outputs/protein-tm-topology-compare/plots/tm_test.DeepTMHMM.tm_topology.html",
+      "skills-testbed/outputs/protein-tm-topology-compare/plots/tm_test.TMHMM.tm_topology.svg",
+      "skills-testbed/outputs/protein-tm-topology-compare/plots/tm_test.TMHMM.tm_topology.html"
+    ],
+    "regions_tsv": "skills-testbed/outputs/protein-tm-topology-compare/protein_tm_topology_regions.tsv",
+    "residue_states_tsv": "skills-testbed/outputs/protein-tm-topology-compare/protein_tm_topology_residue_states.tsv",
+    "result_json": "skills-testbed/outputs/protein-tm-topology-compare/protein_tm_topology_annotation.result.json",
+    "summary_tsv": "skills-testbed/outputs/protein-tm-topology-compare/protein_tm_topology_summary.tsv"
+  },
+  "run_id": "protein-tm-topology-compare",
+  "skill": "protein-tm-topology-annotation",
+  "tmhmm_metadata": {
+    "tm_test": {
+      "expected_tm_aas": "22.0",
+      "expected_tm_aas_first60": "22.0",
+      "length": "48",
+      "n_in_probability": "0.99000",
+      "possible_n_term_signal_sequence": "true",
+      "predicted_tmhs": "1"
+    }
+  },
+  "tools": [
+    "tmhmm",
+    "deeptmhmm"
+  ],
+  "warnings": []
+}

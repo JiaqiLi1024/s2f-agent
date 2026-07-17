@@ -1,5 +1,5 @@
 schema_version: 1
-updated_at: "2026-04-16"
+updated_at: "2026-07-06"
 task_aliases:
   setup: environment-setup
   general-troubleshooting: troubleshooting
@@ -47,6 +47,256 @@ contracts:
       - species
       - assembly
       - sequence-or-interval
+  protein-structure-lookup:
+    canonical_required_inputs:
+      - protein-structure-query
+    required_inputs:
+      - protein-structure-query
+  protein-structure-visualization:
+    canonical_required_inputs:
+      - protein-structure-source
+    required_inputs:
+      - protein-structure-source
+  protein-structure-alignment:
+    canonical_required_inputs:
+      - protein-structure-pair
+    required_inputs:
+      - protein-structure-pair
+  protein-domain-motif-annotation:
+    canonical_required_inputs:
+      - protein-fasta
+    required_inputs:
+      - protein-fasta
+  protein-family-annotation:
+    canonical_required_inputs:
+      - protein-fasta
+    required_inputs:
+      - protein-fasta
+  protein-orthology-annotation:
+    canonical_required_inputs:
+      - protein-fasta
+    required_inputs:
+      - protein-fasta
+  protein-go-pathway-annotation:
+    canonical_required_inputs:
+      - protein-fasta
+    required_inputs:
+      - protein-fasta
+  protein-conservation-assessment:
+    canonical_required_inputs:
+      - protein-conservation-query
+    required_inputs:
+      - protein-conservation-query
+  protein-homolog-search:
+    canonical_required_inputs:
+      - protein-conservation-query
+    required_inputs:
+      - protein-conservation-query
+  protein-msa-conservation:
+    canonical_required_inputs:
+      - protein-conservation-query
+    required_inputs:
+      - protein-conservation-query
+  protein-conserved-region-annotation:
+    canonical_required_inputs:
+      - protein-conservation-query
+    required_inputs:
+      - protein-conservation-query
+  protein-conservation-report:
+    canonical_required_inputs:
+      - protein-conservation-query
+    required_inputs:
+      - protein-conservation-query
+  protein-degron-annotation:
+    canonical_required_inputs:
+      - protein-degron-query
+    required_inputs:
+      - protein-degron-query
+  protein-degradation-signal-annotation:
+    canonical_required_inputs:
+      - protein-degron-query
+    required_inputs:
+      - protein-degron-query
+  protein-elm-degron-scan:
+    canonical_required_inputs:
+      - protein-degron-query
+    required_inputs:
+      - protein-degron-query
+  protein-degronopedia-annotation:
+    canonical_required_inputs:
+      - protein-degron-query
+    required_inputs:
+      - protein-degron-query
+  protein-qcdpred-degron-prediction:
+    canonical_required_inputs:
+      - protein-degron-query
+    required_inputs:
+      - protein-degron-query
+  protein-degron-report:
+    canonical_required_inputs:
+      - protein-degron-query
+    required_inputs:
+      - protein-degron-query
+  protein-immunopresentation-annotation:
+    canonical_required_inputs:
+      - protein-immunopresentation-query
+    required_inputs:
+      - protein-immunopresentation-query
+  protein-mhci-peptide-prediction:
+    canonical_required_inputs:
+      - protein-immunopresentation-query
+    required_inputs:
+      - protein-immunopresentation-query
+  protein-iedb-mhci-annotation:
+    canonical_required_inputs:
+      - protein-immunopresentation-query
+    required_inputs:
+      - protein-immunopresentation-query
+  protein-hla-binder-annotation:
+    canonical_required_inputs:
+      - protein-immunopresentation-query
+    required_inputs:
+      - protein-immunopresentation-query
+  protein-immunogenicity-candidate-annotation:
+    canonical_required_inputs:
+      - protein-immunopresentation-query
+    required_inputs:
+      - protein-immunopresentation-query
+  protein-epitope-candidate-report:
+    canonical_required_inputs:
+      - protein-immunopresentation-query
+    required_inputs:
+      - protein-immunopresentation-query
+  protein-annotation-summary:
+    canonical_required_inputs:
+      - protein-fasta
+    required_inputs:
+      - protein-fasta
+  protein-annotation-report:
+    canonical_required_inputs:
+      - protein-annotation-query
+    required_inputs:
+      - protein-annotation-query
+  protein-uniprot-annotation:
+    canonical_required_inputs:
+      - protein-annotation-query
+    required_inputs:
+      - protein-annotation-query
+  protein-functional-annotation:
+    canonical_required_inputs:
+      - protein-annotation-query
+    required_inputs:
+      - protein-annotation-query
+  protein-llps-report:
+    canonical_required_inputs:
+      - protein-annotation-query
+    required_inputs:
+      - protein-annotation-query
+  protein-aggregation-report:
+    canonical_required_inputs:
+      - protein-annotation-query
+    required_inputs:
+      - protein-annotation-query
+  protein-idr-disorder-annotation:
+    canonical_required_inputs:
+      - protein-disorder-query
+    required_inputs:
+      - protein-disorder-query
+  protein-disorder-composition:
+    canonical_required_inputs:
+      - protein-disorder-query
+    required_inputs:
+      - protein-disorder-query
+  protein-idr-region-calling:
+    canonical_required_inputs:
+      - protein-disorder-query
+    required_inputs:
+      - protein-disorder-query
+  protein-disordered-binding-annotation:
+    canonical_required_inputs:
+      - protein-disorder-query
+    required_inputs:
+      - protein-disorder-query
+  protein-linker-annotation:
+    canonical_required_inputs:
+      - protein-disorder-query
+    required_inputs:
+      - protein-disorder-query
+  protein-redox-disorder-annotation:
+    canonical_required_inputs:
+      - protein-disorder-query
+    required_inputs:
+      - protein-disorder-query
+  protein-llps-annotation:
+    canonical_required_inputs:
+      - protein-disorder-query
+    required_inputs:
+      - protein-disorder-query
+  protein-aggregation-prone-region-annotation:
+    canonical_required_inputs:
+      - protein-disorder-query
+    required_inputs:
+      - protein-disorder-query
+  protein-disorder-visualization:
+    canonical_required_inputs:
+      - protein-disorder-query
+    required_inputs:
+      - protein-disorder-query
+  protein-localization-signal-annotation:
+    canonical_required_inputs:
+      - protein-localization-query
+    required_inputs:
+      - protein-localization-query
+  protein-subcellular-localization:
+    canonical_required_inputs:
+      - protein-localization-query
+    required_inputs:
+      - protein-localization-query
+  protein-signal-peptide-annotation:
+    canonical_required_inputs:
+      - protein-localization-query
+    required_inputs:
+      - protein-localization-query
+  protein-targeting-peptide-annotation:
+    canonical_required_inputs:
+      - protein-localization-query
+    required_inputs:
+      - protein-localization-query
+  protein-secretory-pathway-annotation:
+    canonical_required_inputs:
+      - protein-localization-query
+    required_inputs:
+      - protein-localization-query
+  protein-tm-topology-annotation:
+    canonical_required_inputs:
+      - protein-tm-query
+    required_inputs:
+      - protein-tm-query
+  protein-transmembrane-region-annotation:
+    canonical_required_inputs:
+      - protein-tm-query
+    required_inputs:
+      - protein-tm-query
+  protein-topology-annotation:
+    canonical_required_inputs:
+      - protein-tm-query
+    required_inputs:
+      - protein-tm-query
+  protein-localization-topology:
+    canonical_required_inputs:
+      - protein-tm-query
+    required_inputs:
+      - protein-tm-query
+  protein-tm-residue-state-annotation:
+    canonical_required_inputs:
+      - protein-tm-query
+    required_inputs:
+      - protein-tm-query
+  protein-tm-plot:
+    canonical_required_inputs:
+      - protein-tm-query
+    required_inputs:
+      - protein-tm-query
   troubleshooting:
     canonical_required_inputs:
       - failing-step-or-error

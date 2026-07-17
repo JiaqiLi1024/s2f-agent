@@ -1,5 +1,5 @@
 schema_version: 1
-updated_at: "2026-04-17"
+updated_at: "2026-07-06"
 cases:
   - id: route_001
     query: "Use $dnabert2 to validate my train/dev/test CSV and suggest model_max_length."
@@ -118,3 +118,60 @@ cases:
     expected_secondary_skills:
       - dnabert2
     task: fine-tuning
+  - id: route_024
+    query: "Compare protein structures 1AKE and 4AKE by RMSD and superimpose chain A."
+    expected_primary_skill: protein-structure-align
+    expected_secondary_skills: []
+    task: protein-structure-alignment
+  - id: route_025
+    query: "Compare two protein complex PDB files and make an interface contact map between chains A and B."
+    expected_primary_skill: protein-structure-align
+    expected_secondary_skills: []
+    task: protein-structure-alignment
+  - id: route_026
+    query: "Use Foldseek to search similar protein structures for query.pdb against structures/."
+    expected_primary_skill: protein-structure-align
+    expected_secondary_skills: []
+    task: protein-structure-alignment
+  - id: route_027
+    query: "Cluster protein structures in structures/ by structural similarity."
+    expected_primary_skill: protein-structure-align
+    expected_secondary_skills: []
+    task: protein-structure-alignment
+  - id: route_028
+    query: "Assess evolutionary conservation for this unknown protein sequence with jackhmmer, MAFFT, and Biotite plots."
+    expected_primary_skill: protein-conservation-assessment
+    expected_secondary_skills:
+      - protein-structure-visualize
+    task: protein-conservation-assessment
+  - id: route_029
+    query: "Color this AlphaFold structure by conservation."
+    expected_primary_skill: protein-structure-visualize
+    expected_secondary_skills: []
+    task: protein-structure-visualization
+  - id: route_030
+    query: "Find degron degradation signals in this unknown protein sequence using ELM and DEGRONOPEDIA."
+    expected_primary_skill: protein-degron-annotation
+    expected_secondary_skills: []
+    task: protein-degron-annotation
+  - id: route_031
+    query: "Summarize protein_degron_features.tsv into a protein annotation report."
+    expected_primary_skill: protein-annotation-report
+    expected_secondary_skills:
+      - protein-degron-annotation
+    task: protein-annotation-report
+  - id: route_032
+    query: "Use the Foldseek web API to search similar structures for public query.pdb and return an HTML result."
+    expected_primary_skill: protein-structure-align
+    expected_secondary_skills: []
+    task: protein-structure-alignment
+  - id: route_033
+    query: "Predict quality-control degron intervals in this unknown sequence with QCDPred."
+    expected_primary_skill: protein-degron-annotation
+    expected_secondary_skills: []
+    task: protein-degron-annotation
+  - id: route_034
+    query: "Predict MHC-I immunopresentation candidates from proteins.fa using IEDB Class I, HLA-A*02:01, NetMHCpan EL and BA ranks."
+    expected_primary_skill: protein-immunopresentation-annotation
+    expected_secondary_skills: []
+    task: protein-immunopresentation-annotation

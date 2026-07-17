@@ -1,0 +1,35 @@
+{
+  "api_base": "https://search.foldseek.com/api",
+  "backend": "foldseek-web-api",
+  "database_count": 14,
+  "errors": [],
+  "inputs": {
+    "databases": [
+      "afdb50"
+    ],
+    "outdir": "/Users/qinti/Project/S2F_agent/skills-testbed/outputs/1AKE-foldseek-api-search/databases",
+    "query": ""
+  },
+  "outputs": {
+    "databases_html": "/Users/qinti/Project/S2F_agent/skills-testbed/outputs/1AKE-foldseek-api-search/databases/foldseek_web_databases.html",
+    "databases_json": "/Users/qinti/Project/S2F_agent/skills-testbed/outputs/1AKE-foldseek-api-search/databases/foldseek_web_databases.json",
+    "databases_tsv": "/Users/qinti/Project/S2F_agent/skills-testbed/outputs/1AKE-foldseek-api-search/databases/foldseek_web_databases.tsv",
+    "protein_structure_foldseek_web.result.json": "/Users/qinti/Project/S2F_agent/skills-testbed/outputs/1AKE-foldseek-api-search/databases/protein_structure_foldseek_web.result.json"
+  },
+  "parameters": {
+    "confirm_remote_upload": false,
+    "download_archive": false,
+    "email": "",
+    "endpoint_suffix": "",
+    "entry": 0,
+    "foldseek_mode": "3diaa",
+    "taxfilter": "",
+    "top_n": 25
+  },
+  "script": "protein_structure_foldseek_web.py",
+  "skill": "protein-structure-align",
+  "started_at": "2026-07-05T07:57:39Z",
+  "status": "ok",
+  "warnings": [],
+  "web_base": "https://search.foldseek.com"
+}

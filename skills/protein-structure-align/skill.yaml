@@ -1,0 +1,208 @@
+schema_version: 1
+id: protein-structure-align
+title: Protein Structure Align
+path: skills/protein-structure-align
+status: active
+family: protein-structure-alignment
+tasks:
+  - protein-structure-alignment
+  - protein-rmsd-comparison
+  - protein-tm-score
+  - protein-pae-analysis
+  - protein-contact-map-comparison
+  - protein-interface-contact-map
+  - protein-structure-similarity-search
+  - protein-structure-clustering
+  - protein-conformation-comparison
+  - troubleshooting
+triggers:
+  - protein-structure-align
+  - protein structure alignment
+  - structure alignment
+  - protein alignment
+  - align protein structures
+  - superimpose protein structures
+  - superimpose structures
+  - rmsd
+  - tm score
+  - tm-score
+  - tmalign
+  - foldseek
+  - foldseek api
+  - foldseek web
+  - foldseek web api
+  - foldseek webserver
+  - online foldseek
+  - remote foldseek
+  - structure search
+  - structure similarity search
+  - protein structure search
+  - protein structure similarity
+  - search similar protein structures
+  - search similar structures
+  - web structure similarity search
+  - html foldseek results
+  - cluster protein structures
+  - protein structure clustering
+  - structural clustering
+  - all-vs-all structure comparison
+  - predicted aligned error
+  - pae
+  - pae plot
+  - contact map comparison
+  - contact map delta
+  - interface contact map
+  - ppi contact map
+  - protein-protein interface
+  - ca rmsd
+  - c-alpha rmsd
+  - apo holo comparison
+  - wt mutant structure comparison
+required_inputs:
+  - protein-structure-pair
+optional_inputs:
+  - chain-id
+  - residue-range
+  - structure-pairing-mode
+  - requested-outputs
+  - pae-source
+  - interface-chain-pair
+  - foldseek-query
+  - foldseek-target
+  - foldseek-database-choice
+  - foldseek-api-base
+  - foldseek-web-database
+  - remote-upload-consent
+  - installation-approval
+  - structure-set
+  - output-dir
+  - runtime-context
+input_mappings:
+  - protein-structure-pair|query_tokens=two structures,pdb1,pdb2,file1,file2,uniprot1,uniprot2,apo,holo,wt,mutant,compare structures|script_flags=--pdb1,--pdb2,--uniprot1,--uniprot2,--file1,--file2
+  - chain-id|query_tokens=chain,chain id,chain1,chain2,链|script_flags=--chain1,--chain2
+  - residue-range|query_tokens=residue range,domain,core,res-start,res-end,位点范围|script_flags=--res-start,--res-end
+  - structure-pairing-mode|query_tokens=pairing,numbering,by order,by residue,renumbered|script_flags=--pairing
+  - requested-outputs|query_tokens=rmsd,tm-score,tmalign,per-residue rmsd,contact map,contact map delta,interface contact map,ppi contact map,superimposed pdb,html,viewer,plot,pae|script_flags=--close-threshold,--divergence-threshold,--contact-threshold,--no-contact-maps,--interface-chain1,--interface-chain2,--interface-contact-threshold,--tmalign-bin,--no-tmalign,--no-viewer
+  - pae-source|query_tokens=pae,predicted aligned error,pae json,pae plot|script_flags=--pae1,--pae2,--no-pae
+  - interface-chain-pair|query_tokens=interface chain,ppi chain,chain interface,chains in complex,hypothetical complex|script_flags=--chain1,--chain2,--no-contact-maps,--interface-chain1,--interface-chain2,--interface-contact-threshold
+  - foldseek-query|query_tokens=foldseek query,query pdb,query structure,search this structure,similar structures|script_flags=--mode search,--query
+  - foldseek-target|query_tokens=foldseek target,target database,target folder,search database,pdb database,alphafold database|script_flags=--target
+  - foldseek-database-choice|query_tokens=pdb database,alphafold database,uniprot database,local structure database,download database|script_flags=foldseek databases PDB,foldseek databases Alphafold/UniProt,--target
+  - foldseek-api-base|query_tokens=foldseek api,foldseek web api,search.foldseek.com,online foldseek,remote foldseek|script_flags=--api-base
+  - foldseek-web-database|query_tokens=afdb50,pdb100,afdb-swissprot,afdb-proteome,foldseek web database|script_flags=--database
+  - remote-upload-consent|query_tokens=public structure,ok to upload,confirm remote upload,upload to foldseek web,web api submission|script_flags=--confirm-remote-upload
+  - installation-approval|query_tokens=install foldseek,download foldseek database,create foldseek database,build foldseek index|script_flags=conda install,foldseek databases,foldseek createdb,foldseek createindex
+  - structure-set|query_tokens=structure set,structure folder,cluster these structures,cluster protein structures,all-vs-all structures|script_flags=--mode cluster,--query
+  - output-dir|query_tokens=output,outdir,save,输出目录|script_flags=--outdir
+constraints:
+  - exactly-two-structure-sources-required
+  - aligns-existing-structures-not-sequences
+  - c-alpha-superposition-rigid-body-only
+  - default-pairing-requires-overlapping-residue-numbering
+  - use-chain-and-residue-range-to-avoid-domain-or-chain-mismatch
+  - runtime-requires-biopython-matplotlib-numpy-pandas-py3dmol-requests
+  - tmalign-binary-optional-for-tm-score
+  - foldseek-binary-required-for-structure-search-or-clustering
+  - remote-foldseek-web-api-does-not-require-local-foldseek-installation
+  - foldseek-web-api-uploads-query-structure-to-remote-server
+  - foldseek-web-results-can-be-rendered-as-local-html-report
+  - ask-before-installing-foldseek-or-downloading-large-foldseek-databases
+  - run-foldseek-directly-only-when-binary-query-and-target-are-available
+  - similar-structure-search-with-missing-target-requires-database-choice
+  - foldseek-search-and-cluster-use-external-foldseek-not-internal-rmsd-superposition
+  - pae-requires-alphafold-db-or-local-pae-json
+  - interface-contact-map-uses-structure1-vs-aligned-structure2-not-internal-contact-maps
+tools:
+  - scripts/protein_structure_align.py
+  - scripts/protein_structure_foldseek.py
+  - scripts/protein_structure_foldseek_web.py
+tool_contracts:
+  - tool: scripts/protein_structure_align.py
+    inputs:
+      - protein-structure-pair
+    optional:
+      - chain-id
+      - residue-range
+      - structure-pairing-mode
+      - requested-outputs
+      - pae-source
+      - interface-chain-pair
+      - output-dir
+    outputs:
+      - protein-structure-align-result-json
+      - alignment-summary-tsv
+      - per-residue-rmsd-tsv
+      - per-residue-rmsd-plot
+      - optional-tmalign-tm-score
+      - contact-map-heatmaps
+      - interface-contact-map-heatmaps
+      - optional-aligned-complex-pdb
+      - optional-pae-plots
+      - superimposed-pdb
+      - optional-superimposed-html-viewer
+    side_effects:
+      - writes-output-directory
+      - performs-public-api-requests-for-remote-sources
+    failure_codes:
+      - 1
+      - 2
+      - 3
+  - tool: scripts/protein_structure_foldseek.py
+    inputs:
+      - foldseek-query
+    optional:
+      - foldseek-target
+      - foldseek-database-choice
+      - installation-approval
+      - structure-set
+      - requested-outputs
+      - output-dir
+      - runtime-context
+    outputs:
+      - protein-structure-foldseek-result-json
+      - foldseek-search-tsv
+      - foldseek-top-hits-tsv
+      - foldseek-cluster-tsv
+      - foldseek-cluster-summary-tsv
+      - optional-foldseek-html-or-multimer-report
+    side_effects:
+      - writes-output-directory
+      - runs-external-foldseek-binary
+      - may-require-user-approved-installation-or-database-download
+    failure_codes:
+      - 1
+      - 2
+      - 3
+  - tool: scripts/protein_structure_foldseek_web.py
+    inputs:
+      - foldseek-query
+    optional:
+      - foldseek-api-base
+      - foldseek-web-database
+      - remote-upload-consent
+      - requested-outputs
+      - output-dir
+      - runtime-context
+    outputs:
+      - protein-structure-foldseek-web-result-json
+      - foldseek-web-api-result-json
+      - foldseek-web-hits-tsv
+      - foldseek-web-top-hits-tsv
+      - foldseek-web-results-html
+      - optional-foldseek-web-result-archive
+      - optional-foldseek-web-database-listing
+    side_effects:
+      - writes-output-directory
+      - performs-public-api-requests-for-foldseek-web-service
+      - uploads-query-structure-to-remote-service-after-confirmation
+    failure_codes:
+      - 2
+      - 3
+priority_rules:
+  - prefer-when-user-asks-for-rmsd-superimposition-or-structure-comparison
+  - prefer-when-user-asks-for-foldseek-structure-search-similar-structures-or-structure-clustering
+  - prefer-foldseek-web-api-when-user-asks-for-online-web-api-or-html-foldseek-results-and-upload-is-approved
+  - prefer-when-user-compares-apo-holo-wt-mutant-or-alphafold-vs-experimental-structures
+  - ask-before-installing-foldseek-downloading-public-databases-or-building-large-indexes
+  - ask-before-uploading-private-or-sensitive-query-structures-to-foldseek-web-api
+  - do-not-use-for-single-structure-visualization-sequence-alignment-docking-or-molecular-dynamics

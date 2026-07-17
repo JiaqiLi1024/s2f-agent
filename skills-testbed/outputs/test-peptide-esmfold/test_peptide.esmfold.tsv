@@ -1,0 +1,2 @@
+sequence_name	sequence_length	sequence_sha256	model_source	api_url	pdb_path	fasta_path	generated_utc	mean_confidence_raw	min_confidence_raw	max_confidence_raw	confidence_scale	mean_confidence_0_100	n_atoms
+test_peptide	40	3f58c67c36a585628d33015ae2cd0a227b34f8cbb0e7fcdfaa4c4b3de45c415d	ESMFold hosted API	https://api.esmatlas.com/foldSequence/v1/pdb/	skills-testbed/outputs/test-peptide-esmfold/test_peptide.esmfold.pdb	skills-testbed/outputs/test-peptide-esmfold/test_peptide.sequence.fasta	2026-06-28T08:11:09Z	0.501	0.28	0.63	0-1	50.12	334

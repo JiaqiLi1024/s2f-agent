@@ -1,0 +1,2 @@
+query_id	length	sources	mean_disorder_score	fraction_disordered	n_disordered_residues	n_idr_regions	longest_idr	n_binding_regions	n_linker_regions	warnings
+test_protein	60	IUPred3	0.7497	0.9333	56	2	32	0	0	

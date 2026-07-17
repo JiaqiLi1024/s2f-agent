@@ -1,0 +1,67 @@
+{
+  "finished_at": "2026-06-28T08:57:04Z",
+  "outputs": {
+    "highlight": [
+      "skills-testbed/outputs/1TUP-highlight/1TUP.highlight.html"
+    ],
+    "structure": [
+      "skills-testbed/outputs/1TUP-highlight/1TUP.pdb"
+    ],
+    "summary": [
+      "skills-testbed/outputs/1TUP-highlight/structure_summary.tsv",
+      "skills-testbed/outputs/1TUP-highlight/summary.txt"
+    ]
+  },
+  "query": {
+    "chain": "A",
+    "color_scheme": "spectrum",
+    "contact_threshold_A": 8.0,
+    "gene": null,
+    "highlight_color": "#FFB000",
+    "highlight_labels": true,
+    "highlight_residues": "A:110-R,A:120-K",
+    "highlight_secondary": null,
+    "modules": [
+      "highlight"
+    ],
+    "pdb_file": null,
+    "pdb_id": "1TUP",
+    "probe_radius_A": 1.4,
+    "top_pockets": 5,
+    "uniprot": null,
+    "zoom_end": null,
+    "zoom_start": null
+  },
+  "skill": "protein-structure-visualize",
+  "started_at": "2026-06-28T08:57:02Z",
+  "status": "success",
+  "structure": {
+    "available_chains": [
+      "E",
+      "F",
+      "A",
+      "B",
+      "C"
+    ],
+    "chain_used": "A",
+    "is_alphafold": false,
+    "n_residues": 585,
+    "pdb_path": "skills-testbed/outputs/1TUP-highlight/1TUP.pdb",
+    "source": "rcsb_pdb",
+    "structure_id": "1TUP"
+  },
+  "summary": {
+    "chain_used": "A",
+    "highlight_html": "skills-testbed/outputs/1TUP-highlight/1TUP.highlight.html",
+    "highlight_secondary": "",
+    "is_alphafold": false,
+    "modules": "highlight",
+    "n_highlighted_residues": 2,
+    "n_highlighted_secondary_residues": 0,
+    "n_missing_highlight_residues": 0,
+    "n_residues": 585,
+    "pdb_path": "skills-testbed/outputs/1TUP-highlight/1TUP.pdb",
+    "structure_id": "1TUP"
+  },
+  "warnings": []
+}

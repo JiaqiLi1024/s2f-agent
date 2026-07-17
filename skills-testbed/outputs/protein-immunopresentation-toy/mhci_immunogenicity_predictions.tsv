@@ -1,0 +1,3 @@
+query_id	peptide_start	peptide_end	peptide_length	peptide_sequence	immunogenicity_score	raw_source	raw_columns_json
+toy1	25	33	9	SLYNTVATL	0.12	skills-testbed/inputs/protein-immunopresentation-annotation/toy_immunogenicity.tsv	"{""immunogenicity_score"": ""0.12"", ""peptide"": ""SLYNTVATL"", ""peptide_end"": ""33"", ""peptide_start"": ""25"", ""query_id"": ""toy1""}"
+toy2	2	10	9	CDEFGHIKL	-0.03	skills-testbed/inputs/protein-immunopresentation-annotation/toy_immunogenicity.tsv	"{""immunogenicity_score"": ""-0.03"", ""peptide"": ""CDEFGHIKL"", ""peptide_end"": ""10"", ""peptide_start"": ""2"", ""query_id"": ""toy2""}"

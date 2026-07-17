@@ -1,0 +1,7 @@
+matplotlib>=3.7.0
+numpy>=1.24.0
+pandas>=2.0.0
+requests>=2.28.0
+# Optional: PyMOL executable for --run-pymol visualization rendering.
+# The script can write .pml files without PyMOL installed.
+# conda install -c conda-forge pymol-open-source

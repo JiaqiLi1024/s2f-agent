@@ -129,6 +129,16 @@ csv_to_lines_prefixed() {
   done
 }
 
+csv_get_nth() {
+  local csv="${1:-}"
+  local index="${2:-1}"
+  if [[ -z "$csv" || -z "$index" ]]; then
+    printf '\n'
+    return 0
+  fi
+  printf '%s\n' "$csv" | tr ',' '\n' | awk -v target="$index" 'NF { c++; if (c == target) { print; exit } }'
+}
+
 emit_json_array_from_csv() {
   local csv="${1:-}"
   local first=1
@@ -1243,6 +1253,377 @@ extract_alphagenome_env_from_query() {
   printf '%s\n' "$env_name"
 }
 
+is_protein_gene_stopword() {
+  local token_lc="$1"
+  case "$token_lc" in
+    a|an|and|api|alphafold|bfactor|contact|db|for|from|gene|get|give|human|map|me|model|mouse|of|on|pdb|plddt|ppi|protein|rat|rcsb|show|string|structure|structures|symbol|the|to|uniprot|viewer|visualize|visualizer|with)
+      return 0
+      ;;
+  esac
+  return 1
+}
+
+extract_protein_gene_symbol_from_query() {
+  local query_raw="$1"
+  local token=""
+  local token_lc=""
+
+  token="$(printf '%s\n' "$query_raw" | grep -Eio '(gene|symbol|for|of|about)[[:space:]:=]+[A-Za-z][A-Za-z0-9-]{1,15}' | head -n 1 | awk '{print $NF}' || true)"
+  token="$(printf '%s\n' "$token" | sed -E 's/^[^A-Za-z0-9-]+//; s/[^A-Za-z0-9-]+$//')"
+  token_lc="$(to_lower "$token")"
+  if [[ -n "$token" ]] && ! is_protein_gene_stopword "$token_lc"; then
+    printf '%s\n' "$token"
+    return 0
+  fi
+
+  while IFS= read -r token; do
+    token="$(printf '%s\n' "$token" | sed -E 's/^[^A-Za-z0-9-]+//; s/[^A-Za-z0-9-]+$//')"
+    token_lc="$(to_lower "$token")"
+    [[ -z "$token" ]] && continue
+    if ! is_protein_gene_stopword "$token_lc"; then
+      printf '%s\n' "$token"
+      return 0
+    fi
+  done < <(printf '%s\n' "$query_raw" | tr -cs '[:alnum:]-' '\n' | grep -E '^[A-Z][A-Z0-9-]{1,15}$' || true)
+
+  printf '\n'
+}
+
+extract_protein_pdb_id_from_query() {
+  local query_raw="$1"
+  local token=""
+
+  token="$(printf '%s\n' "$query_raw" | grep -Eio '(pdb|rcsb)[[:space:]:=#-]*[0-9][A-Za-z0-9]{3}' | head -n 1 | grep -Eio '[0-9][A-Za-z0-9]{3}$' || true)"
+  if [[ -z "$token" ]]; then
+    token="$(printf '%s\n' "$query_raw" | tr -cs '[:alnum:]' '\n' | grep -E '^[0-9][A-Za-z0-9]{3}$' | head -n 1 || true)"
+  fi
+  printf '%s\n' "$token" | tr '[:lower:]' '[:upper:]'
+}
+
+extract_protein_pdb_ids_csv_from_query() {
+  local query_raw="$1"
+  local out=""
+  local token=""
+
+  while IFS= read -r token; do
+    token="$(printf '%s\n' "$token" | tr '[:lower:]' '[:upper:]')"
+    [[ -z "$token" ]] && continue
+    out="$(append_csv "$out" "$token")"
+  done < <(printf '%s\n' "$query_raw" | tr -cs '[:alnum:]' '\n' | grep -E '^[0-9][A-Za-z0-9]{3}$' || true)
+
+  printf '%s\n' "$out"
+}
+
+extract_protein_uniprot_accession_from_query() {
+  local query_raw="$1"
+  local token=""
+
+  token="$(printf '%s\n' "$query_raw" | grep -Eio '(uniprot|alphafold)[[:space:]:=#-]*[A-Z][0-9][A-Z0-9]{3}[0-9]' | head -n 1 | grep -Eio '[A-Z][0-9][A-Z0-9]{3}[0-9]$' || true)"
+  if [[ -z "$token" ]]; then
+    token="$(printf '%s\n' "$query_raw" | tr -cs '[:alnum:]' '\n' | grep -E '^[A-Z][0-9][A-Z0-9]{3}[0-9]$' | head -n 1 || true)"
+  fi
+  printf '%s\n' "$token" | tr '[:lower:]' '[:upper:]'
+}
+
+extract_protein_uniprot_accessions_csv_from_query() {
+  local query_raw="$1"
+  local out=""
+  local token=""
+
+  while IFS= read -r token; do
+    token="$(printf '%s\n' "$token" | tr '[:lower:]' '[:upper:]')"
+    [[ -z "$token" ]] && continue
+    out="$(append_csv "$out" "$token")"
+  done < <(printf '%s\n' "$query_raw" | tr -cs '[:alnum:]' '\n' | grep -E '^[A-Z][0-9][A-Z0-9]{3}[0-9]$' || true)
+
+  printf '%s\n' "$out"
+}
+
+extract_protein_amino_acid_sequence_from_query() {
+  local query_raw="$1"
+  local token=""
+  local alphabet="ACDEFGHIKLMNPQRSTVWYBXZJUO"
+
+  token="$(printf '%s\n' "$query_raw" | grep -Eio "(sequence|seq|aa|esmfold|fold)[[:space:]:=#-]+[${alphabet}]+" | awk -v alphabet="$alphabet" '{
+    token=$NF
+    gsub(/[^A-Za-z]/, "", token)
+    token=toupper(token)
+    if (length(token) >= 15 && length(token) <= 400 && token ~ "^[" alphabet "]+$") {
+      print token
+      exit
+    }
+  }' || true)"
+  if [[ -z "$token" ]]; then
+    token="$(printf '%s\n' "$query_raw" | tr -cs '[:alpha:]' '\n' | awk -v alphabet="$alphabet" '{
+      token=toupper($0)
+      if (length(token) >= 15 && length(token) <= 400 && token ~ "^[" alphabet "]+$") {
+        print token
+        exit
+      }
+    }' || true)"
+  fi
+  printf '%s\n' "$token" | tr '[:lower:]' '[:upper:]'
+}
+
+extract_protein_pdb_file_from_query() {
+  local query_raw="$1"
+  local token=""
+
+  token="$(printf '%s\n' "$query_raw" | grep -Eio '([./~A-Za-z0-9_-]+/)?[A-Za-z0-9._-]+\.pdb' | head -n 1 || true)"
+  token="$(printf '%s\n' "$token" | sed -E "s/[\"'(),;:.。；，]+$//")"
+  printf '%s\n' "$token"
+}
+
+extract_protein_structure_files_csv_from_query() {
+  local query_raw="$1"
+  local out=""
+  local token=""
+
+  while IFS= read -r token; do
+    token="$(printf '%s\n' "$token" | sed -E "s/[\"'(),;:.。；，]+$//")"
+    [[ -z "$token" ]] && continue
+    out="$(append_csv "$out" "$token")"
+  done < <(printf '%s\n' "$query_raw" | grep -Eio '([./~A-Za-z0-9_-]+/)?[A-Za-z0-9._-]+\.(pdb|cif|mmcif)' || true)
+
+  printf '%s\n' "$out"
+}
+
+extract_protein_chain_id_from_query() {
+  local query_raw="$1"
+  local token=""
+
+  token="$(printf '%s\n' "$query_raw" | grep -Eio 'chain[[:space:]:=#-]*[A-Za-z0-9]' | head -n 1 | grep -Eio '[A-Za-z0-9]$' || true)"
+  printf '%s\n' "$token"
+}
+
+extract_protein_chain_ids_csv_from_query() {
+  local query_raw="$1"
+  local out=""
+  local token=""
+  local phrase=""
+
+  while IFS= read -r token; do
+    token="$(printf '%s\n' "$token" | grep -Eio '[A-Za-z0-9]$' || true)"
+    [[ -z "$token" ]] && continue
+    out="$(append_csv "$out" "$token")"
+  done < <(printf '%s\n' "$query_raw" | grep -Eio 'chains?[[:space:]:=#-]+[A-Za-z0-9]' || true)
+
+  while IFS= read -r phrase; do
+    phrase="$(printf '%s\n' "$phrase" | sed -E 's/^[Cc]hains?[[:space:]:=#-]+//')"
+    while IFS= read -r token; do
+      token="$(printf '%s\n' "$token" | sed -E 's/[^A-Za-z0-9]//g')"
+      [[ -z "$token" ]] && continue
+      out="$(append_csv "$out" "$token")"
+    done < <(printf '%s\n' "$phrase" | tr ',/&' '   ' | awk '{ for (i = 1; i <= NF; i++) print $i }' | grep -E '^[A-Za-z0-9]$' || true)
+  done < <(printf '%s\n' "$query_raw" | grep -Eio 'chains?[[:space:]:=#-]+[A-Za-z0-9]([[:space:]]*(and|,|/|&)[[:space:]]*[A-Za-z0-9])?' || true)
+
+  printf '%s\n' "$out"
+}
+
+has_interface_contact_map_intent() {
+  local query_lc="$1"
+  contains_token "$query_lc" "interface contact map" \
+    || contains_token "$query_lc" "ppi contact map" \
+    || contains_token "$query_lc" "protein-protein interface" \
+    || contains_token "$query_lc" "chain interface" \
+    || (contains_token "$query_lc" "contact map" && contains_token "$query_lc" "complex")
+}
+
+has_foldseek_intent() {
+  local query_lc="$1"
+  contains_token "$query_lc" "foldseek" \
+    || contains_token "$query_lc" "structure similarity search" \
+    || contains_token "$query_lc" "protein structure search" \
+    || contains_token "$query_lc" "search similar protein structures" \
+    || contains_token "$query_lc" "search similar structures" \
+    || contains_token "$query_lc" "cluster protein structures" \
+    || contains_token "$query_lc" "protein structure clustering" \
+    || contains_token "$query_lc" "structural clustering" \
+    || contains_token "$query_lc" "all-vs-all structure comparison"
+}
+
+has_foldseek_web_intent() {
+  local query_lc="$1"
+  contains_token "$query_lc" "foldseek api" \
+    || contains_token "$query_lc" "foldseek web" \
+    || contains_token "$query_lc" "foldseek web api" \
+    || contains_token "$query_lc" "foldseek webserver" \
+    || contains_token "$query_lc" "search.foldseek.com" \
+    || contains_token "$query_lc" "online foldseek" \
+    || contains_token "$query_lc" "remote foldseek" \
+    || contains_token "$query_lc" "网页" \
+    || contains_token "$query_lc" "在线" \
+    || (contains_token "$query_lc" "foldseek" && contains_token "$query_lc" "api") \
+    || (contains_token "$query_lc" "foldseek" && contains_token "$query_lc" "web") \
+    || (contains_token "$query_lc" "foldseek" && contains_token "$query_lc" "html")
+}
+
+has_foldseek_list_databases_intent() {
+  local query_lc="$1"
+  contains_token "$query_lc" "list databases" \
+    || contains_token "$query_lc" "database list" \
+    || contains_token "$query_lc" "available databases" \
+    || contains_token "$query_lc" "列出数据库" \
+    || contains_token "$query_lc" "数据库列表"
+}
+
+has_remote_upload_consent() {
+  local query_lc="$1"
+  contains_token "$query_lc" "confirm remote upload" \
+    || contains_token "$query_lc" "ok to upload" \
+    || contains_token "$query_lc" "okay to upload" \
+    || contains_token "$query_lc" "can be uploaded" \
+    || contains_token "$query_lc" "public structure" \
+    || contains_token "$query_lc" "public query" \
+    || contains_token "$query_lc" "remote upload is approved" \
+    || contains_token "$query_lc" "upload is approved" \
+    || contains_token "$query_lc" "remote submission approved" \
+    || contains_token "$query_lc" "可以上传" \
+    || contains_token "$query_lc" "公开结构"
+}
+
+extract_foldseek_web_databases_csv() {
+  local query_lc="$1"
+  local out=""
+  if contains_token "$query_lc" "afdb50"; then
+    out="$(append_csv "$out" "afdb50")"
+  fi
+  if contains_token "$query_lc" "afdb-swissprot" || contains_token "$query_lc" "swiss-prot"; then
+    out="$(append_csv "$out" "afdb-swissprot")"
+  fi
+  if contains_token "$query_lc" "afdb-proteome" || contains_token "$query_lc" "proteome"; then
+    out="$(append_csv "$out" "afdb-proteome")"
+  fi
+  if contains_token "$query_lc" "pdb100" || contains_token "$query_lc" "pdb database" || contains_token "$query_lc" "pdb structures"; then
+    out="$(append_csv "$out" "pdb100")"
+  fi
+  if [[ -z "$out" ]]; then
+    out="afdb50"
+  fi
+  printf '%s\n' "$out"
+}
+
+extract_foldseek_mode_from_query() {
+  local query_lc="$1"
+  if contains_token "$query_lc" "cluster" || contains_token "$query_lc" "clustering" || contains_token "$query_lc" "all-vs-all"; then
+    printf 'cluster\n'
+  else
+    printf 'search\n'
+  fi
+}
+
+has_foldseek_multimer_intent() {
+  local query_lc="$1"
+  contains_token "$query_lc" "multimer" \
+    || contains_token "$query_lc" "complex-level" \
+    || contains_token "$query_lc" "protein complex" \
+    || contains_token "$query_lc" "complex structure"
+}
+
+extract_foldseek_paths_csv_from_query() {
+  local query_raw="$1"
+  local out=""
+  local token=""
+
+  while IFS= read -r token; do
+    token="$(printf '%s\n' "$token" | sed -E "s/[\"'(),;:.。；，]+$//")"
+    [[ -z "$token" ]] && continue
+    out="$(append_csv "$out" "$token")"
+  done < <(printf '%s\n' "$query_raw" | grep -Eio '([./~A-Za-z0-9_-]+/)?[A-Za-z0-9._-]+\.(pdb|cif|mmcif|fa|faa|fasta)(\.gz)?|([./~A-Za-z0-9_-]+/)+[A-Za-z0-9._-]*/?' || true)
+
+  printf '%s\n' "$out"
+}
+
+extract_protein_residue_range_csv_from_query() {
+  local query_raw="$1"
+  local range=""
+  local start=""
+  local end=""
+
+  range="$(printf '%s\n' "$query_raw" | grep -Eio '(residues?|residue range|range|domain)[^0-9]{0,24}[0-9]{1,5}[[:space:]]*[-:][[:space:]]*[0-9]{1,5}' | head -n 1 || true)"
+  if [[ -z "$range" ]]; then
+    range="$(printf '%s\n' "$query_raw" | grep -Eio '[0-9]{1,5}[[:space:]]*[-:][[:space:]]*[0-9]{1,5}[[:space:]]*(residues?|aa|amino acids)' | head -n 1 || true)"
+  fi
+  if [[ -n "$range" ]]; then
+    start="$(printf '%s\n' "$range" | grep -Eo '[0-9]{1,5}' | head -n 1 || true)"
+    end="$(printf '%s\n' "$range" | grep -Eo '[0-9]{1,5}' | tail -n 1 || true)"
+  fi
+  if [[ -n "$start" && -n "$end" && "$start" != "$end" ]]; then
+    printf '%s,%s\n' "$start" "$end"
+  else
+    printf '\n'
+  fi
+}
+
+extract_protein_alignment_pairing_from_query() {
+  local query_lc="$1"
+  if contains_token "$query_lc" "by order" || contains_token "$query_lc" "order-based" || contains_token "$query_lc" "renumbered" || contains_token "$query_lc" "numbering differs"; then
+    printf 'order\n'
+  elif contains_token "$query_lc" "chain_resseq" || contains_token "$query_lc" "chain resseq"; then
+    printf 'chain_resseq\n'
+  elif contains_token "$query_lc" "by residue" || contains_token "$query_lc" "resseq"; then
+    printf 'resseq\n'
+  else
+    printf 'auto\n'
+  fi
+}
+
+extract_protein_visualize_module_from_query() {
+  local query_lc="$1"
+
+  if contains_token "$query_lc" "highlight" || contains_token "$query_lc" "高亮"; then
+    printf 'highlight\n'
+  elif contains_token "$query_lc" "contact map"; then
+    printf 'contact_map\n'
+  elif contains_token "$query_lc" "pocket" || contains_token "$query_lc" "binding pocket"; then
+    printf 'pocket\n'
+  elif contains_token "$query_lc" "plddt" || contains_token "$query_lc" "bfactor" || contains_token "$query_lc" "b-factor"; then
+    printf 'bfactor\n'
+  elif contains_token "$query_lc" "secondary structure"; then
+    printf 'secondary\n'
+  elif contains_token "$query_lc" "conservation"; then
+    printf 'conservation\n'
+  elif contains_token "$query_lc" "ppi" || contains_token "$query_lc" "string"; then
+    printf 'ppi\n'
+  elif contains_token "$query_lc" "view" || contains_token "$query_lc" "viewer" || contains_token "$query_lc" "3d"; then
+    printf 'view\n'
+  else
+    printf 'all\n'
+  fi
+}
+
+extract_protein_highlight_residues_from_query() {
+  local query_raw="$1"
+  local token=""
+  local out=""
+
+  while IFS= read -r token; do
+    token="$(printf '%s\n' "$token" | sed -E 's/^[^A-Za-z0-9:.-]+//; s/[^A-Za-z0-9:.-]+$//')"
+    [[ -z "$token" ]] && continue
+    if [[ "$token" =~ ^[A-Za-z]:[0-9]{1,5}([:-][A-Za-z]{1,3})?$ || "$token" =~ ^[0-9]{1,5}[-:][A-Za-z]{1,3}$ ]]; then
+      out="$(append_csv "$out" "$token")"
+    fi
+  done < <(printf '%s\n' "$query_raw" | tr '，、;' ',' | tr ',' '\n' | tr -cs '[:alnum:]:.-' '\n')
+
+  printf '%s\n' "$out"
+}
+
+extract_protein_highlight_secondary_from_query() {
+  local query_lc="$1"
+  local out=""
+
+  if contains_token "$query_lc" "helix" || contains_token "$query_lc" "alpha helix" || contains_token "$query_lc" "螺旋"; then
+    out="$(append_csv "$out" "helix")"
+  fi
+  if contains_token "$query_lc" "sheet" || contains_token "$query_lc" "strand" || contains_token "$query_lc" "beta" || contains_token "$query_lc" "折叠"; then
+    out="$(append_csv "$out" "sheet")"
+  fi
+  if contains_token "$query_lc" "coil" || contains_token "$query_lc" "loop" || contains_token "$query_lc" "环"; then
+    out="$(append_csv "$out" "coil")"
+  fi
+  printf '%s\n' "$out"
+}
+
 resolve_conda_env_prefix() {
   local env_name="$1"
   local prefix=""
@@ -1817,6 +2198,48 @@ provided_csv=""
 missing_csv=""
 provided_canonical_csv=""
 missing_canonical_csv=""
+protein_gene_symbol=""
+protein_lookup_uniprot_acc=""
+protein_aa_sequence=""
+protein_lookup_wants_pymol=0
+protein_lookup_run_pymol=0
+protein_lookup_pymol_color_mode="chain"
+protein_pdb_id=""
+protein_uniprot_acc=""
+protein_pdb_file=""
+protein_structure_source_label=""
+protein_structure_source_flag=""
+protein_structure_source_value=""
+protein_visualize_module=""
+protein_chain_id=""
+protein_highlight_residues=""
+protein_highlight_secondary=""
+protein_align_files_csv=""
+protein_align_pdb_ids_csv=""
+protein_align_uniprot_csv=""
+protein_align_source1_flag=""
+protein_align_source1_value=""
+protein_align_source2_flag=""
+protein_align_source2_value=""
+protein_align_chain1=""
+protein_align_chain2=""
+protein_align_interface_chain1=""
+protein_align_interface_chain2=""
+protein_align_wants_interface=0
+protein_align_wants_foldseek=0
+protein_foldseek_mode=""
+protein_foldseek_paths_csv=""
+protein_foldseek_query=""
+protein_foldseek_target=""
+protein_foldseek_multimer=0
+protein_foldseek_web=0
+protein_foldseek_web_databases_csv=""
+protein_foldseek_list_databases=0
+protein_foldseek_remote_upload_confirmed=0
+protein_align_range_csv=""
+protein_align_res_start=""
+protein_align_res_end=""
+protein_align_pairing="auto"
 for req in $(printf '%s\n' "$required_csv" | tr ',' ' '); do
   [[ -z "$req" ]] && continue
   req_canonical="$(input_schema_resolve_key "$input_schema_file" "$req" || true)"
@@ -1831,6 +2254,206 @@ for req in $(printf '%s\n' "$required_csv" | tr ',' ' '); do
     missing_canonical_csv="$(append_csv "$missing_canonical_csv" "$req_canonical")"
   fi
 done
+
+if [[ "$effective_task" == "protein-structure-lookup" && "$primary_skill" == "protein-structure-get" ]]; then
+  protein_gene_symbol="$(extract_protein_gene_symbol_from_query "$query")"
+  protein_lookup_uniprot_acc="$(extract_protein_uniprot_accession_from_query "$query")"
+  protein_aa_sequence="$(extract_protein_amino_acid_sequence_from_query "$query")"
+  if contains_token "$query_lc" "pymol"; then
+    protein_lookup_wants_pymol=1
+  fi
+  if contains_token "$query_lc" "run pymol" || contains_token "$query_lc" "pymol png" || contains_token "$query_lc" "pymol session"; then
+    protein_lookup_run_pymol=1
+  fi
+  if contains_token "$query_lc" "confidence" || contains_token "$query_lc" "plddt"; then
+    protein_lookup_pymol_color_mode="confidence"
+  fi
+  if [[ -n "$protein_gene_symbol" || -n "$protein_lookup_uniprot_acc" || -n "$protein_aa_sequence" ]]; then
+    if in_csv_list "protein-structure-query" "$missing_csv" || in_csv_list "protein-structure-query" "$missing_canonical_csv"; then
+      missing_csv="$(remove_csv_item "$missing_csv" "protein-structure-query")"
+      missing_canonical_csv="$(remove_csv_item "$missing_canonical_csv" "protein-structure-query")"
+      provided_csv="$(append_csv "$provided_csv" "protein-structure-query")"
+      provided_canonical_csv="$(append_csv "$provided_canonical_csv" "protein-structure-query")"
+    fi
+  fi
+  if [[ -n "$protein_aa_sequence" ]]; then
+    plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "amino-acid-sequence-inferred-from-query:length-${#protein_aa_sequence}")"
+  elif [[ -n "$protein_lookup_uniprot_acc" ]]; then
+    plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "uniprot-accession-inferred-from-query:${protein_lookup_uniprot_acc}")"
+  elif [[ -n "$protein_gene_symbol" ]]; then
+    plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "gene-symbol-inferred-from-query:${protein_gene_symbol}")"
+  fi
+fi
+
+if [[ "$effective_task" == "protein-structure-visualization" && "$primary_skill" == "protein-structure-visualize" ]]; then
+  protein_pdb_file="$(extract_protein_pdb_file_from_query "$query")"
+  protein_pdb_id="$(extract_protein_pdb_id_from_query "$query")"
+  protein_uniprot_acc="$(extract_protein_uniprot_accession_from_query "$query")"
+  protein_visualize_module="$(extract_protein_visualize_module_from_query "$query_lc")"
+  protein_chain_id="$(extract_protein_chain_id_from_query "$query")"
+  protein_highlight_residues="$(extract_protein_highlight_residues_from_query "$query")"
+  protein_highlight_secondary="$(extract_protein_highlight_secondary_from_query "$query_lc")"
+
+  if [[ -n "$protein_pdb_file" ]]; then
+    protein_structure_source_label="pdb-file"
+    protein_structure_source_flag="--pdb-file"
+    protein_structure_source_value="$protein_pdb_file"
+  elif [[ -n "$protein_pdb_id" ]]; then
+    protein_structure_source_label="pdb-id"
+    protein_structure_source_flag="--pdb-id"
+    protein_structure_source_value="$protein_pdb_id"
+  elif [[ -n "$protein_uniprot_acc" ]]; then
+    protein_structure_source_label="uniprot"
+    protein_structure_source_flag="--uniprot"
+    protein_structure_source_value="$protein_uniprot_acc"
+  fi
+
+  if [[ -n "$protein_structure_source_value" ]]; then
+    if in_csv_list "protein-structure-source" "$missing_csv" || in_csv_list "protein-structure-source" "$missing_canonical_csv"; then
+      missing_csv="$(remove_csv_item "$missing_csv" "protein-structure-source")"
+      missing_canonical_csv="$(remove_csv_item "$missing_canonical_csv" "protein-structure-source")"
+      provided_csv="$(append_csv "$provided_csv" "protein-structure-source")"
+      provided_canonical_csv="$(append_csv "$provided_canonical_csv" "protein-structure-source")"
+      plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "protein-structure-source-inferred:${protein_structure_source_label}:${protein_structure_source_value}")"
+    fi
+  fi
+fi
+
+if [[ "$effective_task" == "protein-structure-alignment" && "$primary_skill" == "protein-structure-align" ]]; then
+  protein_align_files_csv="$(extract_protein_structure_files_csv_from_query "$query")"
+  protein_align_pdb_ids_csv="$(extract_protein_pdb_ids_csv_from_query "$query")"
+  protein_align_uniprot_csv="$(extract_protein_uniprot_accessions_csv_from_query "$query")"
+  protein_align_chain_ids_csv="$(extract_protein_chain_ids_csv_from_query "$query")"
+  protein_align_range_csv="$(extract_protein_residue_range_csv_from_query "$query")"
+  protein_align_pairing="$(extract_protein_alignment_pairing_from_query "$query_lc")"
+  if has_interface_contact_map_intent "$query_lc"; then
+    protein_align_wants_interface=1
+  fi
+  if has_foldseek_intent "$query_lc"; then
+    protein_align_wants_foldseek=1
+    protein_foldseek_mode="$(extract_foldseek_mode_from_query "$query_lc")"
+    protein_foldseek_paths_csv="$(extract_foldseek_paths_csv_from_query "$query")"
+    protein_foldseek_query="$(csv_get_nth "$protein_foldseek_paths_csv" 1)"
+    protein_foldseek_target="$(csv_get_nth "$protein_foldseek_paths_csv" 2)"
+    if has_foldseek_web_intent "$query_lc"; then
+      protein_foldseek_web=1
+      protein_foldseek_web_databases_csv="$(extract_foldseek_web_databases_csv "$query_lc")"
+    fi
+    if has_foldseek_list_databases_intent "$query_lc"; then
+      protein_foldseek_list_databases=1
+      protein_foldseek_web=1
+      protein_foldseek_web_databases_csv="$(extract_foldseek_web_databases_csv "$query_lc")"
+    fi
+    if has_remote_upload_consent "$query_lc"; then
+      protein_foldseek_remote_upload_confirmed=1
+    fi
+    if has_foldseek_multimer_intent "$query_lc"; then
+      protein_foldseek_multimer=1
+    fi
+  fi
+
+  protein_align_file1="$(csv_get_nth "$protein_align_files_csv" 1)"
+  protein_align_file2="$(csv_get_nth "$protein_align_files_csv" 2)"
+  protein_align_pdb1="$(csv_get_nth "$protein_align_pdb_ids_csv" 1)"
+  protein_align_pdb2="$(csv_get_nth "$protein_align_pdb_ids_csv" 2)"
+  protein_align_uniprot1="$(csv_get_nth "$protein_align_uniprot_csv" 1)"
+  protein_align_uniprot2="$(csv_get_nth "$protein_align_uniprot_csv" 2)"
+
+  if [[ -n "$protein_align_file1" && -n "$protein_align_file2" ]]; then
+    protein_align_source1_flag="--file1"
+    protein_align_source1_value="$protein_align_file1"
+    protein_align_source2_flag="--file2"
+    protein_align_source2_value="$protein_align_file2"
+  elif [[ -n "$protein_align_file1" && -n "$protein_align_pdb1" ]]; then
+    protein_align_source1_flag="--file1"
+    protein_align_source1_value="$protein_align_file1"
+    protein_align_source2_flag="--pdb2"
+    protein_align_source2_value="$protein_align_pdb1"
+  elif [[ -n "$protein_align_file1" && -n "$protein_align_uniprot1" ]]; then
+    protein_align_source1_flag="--file1"
+    protein_align_source1_value="$protein_align_file1"
+    protein_align_source2_flag="--uniprot2"
+    protein_align_source2_value="$protein_align_uniprot1"
+  elif [[ -n "$protein_align_pdb1" && -n "$protein_align_pdb2" ]]; then
+    protein_align_source1_flag="--pdb1"
+    protein_align_source1_value="$protein_align_pdb1"
+    protein_align_source2_flag="--pdb2"
+    protein_align_source2_value="$protein_align_pdb2"
+  elif [[ -n "$protein_align_pdb1" && -n "$protein_align_uniprot1" ]]; then
+    protein_align_source1_flag="--pdb1"
+    protein_align_source1_value="$protein_align_pdb1"
+    protein_align_source2_flag="--uniprot2"
+    protein_align_source2_value="$protein_align_uniprot1"
+  elif [[ -n "$protein_align_uniprot1" && -n "$protein_align_uniprot2" ]]; then
+    protein_align_source1_flag="--uniprot1"
+    protein_align_source1_value="$protein_align_uniprot1"
+    protein_align_source2_flag="--uniprot2"
+    protein_align_source2_value="$protein_align_uniprot2"
+  fi
+
+  protein_align_chain1="$(csv_get_nth "$protein_align_chain_ids_csv" 1)"
+  protein_align_chain2="$(csv_get_nth "$protein_align_chain_ids_csv" 2)"
+  if [[ "$protein_align_wants_interface" -eq 1 ]]; then
+    protein_align_interface_chain1="$protein_align_chain1"
+    protein_align_interface_chain2="$protein_align_chain2"
+    if [[ -n "$protein_align_interface_chain1" ]]; then
+      protein_align_chain1="$protein_align_interface_chain1"
+      protein_align_chain2="$protein_align_interface_chain1"
+    fi
+  fi
+  if [[ -n "$protein_align_chain1" && -z "$protein_align_chain2" ]]; then
+    protein_align_chain2="$protein_align_chain1"
+  fi
+  protein_align_res_start="$(csv_get_nth "$protein_align_range_csv" 1)"
+  protein_align_res_end="$(csv_get_nth "$protein_align_range_csv" 2)"
+
+  if [[ -n "$protein_align_source1_value" && -n "$protein_align_source2_value" ]]; then
+    if in_csv_list "protein-structure-pair" "$missing_csv" || in_csv_list "protein-structure-pair" "$missing_canonical_csv"; then
+      missing_csv="$(remove_csv_item "$missing_csv" "protein-structure-pair")"
+      missing_canonical_csv="$(remove_csv_item "$missing_canonical_csv" "protein-structure-pair")"
+      provided_csv="$(append_csv "$provided_csv" "protein-structure-pair")"
+      provided_canonical_csv="$(append_csv "$provided_canonical_csv" "protein-structure-pair")"
+    fi
+    plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "protein-structure-pair-inferred:${protein_align_source1_value}_vs_${protein_align_source2_value}")"
+    plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "pairing:${protein_align_pairing}")"
+    if [[ "$protein_align_wants_interface" -eq 1 && -n "$protein_align_interface_chain1" && -n "$protein_align_interface_chain2" ]]; then
+      plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "interface-chain-pair:${protein_align_interface_chain1}-${protein_align_interface_chain2}")"
+    fi
+  fi
+
+  if [[ "$protein_align_wants_foldseek" -eq 1 && ( -n "$protein_foldseek_query" || "$protein_foldseek_list_databases" -eq 1 ) ]]; then
+    if [[ "$protein_foldseek_web" -eq 1 || "$protein_foldseek_mode" == "cluster" || -n "$protein_foldseek_target" ]]; then
+      if in_csv_list "protein-structure-pair" "$missing_csv" || in_csv_list "protein-structure-pair" "$missing_canonical_csv"; then
+        missing_csv="$(remove_csv_item "$missing_csv" "protein-structure-pair")"
+        missing_canonical_csv="$(remove_csv_item "$missing_canonical_csv" "protein-structure-pair")"
+        provided_csv="$(append_csv "$provided_csv" "protein-structure-pair")"
+        provided_canonical_csv="$(append_csv "$provided_canonical_csv" "protein-structure-pair")"
+      fi
+      plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "foldseek-mode:${protein_foldseek_mode}")"
+      if [[ -n "$protein_foldseek_query" ]]; then
+        plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "foldseek-query:${protein_foldseek_query}")"
+      fi
+      if [[ "$protein_foldseek_web" -eq 1 ]]; then
+        plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "remote-foldseek-web-api-does-not-require-local-foldseek-installation")"
+        plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "foldseek-web-api-uploads-query-structure-to-remote-server")"
+        plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "foldseek-web-results-can-be-rendered-as-local-html-report")"
+        plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "foldseek-web-databases:${protein_foldseek_web_databases_csv}")"
+        if [[ "$protein_foldseek_remote_upload_confirmed" -ne 1 && "$protein_foldseek_list_databases" -ne 1 ]]; then
+          plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "remote-upload-consent-required-before-submission")"
+        fi
+      else
+        plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "ask-before-installing-foldseek-or-downloading-large-foldseek-databases")"
+        plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "run-foldseek-directly-only-when-binary-query-and-target-are-available")"
+      fi
+      if [[ -n "$protein_foldseek_target" ]]; then
+        plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "foldseek-target:${protein_foldseek_target}")"
+      fi
+      if [[ "$protein_foldseek_multimer" -eq 1 ]]; then
+        plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "foldseek-multimer-mode")"
+      fi
+    fi
+  fi
+fi
 
 if [[ "$effective_task" == "track-prediction" && "$primary_skill" == "nucleotide-transformer-v3" ]]; then
   if has_track_head_intent "$query_lc" && in_csv_list "output-head" "$missing_csv"; then
@@ -2890,6 +3513,254 @@ if [[ "$effective_task" == "variant-effect" && "$variant_multi_plan_enabled" -eq
     plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "fixed-rna-seq-with-uberon-0001157-for-minimal-stable-output")"
     plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "retry-with-local-proxy-if-grpc-connectivity-times-out")"
   fi
+fi
+
+if [[ "$effective_task" == "protein-structure-lookup" && "$primary_skill" == "protein-structure-get" ]]; then
+  protein_lookup_target=""
+  protein_lookup_safe=""
+  protein_lookup_cmd=""
+  protein_lookup_mode=""
+  if [[ -n "$protein_aa_sequence" ]]; then
+    protein_lookup_target="sequence_${#protein_aa_sequence}_$(printf '%.10s' "$protein_aa_sequence")"
+    protein_lookup_safe="$(printf '%s\n' "$protein_lookup_target" | sed -E 's/[^A-Za-z0-9._-]+/_/g')"
+    protein_lookup_cmd="python skills/protein-structure-get/scripts/protein_structure_get.py --sequence ${protein_aa_sequence} --sequence-name ${protein_lookup_safe} --modules esmfold --outdir output/protein-structure/${protein_lookup_safe}"
+    protein_lookup_mode="esmfold-sequence"
+  elif [[ -n "$protein_lookup_uniprot_acc" ]]; then
+    protein_lookup_target="$protein_lookup_uniprot_acc"
+    protein_lookup_safe="$(printf '%s\n' "$protein_lookup_target" | sed -E 's/[^A-Za-z0-9._-]+/_/g')"
+    protein_lookup_cmd="python skills/protein-structure-get/scripts/protein_structure_get.py --uniprot ${protein_lookup_uniprot_acc} --modules all --outdir output/protein-structure/${protein_lookup_safe}"
+    protein_lookup_mode="uniprot"
+  elif [[ -n "$protein_gene_symbol" ]]; then
+    protein_lookup_target="$protein_gene_symbol"
+    protein_lookup_safe="$(printf '%s\n' "$protein_lookup_target" | sed -E 's/[^A-Za-z0-9._-]+/_/g')"
+    protein_lookup_cmd="python skills/protein-structure-get/scripts/protein_structure_get.py --gene ${protein_gene_symbol} --organism human --modules all --outdir output/protein-structure/${protein_lookup_safe}"
+    protein_lookup_mode="gene"
+  fi
+  if [[ -n "$protein_lookup_cmd" && "$protein_lookup_wants_pymol" -eq 1 ]]; then
+    protein_lookup_cmd="${protein_lookup_cmd} --pymol --pymol-color-mode ${protein_lookup_pymol_color_mode}"
+    if [[ "$protein_lookup_run_pymol" -eq 1 ]]; then
+      protein_lookup_cmd="${protein_lookup_cmd} --run-pymol"
+    fi
+  fi
+fi
+
+if [[ "$effective_task" == "protein-structure-lookup" && "$primary_skill" == "protein-structure-get" && -n "$protein_lookup_cmd" ]]; then
+  protein_output_dir="output/protein-structure/${protein_lookup_safe}"
+  plan_steps_csv="$protein_lookup_cmd"
+  plan_expected_outputs_csv=""
+  plan_expected_outputs_csv="$(append_csv "$plan_expected_outputs_csv" "plan-json:protein-structure-lookup")"
+  plan_expected_outputs_csv="$(append_csv "$plan_expected_outputs_csv" "expected-file:${protein_output_dir}/protein_structure_get.result.json")"
+  plan_expected_outputs_csv="$(append_csv "$plan_expected_outputs_csv" "expected-file:${protein_output_dir}/protein_structure_summary.tsv")"
+  if [[ "$protein_lookup_mode" == "esmfold-sequence" ]]; then
+    plan_expected_outputs_csv="$(append_csv "$plan_expected_outputs_csv" "expected-file:${protein_output_dir}/${protein_lookup_safe}.esmfold.pdb")"
+    plan_expected_outputs_csv="$(append_csv "$plan_expected_outputs_csv" "expected-file:${protein_output_dir}/${protein_lookup_safe}.esmfold.tsv")"
+    plan_expected_outputs_csv="$(append_csv "$plan_expected_outputs_csv" "expected-file:${protein_output_dir}/${protein_lookup_safe}.sequence.fasta")"
+    plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "esmfold-hosted-api-max-length:400")"
+    plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "esmfold-min-length:15")"
+  else
+    plan_expected_outputs_csv="$(append_csv "$plan_expected_outputs_csv" "expected-file:${protein_output_dir}/${protein_lookup_safe}.<ACCESSION>.features.tsv")"
+    plan_expected_outputs_csv="$(append_csv "$plan_expected_outputs_csv" "expected-file:${protein_output_dir}/${protein_lookup_safe}.<ACCESSION>.pdb_structures.tsv")"
+    plan_expected_outputs_csv="$(append_csv "$plan_expected_outputs_csv" "expected-file:${protein_output_dir}/${protein_lookup_safe}.<ACCESSION>.alphafold.tsv")"
+    plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "default-organism:human")"
+  fi
+  if [[ "$protein_lookup_wants_pymol" -eq 1 ]]; then
+    plan_expected_outputs_csv="$(append_csv "$plan_expected_outputs_csv" "optional-file:${protein_output_dir}/${protein_lookup_safe}.pymol.pml")"
+    plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "pymol-script-generation-enabled")"
+    if [[ "$protein_lookup_run_pymol" -eq 1 ]]; then
+      plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "pymol-binary-required-for-run-pymol")"
+    fi
+  fi
+  plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "protein-structure-lookup-fastpath-enabled")"
+  plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "protein-structure-query-mode:${protein_lookup_mode}")"
+  plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "requires-python-packages:matplotlib+numpy+pandas+requests")"
+  plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "output-dir:${protein_output_dir}")"
+fi
+
+if [[ "$effective_task" == "protein-structure-visualization" && "$primary_skill" == "protein-structure-visualize" && -n "$protein_structure_source_value" ]]; then
+  protein_visual_safe="$(printf '%s\n' "$protein_structure_source_value" | sed -E 's#[^A-Za-z0-9._-]+#_#g')"
+  if [[ -z "$protein_visual_safe" ]]; then
+    protein_visual_safe="structure"
+  fi
+  protein_output_dir="output/protein-structure-visualize/${protein_visual_safe}"
+  protein_step_cmd="python skills/protein-structure-visualize/scripts/protein_structure_visualize.py ${protein_structure_source_flag} ${protein_structure_source_value} --modules ${protein_visualize_module} --outdir ${protein_output_dir}"
+  if [[ -n "$protein_chain_id" ]]; then
+    protein_step_cmd="${protein_step_cmd} --chain ${protein_chain_id}"
+  fi
+  if [[ "$protein_visualize_module" == "highlight" ]]; then
+    if [[ -n "$protein_highlight_residues" ]]; then
+      protein_highlight_residues_arg="${protein_highlight_residues//,/+}"
+      protein_step_cmd="${protein_step_cmd} --highlight-residues ${protein_highlight_residues_arg}"
+    fi
+    if [[ -n "$protein_highlight_secondary" ]]; then
+      protein_highlight_secondary_arg="${protein_highlight_secondary//,/+}"
+      protein_step_cmd="${protein_step_cmd} --highlight-secondary ${protein_highlight_secondary_arg}"
+    fi
+  fi
+  protein_gene_symbol="$(extract_protein_gene_symbol_from_query "$query")"
+  if [[ -n "$protein_gene_symbol" && "$protein_visualize_module" == "ppi" ]]; then
+    protein_step_cmd="${protein_step_cmd} --gene ${protein_gene_symbol}"
+  fi
+
+  plan_steps_csv="$protein_step_cmd"
+  plan_expected_outputs_csv=""
+  plan_expected_outputs_csv="$(append_csv "$plan_expected_outputs_csv" "plan-json:protein-structure-visualization")"
+  plan_expected_outputs_csv="$(append_csv "$plan_expected_outputs_csv" "expected-file:${protein_output_dir}/protein_structure_visualize.result.json")"
+  plan_expected_outputs_csv="$(append_csv "$plan_expected_outputs_csv" "expected-file:${protein_output_dir}/structure_summary.tsv")"
+  plan_expected_outputs_csv="$(append_csv "$plan_expected_outputs_csv" "expected-file:${protein_output_dir}/summary.txt")"
+  plan_expected_outputs_csv="$(append_csv "$plan_expected_outputs_csv" "expected-output-artifacts:${protein_output_dir}/*")"
+  plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "protein-structure-visualization-fastpath-enabled")"
+  plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "structure-source:${protein_structure_source_label}")"
+  plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "modules:${protein_visualize_module}")"
+  plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "requires-python-packages:biopython+matplotlib+networkx+numpy+pandas+py3Dmol+requests")"
+  plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "output-dir:${protein_output_dir}")"
+fi
+
+protein_foldseek_ready=0
+if [[ "$protein_foldseek_web" -eq 1 ]]; then
+  if [[ "$protein_foldseek_list_databases" -eq 1 || -n "$protein_foldseek_query" ]]; then
+    protein_foldseek_ready=1
+  fi
+elif [[ -n "$protein_foldseek_query" && ( "$protein_foldseek_mode" == "cluster" || -n "$protein_foldseek_target" ) ]]; then
+  protein_foldseek_ready=1
+fi
+
+if [[ "$effective_task" == "protein-structure-alignment" && "$primary_skill" == "protein-structure-align" && "$protein_align_wants_foldseek" -eq 1 && "$protein_foldseek_ready" -eq 1 ]]; then
+  protein_foldseek_label_source="${protein_foldseek_query}"
+  if [[ -z "$protein_foldseek_label_source" && "$protein_foldseek_list_databases" -eq 1 ]]; then
+    protein_foldseek_label_source="foldseek_web_databases"
+  fi
+  if [[ "$protein_foldseek_mode" == "search" && -n "$protein_foldseek_target" ]]; then
+    protein_foldseek_label_source="${protein_foldseek_query}_vs_${protein_foldseek_target}"
+  fi
+  protein_foldseek_safe="$(printf '%s\n' "$protein_foldseek_label_source" | sed -E 's#[^A-Za-z0-9._-]+#_#g; s#_+#_#g; s#^_##; s#_$##')"
+  if [[ -z "$protein_foldseek_safe" ]]; then
+    protein_foldseek_safe="foldseek"
+  fi
+  if [[ "$protein_foldseek_web" -eq 1 ]]; then
+    protein_output_dir="output/protein-structure-align/${protein_foldseek_safe}_foldseek_web"
+    if [[ "$protein_foldseek_list_databases" -eq 1 && -z "$protein_foldseek_query" ]]; then
+      protein_step_cmd="python skills/protein-structure-align/scripts/protein_structure_foldseek_web.py --list-databases --outdir ${protein_output_dir}"
+    else
+      protein_step_cmd="python skills/protein-structure-align/scripts/protein_structure_foldseek_web.py --query ${protein_foldseek_query}"
+      protein_foldseek_web_db=""
+      while IFS= read -r protein_foldseek_web_db; do
+        [[ -z "$protein_foldseek_web_db" ]] && continue
+        protein_step_cmd="${protein_step_cmd} --database ${protein_foldseek_web_db}"
+      done < <(printf '%s\n' "$protein_foldseek_web_databases_csv" | tr ',' '\n')
+      protein_step_cmd="${protein_step_cmd} --foldseek-mode 3diaa --outdir ${protein_output_dir} --prefix ${protein_foldseek_safe}"
+      if [[ "$protein_foldseek_remote_upload_confirmed" -eq 1 ]]; then
+        protein_step_cmd="${protein_step_cmd} --confirm-remote-upload"
+      else
+        protein_step_cmd="${protein_step_cmd} --dry-run"
+      fi
+    fi
+  else
+    protein_output_dir="output/protein-structure-align/${protein_foldseek_safe}_${protein_foldseek_mode}"
+    protein_step_cmd="python skills/protein-structure-align/scripts/protein_structure_foldseek.py --mode ${protein_foldseek_mode} --query ${protein_foldseek_query}"
+    if [[ "$protein_foldseek_mode" == "search" && -n "$protein_foldseek_target" ]]; then
+      protein_step_cmd="${protein_step_cmd} --target ${protein_foldseek_target}"
+    fi
+    protein_step_cmd="${protein_step_cmd} --coverage 0.8 --outdir ${protein_output_dir} --prefix ${protein_foldseek_safe}"
+    if [[ "$protein_foldseek_mode" == "search" ]]; then
+      protein_step_cmd="${protein_step_cmd} --evalue 1e-3"
+    else
+      protein_step_cmd="${protein_step_cmd} --tmscore-threshold 0.6"
+    fi
+    if [[ "$protein_foldseek_multimer" -eq 1 ]]; then
+      protein_step_cmd="${protein_step_cmd} --multimer"
+    fi
+  fi
+
+  plan_steps_csv="$protein_step_cmd"
+  plan_expected_outputs_csv=""
+  plan_expected_outputs_csv="$(append_csv "$plan_expected_outputs_csv" "plan-json:protein-structure-alignment")"
+  if [[ "$protein_foldseek_web" -eq 1 ]]; then
+    plan_expected_outputs_csv="$(append_csv "$plan_expected_outputs_csv" "expected-file:${protein_output_dir}/protein_structure_foldseek_web.result.json")"
+    if [[ "$protein_foldseek_list_databases" -eq 1 && -z "$protein_foldseek_query" ]]; then
+      plan_expected_outputs_csv="$(append_csv "$plan_expected_outputs_csv" "expected-file:${protein_output_dir}/foldseek_web_databases.tsv")"
+      plan_expected_outputs_csv="$(append_csv "$plan_expected_outputs_csv" "expected-html:${protein_output_dir}/foldseek_web_databases.html")"
+    elif [[ "$protein_foldseek_remote_upload_confirmed" -eq 1 ]]; then
+      plan_expected_outputs_csv="$(append_csv "$plan_expected_outputs_csv" "expected-file:${protein_output_dir}/${protein_foldseek_safe}.foldseek_web_result.json")"
+      plan_expected_outputs_csv="$(append_csv "$plan_expected_outputs_csv" "expected-file:${protein_output_dir}/${protein_foldseek_safe}.foldseek_web_hits.tsv")"
+      plan_expected_outputs_csv="$(append_csv "$plan_expected_outputs_csv" "expected-file:${protein_output_dir}/${protein_foldseek_safe}.foldseek_web_top_hits.tsv")"
+      plan_expected_outputs_csv="$(append_csv "$plan_expected_outputs_csv" "expected-html:${protein_output_dir}/${protein_foldseek_safe}.foldseek_web_results.html")"
+    else
+      plan_expected_outputs_csv="$(append_csv "$plan_expected_outputs_csv" "expected-file:${protein_output_dir}/summary.txt")"
+    fi
+  else
+    plan_expected_outputs_csv="$(append_csv "$plan_expected_outputs_csv" "expected-file:${protein_output_dir}/protein_structure_foldseek.result.json")"
+    if [[ "$protein_foldseek_mode" == "search" ]]; then
+      plan_expected_outputs_csv="$(append_csv "$plan_expected_outputs_csv" "expected-file:${protein_output_dir}/${protein_foldseek_safe}.foldseek_search.tsv")"
+      plan_expected_outputs_csv="$(append_csv "$plan_expected_outputs_csv" "expected-file:${protein_output_dir}/${protein_foldseek_safe}.foldseek_search.top_hits.tsv")"
+    else
+      if [[ "$protein_foldseek_multimer" -eq 1 ]]; then
+        plan_expected_outputs_csv="$(append_csv "$plan_expected_outputs_csv" "expected-file:${protein_output_dir}/${protein_foldseek_safe}.foldseek_cluster_cluster.tsv")"
+        plan_expected_outputs_csv="$(append_csv "$plan_expected_outputs_csv" "expected-file:${protein_output_dir}/${protein_foldseek_safe}.foldseek_cluster_cluster.summary.tsv")"
+      else
+        plan_expected_outputs_csv="$(append_csv "$plan_expected_outputs_csv" "expected-file:${protein_output_dir}/${protein_foldseek_safe}.foldseek_cluster_clu.tsv")"
+        plan_expected_outputs_csv="$(append_csv "$plan_expected_outputs_csv" "expected-file:${protein_output_dir}/${protein_foldseek_safe}.foldseek_cluster_clu.summary.tsv")"
+      fi
+    fi
+  fi
+  plan_expected_outputs_csv="$(append_csv "$plan_expected_outputs_csv" "expected-file:${protein_output_dir}/summary.txt")"
+  if [[ "$protein_foldseek_web" -eq 1 ]]; then
+    plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "protein-structure-foldseek-web-fastpath-enabled")"
+    plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "remote-foldseek-web-api-does-not-require-local-foldseek-installation")"
+    plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "foldseek-web-api-uploads-query-structure-to-remote-server")"
+    plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "foldseek-web-results-can-be-rendered-as-local-html-report")"
+  else
+    plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "protein-structure-foldseek-fastpath-enabled")"
+    plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "foldseek-binary-required-for-structure-search-or-clustering")"
+    plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "ask-before-installing-foldseek-or-downloading-large-foldseek-databases")"
+    plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "run-foldseek-directly-only-when-binary-query-and-target-are-available")"
+  fi
+  plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "foldseek-search-and-cluster-use-external-foldseek-not-internal-rmsd-superposition")"
+  plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "output-dir:${protein_output_dir}")"
+fi
+
+if [[ -z "$plan_steps_csv" && "$effective_task" == "protein-structure-alignment" && "$primary_skill" == "protein-structure-align" && -n "$protein_align_source1_value" && -n "$protein_align_source2_value" ]]; then
+  protein_align_safe="$(printf '%s_vs_%s\n' "$protein_align_source1_value" "$protein_align_source2_value" | sed -E 's#[^A-Za-z0-9._-]+#_#g; s#_+#_#g; s#^_##; s#_$##')"
+  if [[ -z "$protein_align_safe" ]]; then
+    protein_align_safe="structure_pair"
+  fi
+  protein_output_dir="output/protein-structure-align/${protein_align_safe}"
+  protein_step_cmd="python skills/protein-structure-align/scripts/protein_structure_align.py ${protein_align_source1_flag} ${protein_align_source1_value} ${protein_align_source2_flag} ${protein_align_source2_value} --pairing ${protein_align_pairing} --contact-threshold 5.0 --prefix ${protein_align_safe} --outdir ${protein_output_dir}"
+  if [[ -n "$protein_align_chain1" ]]; then
+    protein_step_cmd="${protein_step_cmd} --chain1 ${protein_align_chain1}"
+  fi
+  if [[ -n "$protein_align_chain2" ]]; then
+    protein_step_cmd="${protein_step_cmd} --chain2 ${protein_align_chain2}"
+  fi
+  if [[ -n "$protein_align_res_start" && -n "$protein_align_res_end" ]]; then
+    protein_step_cmd="${protein_step_cmd} --res-start ${protein_align_res_start} --res-end ${protein_align_res_end}"
+  fi
+  if [[ "$protein_align_wants_interface" -eq 1 && -n "$protein_align_interface_chain1" && -n "$protein_align_interface_chain2" ]]; then
+    protein_step_cmd="${protein_step_cmd} --no-contact-maps --interface-chain1 ${protein_align_interface_chain1} --interface-chain2 ${protein_align_interface_chain2} --interface-contact-threshold 5.0"
+  fi
+
+  plan_steps_csv="$protein_step_cmd"
+  plan_expected_outputs_csv=""
+  plan_expected_outputs_csv="$(append_csv "$plan_expected_outputs_csv" "plan-json:protein-structure-alignment")"
+  plan_expected_outputs_csv="$(append_csv "$plan_expected_outputs_csv" "expected-file:${protein_output_dir}/protein_structure_align.result.json")"
+  plan_expected_outputs_csv="$(append_csv "$plan_expected_outputs_csv" "expected-file:${protein_output_dir}/${protein_align_safe}.alignment_summary.tsv")"
+  plan_expected_outputs_csv="$(append_csv "$plan_expected_outputs_csv" "expected-file:${protein_output_dir}/${protein_align_safe}.per_residue_rmsd.tsv")"
+  plan_expected_outputs_csv="$(append_csv "$plan_expected_outputs_csv" "expected-plot:${protein_output_dir}/${protein_align_safe}.per_residue_rmsd.png")"
+  if [[ "$protein_align_wants_interface" -eq 1 && -n "$protein_align_interface_chain1" && -n "$protein_align_interface_chain2" ]]; then
+    plan_expected_outputs_csv="$(append_csv "$plan_expected_outputs_csv" "expected-file:${protein_output_dir}/${protein_align_safe}.aligned_complex.pdb")"
+    plan_expected_outputs_csv="$(append_csv "$plan_expected_outputs_csv" "expected-file:${protein_output_dir}/${protein_align_safe}.aligned_complex_interface_contacts.tsv")"
+    plan_expected_outputs_csv="$(append_csv "$plan_expected_outputs_csv" "expected-plot:${protein_output_dir}/${protein_align_safe}.aligned_complex_interface_contact_map.png")"
+    plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "interface-contact-threshold-A:5.0")"
+    plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "intra-protein-contact-maps-skipped-for-interface-mode")"
+  else
+    plan_expected_outputs_csv="$(append_csv "$plan_expected_outputs_csv" "expected-plot:${protein_output_dir}/${protein_align_safe}.contact_map_structure1.png")"
+    plan_expected_outputs_csv="$(append_csv "$plan_expected_outputs_csv" "expected-plot:${protein_output_dir}/${protein_align_safe}.contact_map_structure2.png")"
+    plan_expected_outputs_csv="$(append_csv "$plan_expected_outputs_csv" "expected-file:${protein_output_dir}/${protein_align_safe}.contact_map_delta.tsv")"
+  fi
+  plan_expected_outputs_csv="$(append_csv "$plan_expected_outputs_csv" "expected-file:${protein_output_dir}/${protein_align_safe}.superimposed.pdb")"
+  plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "protein-structure-alignment-fastpath-enabled")"
+  plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "requires-python-packages:biopython+matplotlib+numpy+pandas+py3Dmol+requests")"
+  plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "tmalign-optional-for-tm-score")"
+  plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "output-dir:${protein_output_dir}")"
 fi
 
 if [[ -z "$required_canonical_csv" ]]; then

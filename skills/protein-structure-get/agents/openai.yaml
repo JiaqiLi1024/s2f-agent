@@ -1,0 +1,4 @@
+interface:
+  display_name: "Protein Structure Get"
+  short_description: "Gene-to-UniProt, AlphaFold DB, PDB, and domains"
+  default_prompt: "Use $protein-structure-get to retrieve UniProt, AlphaFold DB, PDB, and domain-map information for a gene symbol."

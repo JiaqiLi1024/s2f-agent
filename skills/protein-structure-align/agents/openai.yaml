@@ -1,0 +1,4 @@
+interface:
+  display_name: "Protein Structure Align"
+  short_description: "Align, search, and cluster protein structures"
+  default_prompt: "Use $protein-structure-align to compare protein structures or run local/web Foldseek structure search and clustering."

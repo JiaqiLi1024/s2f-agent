@@ -1,0 +1,5 @@
+query_id	source	region_type	start	end	length	mean_score	max_score	threshold	evidence
+seq_one	IUPred3-local	idr	5	12	8	0.7200	0.7200	0.5000	disorder
+seq_one	IUPred3-local	disordered_binding_region	7	11	5	0.6300	0.6300	0.5000	binding
+seq_two	IUPred3-local	idr	5	12	8	0.7200	0.7200	0.5000	disorder
+seq_two	IUPred3-local	disordered_binding_region	7	11	5	0.6300	0.6300	0.5000	binding

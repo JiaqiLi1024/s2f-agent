@@ -1,0 +1,32 @@
+{
+  "skill_id": "protein-embedding",
+  "status": "ok",
+  "input": {
+    "fasta": null,
+    "sequence_provided": true,
+    "uniprot": null
+  },
+  "model_family": "esm2",
+  "model_id": "facebook/esm2_t6_8M_UR50D",
+  "embedding_type": "both",
+  "pooling": "mean",
+  "protein_count": 1,
+  "protein_ids": [
+    "user_sequence"
+  ],
+  "sequence_lengths": {
+    "user_sequence": 79
+  },
+  "dry_run": false,
+  "warnings": [],
+  "outputs": {
+    "run_summary_json": "output/protein-embedding/esm2_t6_8m_user_sequence/run_summary.json",
+    "embeddings_npz": "output/protein-embedding/esm2_t6_8m_user_sequence/embeddings.npz",
+    "protein_embeddings_tsv": "output/protein-embedding/esm2_t6_8m_user_sequence/protein_embeddings.tsv",
+    "residue_embedding_keys": {
+      "user_sequence": "residue_embeddings__user_sequence"
+    }
+  },
+  "device": "cpu",
+  "embedding_dim": 320
+}

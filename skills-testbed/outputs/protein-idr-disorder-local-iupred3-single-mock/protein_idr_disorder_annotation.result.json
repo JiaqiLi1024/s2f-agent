@@ -1,0 +1,85 @@
+{
+  "commands_file": "skills-testbed/outputs/protein-idr-disorder-local-iupred3-single-mock/commands.sh",
+  "counts": {
+    "llps_features": 0,
+    "llps_summary_rows": 2,
+    "plots": 8,
+    "records": 2,
+    "regions": 4,
+    "residue_score_rows": 80
+  },
+  "created_utc": "2026-07-01T09:22:14Z",
+  "errors": [],
+  "execute": true,
+  "execution": {
+    "iupred3_local": [
+      {
+        "log": "skills-testbed/outputs/protein-idr-disorder-local-iupred3-single-mock/logs/query_sequence.iupred3_local.1.log",
+        "ok": true,
+        "returncode": 0
+      },
+      {
+        "log": "skills-testbed/outputs/protein-idr-disorder-local-iupred3-single-mock/logs/query_sequence.iupred3_local.2.log",
+        "ok": true,
+        "returncode": 0
+      }
+    ]
+  },
+  "input_fasta": "skills-testbed/outputs/protein-idr-disorder-local-iupred3-single-mock/normalized_input.fasta",
+  "iupred3_table_input": "",
+  "outputs": {
+    "llps_features_tsv": "skills-testbed/outputs/protein-idr-disorder-local-iupred3-single-mock/protein_llps_features.tsv",
+    "llps_summary_tsv": "skills-testbed/outputs/protein-idr-disorder-local-iupred3-single-mock/protein_llps_summary.tsv",
+    "plots": [
+      "skills-testbed/outputs/protein-idr-disorder-local-iupred3-single-mock/plots/seq_one.IUPred3-local.disorder.svg",
+      "skills-testbed/outputs/protein-idr-disorder-local-iupred3-single-mock/plots/seq_one.IUPred3-local.disorder.html",
+      "skills-testbed/outputs/protein-idr-disorder-local-iupred3-single-mock/plots/seq_one.IUPred3-local.binding.svg",
+      "skills-testbed/outputs/protein-idr-disorder-local-iupred3-single-mock/plots/seq_one.IUPred3-local.binding.html",
+      "skills-testbed/outputs/protein-idr-disorder-local-iupred3-single-mock/plots/seq_two.IUPred3-local.disorder.svg",
+      "skills-testbed/outputs/protein-idr-disorder-local-iupred3-single-mock/plots/seq_two.IUPred3-local.disorder.html",
+      "skills-testbed/outputs/protein-idr-disorder-local-iupred3-single-mock/plots/seq_two.IUPred3-local.binding.svg",
+      "skills-testbed/outputs/protein-idr-disorder-local-iupred3-single-mock/plots/seq_two.IUPred3-local.binding.html"
+    ],
+    "regions_tsv": "skills-testbed/outputs/protein-idr-disorder-local-iupred3-single-mock/protein_idr_regions.tsv",
+    "residue_scores_tsv": "skills-testbed/outputs/protein-idr-disorder-local-iupred3-single-mock/protein_idr_residue_scores.tsv",
+    "result_json": "skills-testbed/outputs/protein-idr-disorder-local-iupred3-single-mock/protein_idr_disorder_annotation.result.json",
+    "summary_tsv": "skills-testbed/outputs/protein-idr-disorder-local-iupred3-single-mock/protein_idr_summary.tsv"
+  },
+  "plans": {
+    "iupred3_local": {
+      "commands": [
+        [
+          "skills-testbed/inputs/protein-idr-disorder/mock_iupred3_single.py",
+          "skills-testbed/outputs/protein-idr-disorder-local-iupred3-single-mock/iupred3/single_fasta_inputs/seq_one.fasta",
+          "long"
+        ],
+        [
+          "skills-testbed/inputs/protein-idr-disorder/mock_iupred3_single.py",
+          "skills-testbed/outputs/protein-idr-disorder-local-iupred3-single-mock/iupred3/single_fasta_inputs/seq_two.fasta",
+          "long"
+        ]
+      ],
+      "expected_files": [
+        "skills-testbed/outputs/protein-idr-disorder-local-iupred3-single-mock/iupred3/seq_one.iupred3_local.txt",
+        "skills-testbed/outputs/protein-idr-disorder-local-iupred3-single-mock/iupred3/seq_two.iupred3_local.txt"
+      ],
+      "input_files": [
+        "skills-testbed/outputs/protein-idr-disorder-local-iupred3-single-mock/iupred3/single_fasta_inputs/seq_one.fasta",
+        "skills-testbed/outputs/protein-idr-disorder-local-iupred3-single-mock/iupred3/single_fasta_inputs/seq_two.fasta"
+      ],
+      "input_format": "fasta",
+      "outdir": "skills-testbed/outputs/protein-idr-disorder-local-iupred3-single-mock/iupred3",
+      "stdout_files": [
+        "skills-testbed/outputs/protein-idr-disorder-local-iupred3-single-mock/iupred3/seq_one.iupred3_local.txt",
+        "skills-testbed/outputs/protein-idr-disorder-local-iupred3-single-mock/iupred3/seq_two.iupred3_local.txt"
+      ]
+    }
+  },
+  "run_id": "query_sequence",
+  "skill": "protein-idr-disorder-annotation",
+  "status": "success",
+  "tools": [
+    "iupred3"
+  ],
+  "warnings": []
+}

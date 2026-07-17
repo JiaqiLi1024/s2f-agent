@@ -1,0 +1,136 @@
+schema_version: 1
+id: protein-embedding
+title: Protein Embedding
+path: skills/protein-embedding
+status: active
+family: protein-language-model-embedding
+tasks:
+  - embedding
+  - protein-sequence-embedding
+  - protein-residue-embedding
+  - protein-layer-embedding
+  - esmc-forge-embedding
+  - esmc-sae-feature-extraction
+  - embedding-layer-sweep
+  - protein-embedding-cache
+  - model-selection
+  - environment-setup
+  - troubleshooting
+triggers:
+  - protein embedding
+  - protein language model embedding
+  - esm2
+  - esm-2
+  - esmc
+  - prott5
+  - prot_t5
+  - ankh
+  - saprot
+  - per-residue embedding
+  - per-protein embedding
+  - layer embedding
+  - all-layer embedding
+  - layer sweep
+  - Biohub Forge
+  - ESMC SAE
+  - SAE feature
+  - protein representation
+required_inputs:
+  - sequence-or-fasta
+optional_inputs:
+  - env-dir
+  - backend
+  - model-family
+  - embedding-target
+  - representation-type
+  - layer-selection
+  - pooling-strategy
+  - sequence-validation-policy
+  - biohub-token-env
+  - sae-model
+  - output-dir
+  - compute-constraints
+input_mappings:
+  - sequence-or-fasta|query_tokens=sequence,fasta,protein,uniprot,accession|script_flags=--sequence,--fasta,--uniprot
+  - env-dir|query_tokens=env,venv,environment,install,setup,环境|script_flags=--env-dir
+  - backend|query_tokens=backend,huggingface,hf-transformers,biohub,forge,api,sdk|script_flags=--backend
+  - model-family|query_tokens=esm2,esm-2,esmc,prott5,prot_t5,ankh,saprot,model,checkpoint|script_flags=--model-family,--model-id
+  - embedding-target|query_tokens=per-protein,per-residue,residue,protein,pool,embedding,representation|script_flags=--embedding-type
+  - representation-type|query_tokens=hidden-state,sae,sparse-autoencoder,feature,activation|script_flags=--representation,--sae-model-name
+  - layer-selection|query_tokens=layer,all-layer,last-layer,layer-sweep,ith_hidden_layer|script_flags=--layer
+  - pooling-strategy|query_tokens=mean,cls,bos,pooling,pool|script_flags=--pooling
+  - sequence-validation-policy|query_tokens=ambiguous,rare,X,U,O,B,Z,J,saprot,3di,foldseek|script_flags=--allow-ambiguous-aa,--allow-rare-aa,--saprot-input-mode
+  - biohub-token-env|query_tokens=BIOHUB_API_TOKEN,ESM_API_KEY,token,biohub-token|script_flags=--biohub-token-env,--biohub-url
+  - output-dir|query_tokens=output,outdir,save,cache,目录|script_flags=--output-dir
+  - compute-constraints|query_tokens=gpu,cpu,cuda,mps,memory,batch,budget|script_flags=--device,--batch-size
+constraints:
+  - validate-protein-alphabet-before-model-download
+  - preserve-fasta-ids-as-embedding-ids
+  - default-pooling-is-attention-mask-mean-over-non-special-tokens
+  - record-selected-layer-indices-and-layer-indexing-convention-in-run-summary
+  - remove-bos-eos-special-tokens-from-per-residue-outputs
+  - biohub-forge-requires-explicit-backend-and-token-env-without-token-logging
+  - saprot-35m-and-650m-frozen-embeddings-require-structure-aware-aa-3di-input-for-best-use
+  - output-must-include-run-summary-json-with-model-input-and-shape-metadata
+tools:
+  - scripts/setup_protein_embedding_env.py
+  - scripts/validate_protein_fasta.py
+  - scripts/run_real_protein_embedding_workflow.py
+  - scripts/convert_embedding_table.py
+tool_contracts:
+  - tool: scripts/setup_protein_embedding_env.py
+    inputs:
+      - model-family-or-model-id
+      - env-dir
+      - install-policy
+      - optional-biohub-token-env
+    outputs:
+      - setup-summary-json
+      - optional-smoke-test-artifacts
+    side_effects:
+      - creates-or-updates-virtualenv
+      - installs-python-packages
+      - may-download-huggingface-models
+    failure_codes:
+      - 1
+  - tool: scripts/validate_protein_fasta.py
+    inputs:
+      - fasta-file
+      - sequence-validation-policy
+    outputs:
+      - validation-json
+    side_effects:
+      - optional-writes-validation-json
+    failure_codes:
+      - 1
+  - tool: scripts/run_real_protein_embedding_workflow.py
+    inputs:
+      - sequence-or-fasta
+      - model-family-or-model-id
+      - backend
+      - embedding-target
+      - layer-selection
+      - representation-type
+    outputs:
+      - embeddings-npz
+      - run-summary-json
+      - optional-protein-embeddings-tsv
+    side_effects:
+      - writes-output-artifacts
+      - may-download-huggingface-models-unless-dry-run-or-local-files-only
+      - may-call-biohub-forge-api-when-backend-is-biohub-forge
+    failure_codes:
+      - 1
+  - tool: scripts/convert_embedding_table.py
+    inputs:
+      - embeddings-npz
+    outputs:
+      - protein-embeddings-tsv
+    side_effects:
+      - writes-output-tsv
+    failure_codes:
+      - 1
+priority_rules:
+  - prefer-when-user-explicitly-mentions-protein-embedding
+  - prefer-when-task-needs-protein-language-model-embedding-or-protein-representations
+  - defer-mutation-effect-generation-function-prediction-and-structure-prediction-to-specialized-skills

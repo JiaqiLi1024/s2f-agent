@@ -1,0 +1,4 @@
+interface:
+  display_name: "Protein Immunopresentation Annotation"
+  short_description: "MHC-I presentation candidate reports"
+  default_prompt: "Use $protein-immunopresentation-annotation to predict MHC-I immunopresentation candidates from protein sequences or FASTA files."

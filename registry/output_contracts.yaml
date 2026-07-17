@@ -1,5 +1,5 @@
 schema_version: 1
-updated_at: "2026-04-17"
+updated_at: "2026-07-06"
 contracts:
   variant-effect:
     assumptions:
@@ -108,3 +108,764 @@ contracts:
     fallbacks:
       - fallback-to-secondary-track-skill
     retry_policy: clarify-interval-or-bed-then-per-interval-network-retry-once
+  protein-structure-lookup:
+    assumptions:
+      - retrieval-workflow-not-de-novo-folding
+      - default-organism-human-unless-user-states-otherwise
+      - uniprot-reviewed-entry-preferred-then-relaxed
+      - alphafold-db-absence-is-non-fatal
+      - esmfold-hosted-api-sequence-length-15-to-400
+      - esmfold-sequence-input-uses-canonical-amino-acid-codes-by-default
+      - pymol-binary-is-optional-for-script-generation
+    runnable_steps:
+      - python skills/protein-structure-get/scripts/protein_structure_get.py --gene <GENE_SYMBOL> --organism human --modules all --outdir output/protein-structure/<GENE_SYMBOL>
+      - python skills/protein-structure-get/scripts/protein_structure_get.py --sequence <AA_SEQUENCE> --sequence-name <LABEL> --modules esmfold --outdir output/protein-structure/<LABEL>
+      - python skills/protein-structure-get/scripts/protein_structure_get.py --uniprot <ACCESSION> --modules alphafold --pymol --outdir output/protein-structure/<ACCESSION>_pymol
+      - awk 'NR<=120{print}' playbooks/protein-structure-lookup/README.md
+    expected_outputs:
+      - plan-json:protein-structure-lookup
+      - expected-file:output/protein-structure/<GENE_SYMBOL>/protein_structure_get.result.json
+      - expected-file:output/protein-structure/<GENE_SYMBOL>/protein_structure_summary.tsv
+      - expected-file:output/protein-structure/<GENE_SYMBOL>/<GENE_SYMBOL>.<ACCESSION>.features.tsv
+      - expected-file:output/protein-structure/<GENE_SYMBOL>/<GENE_SYMBOL>.<ACCESSION>.pdb_structures.tsv
+      - expected-file:output/protein-structure/<GENE_SYMBOL>/<GENE_SYMBOL>.<ACCESSION>.alphafold.tsv
+      - sequence-mode:expected-file:output/protein-structure/<LABEL>/<LABEL>.esmfold.pdb
+      - sequence-mode:expected-file:output/protein-structure/<LABEL>/<LABEL>.esmfold.tsv
+      - sequence-mode:expected-file:output/protein-structure/<LABEL>/<LABEL>.sequence.fasta
+      - optional-file:output/protein-structure/<TARGET>/<LABEL>.pymol.pml
+    fallbacks:
+      - ask-for-organism-or-uniprot-accession-if-gene-resolution-fails
+      - ask-for-valid-15-to-400-aa-sequence-if-esmfold-input-is-invalid
+      - continue-with-uniprot-and-pdb-outputs-if-alphafold-entry-is-missing
+      - install-requirements-if-runtime-dependencies-are-missing
+    retry_policy: clarify-organism-or-accession-then-network-retry-once
+  protein-structure-visualization:
+    assumptions:
+      - structure-source-must-be-known-before-visualization
+      - use-protein-structure-get-first-when-only-gene-symbol-is-provided
+      - pocket-detection-is-heuristic-not-docking-or-binding-energy
+      - conservation-and-ppi-modules-depend-on-public-network-services
+      - residue-and-secondary-highlight-output-is-html-only
+    runnable_steps:
+      - python skills/protein-structure-visualize/scripts/protein_structure_visualize.py --pdb-id <PDB_ID> --modules all --outdir output/protein-structure-visualize/<PDB_ID>
+      - python skills/protein-structure-visualize/scripts/protein_structure_visualize.py --uniprot <ACCESSION> --modules all --gene <GENE_SYMBOL> --outdir output/protein-structure-visualize/<ACCESSION>
+      - python skills/protein-structure-visualize/scripts/protein_structure_visualize.py --pdb-id <PDB_ID> --modules highlight --chain <CHAIN> --highlight-residues <A:110-R,A:120-K> --highlight-secondary <helix,sheet> --outdir output/protein-structure-visualize/<PDB_ID>_highlight
+      - awk 'NR<=140{print}' playbooks/protein-structure-visualization/README.md
+    expected_outputs:
+      - plan-json:protein-structure-visualization
+      - expected-file:output/protein-structure-visualize/<TARGET>/protein_structure_visualize.result.json
+      - expected-file:output/protein-structure-visualize/<TARGET>/structure_summary.tsv
+      - expected-file:output/protein-structure-visualize/<TARGET>/summary.txt
+      - expected-html:output/protein-structure-visualize/<TARGET>/<PREFIX>.full_view.html
+      - expected-html:output/protein-structure-visualize/<TARGET>/<PREFIX>.highlight.html
+      - expected-plot:output/protein-structure-visualize/<TARGET>/<PREFIX>.contact_map.png
+      - expected-plot:output/protein-structure-visualize/<TARGET>/<PREFIX>.bfactor.png
+      - expected-file:output/protein-structure-visualize/<TARGET>/<PREFIX>.ca_distances.tsv
+    fallbacks:
+      - ask-for-pdb-id-uniprot-accession-or-local-pdb-if-source-is-missing
+      - run-protein-structure-get-first-if-user-provides-only-gene-symbol
+      - install-requirements-if-runtime-dependencies-are-missing
+      - install-dssp-or-use-pdb-with-helix-sheet-records-if-secondary-highlight-has-zero-hits
+      - rerun-without-network-dependent-modules-if-hmmer-or-string-time-out
+    retry_policy: clarify-structure-source-then-network-module-retry-once
+  protein-structure-alignment:
+    assumptions:
+      - exactly-two-structure-sources-required
+      - c-alpha-rigid-body-superposition-not-sequence-alignment
+      - default-pairing-requires-overlapping-residue-numbering
+      - chain-and-domain-selection-can-dominate-rmsd-interpretation
+      - tmalign-binary-is-optional-for-tm-score
+      - foldseek-binary-required-for-structure-search-or-clustering
+      - remote-foldseek-web-api-does-not-require-local-foldseek-installation
+      - foldseek-web-api-uploads-query-structure-to-remote-server
+      - foldseek-web-results-can-be-rendered-as-local-html-report
+      - ask-before-installing-foldseek-or-downloading-large-foldseek-databases
+      - run-foldseek-directly-only-when-binary-query-and-target-are-available
+      - similar-structure-search-with-missing-target-requires-database-choice
+      - foldseek-search-and-cluster-use-external-foldseek-not-internal-rmsd-superposition
+      - pae-is-an-alphafold-confidence-metric-not-an-alignment-score
+      - interface-contact-map-uses-structure1-vs-aligned-structure2-not-internal-contact-maps
+    runnable_steps:
+      - python skills/protein-structure-align/scripts/protein_structure_align.py --pdb1 <PDB_ID_1> --pdb2 <PDB_ID_2> --chain1 <CHAIN_1> --chain2 <CHAIN_2> --outdir output/protein-structure-align/<PDB_ID_1>_vs_<PDB_ID_2>
+      - python skills/protein-structure-align/scripts/protein_structure_align.py --pdb1 <PDB_ID> --uniprot2 <ACCESSION> --chain1 <CHAIN_1> --chain2 <CHAIN_2> --contact-threshold 5.0 --outdir output/protein-structure-align/<PDB_ID>_vs_AF_<ACCESSION>
+      - python skills/protein-structure-align/scripts/protein_structure_align.py --file1 <PDB_FILE_1> --file2 <PDB_FILE_2> --chain1 <CHAIN_1> --chain2 <CHAIN_2> --pae1 <PAE_JSON_1> --pae2 <PAE_JSON_2> --outdir output/protein-structure-align/<LABEL>
+      - python skills/protein-structure-align/scripts/protein_structure_align.py --file1 <PROTEIN_1> --file2 <PROTEIN_2> --chain1 <SOURCE_CHAIN_1> --chain2 <SOURCE_CHAIN_2> --no-contact-maps --interface-chain1 A --interface-chain2 B --outdir output/protein-structure-align/<LABEL>
+      - python skills/protein-structure-align/scripts/protein_structure_foldseek.py --mode search --query <QUERY_STRUCTURE_OR_DIR> --target <TARGET_STRUCTURE_DIR_OR_DB> --coverage 0.8 --evalue 1e-3 --outdir output/protein-structure-align/<LABEL>_foldseek_search
+      - python skills/protein-structure-align/scripts/protein_structure_foldseek.py --mode cluster --query <STRUCTURE_DIR_OR_DB> --coverage 0.8 --tmscore-threshold 0.6 --outdir output/protein-structure-align/<LABEL>_foldseek_cluster
+      - python skills/protein-structure-align/scripts/protein_structure_foldseek_web.py --list-databases --outdir output/protein-structure-align/foldseek_web_databases
+      - python skills/protein-structure-align/scripts/protein_structure_foldseek_web.py --query <QUERY_STRUCTURE_FILE> --database afdb50 --database pdb100 --foldseek-mode 3diaa --confirm-remote-upload --outdir output/protein-structure-align/<LABEL>_foldseek_web
+      - awk 'NR<=140{print}' playbooks/protein-structure-alignment/README.md
+    expected_outputs:
+      - plan-json:protein-structure-alignment
+      - expected-file:output/protein-structure-align/<TARGET>/protein_structure_align.result.json
+      - expected-file:output/protein-structure-align/<TARGET>/<PREFIX>.alignment_summary.tsv
+      - expected-file:output/protein-structure-align/<TARGET>/<PREFIX>.per_residue_rmsd.tsv
+      - expected-plot:output/protein-structure-align/<TARGET>/<PREFIX>.per_residue_rmsd.png
+      - expected-plot:output/protein-structure-align/<TARGET>/<PREFIX>.contact_map_structure1.png
+      - expected-plot:output/protein-structure-align/<TARGET>/<PREFIX>.contact_map_structure2.png
+      - expected-file:output/protein-structure-align/<TARGET>/<PREFIX>.contact_map_delta.tsv
+      - optional-file:output/protein-structure-align/<TARGET>/<PREFIX>.aligned_complex.pdb
+      - optional-file:output/protein-structure-align/<TARGET>/<PREFIX>.aligned_complex_interface_contacts.tsv
+      - optional-plot:output/protein-structure-align/<TARGET>/<PREFIX>.aligned_complex_interface_contact_map.png
+      - optional-plot:output/protein-structure-align/<TARGET>/<PREFIX>.aligned_complex_interface_distance_clustermap.png
+      - optional-file:output/protein-structure-align/<TARGET>/<PREFIX>.tmalign.tsv
+      - optional-plot:output/protein-structure-align/<TARGET>/<PREFIX>.pae_structure1.png
+      - optional-plot:output/protein-structure-align/<TARGET>/<PREFIX>.pae_structure2.png
+      - expected-file:output/protein-structure-align/<TARGET>/<PREFIX>.superimposed.pdb
+      - expected-html:output/protein-structure-align/<TARGET>/<PREFIX>.superimposed.html
+      - optional-file:output/protein-structure-align/<TARGET>/protein_structure_foldseek.result.json
+      - optional-file:output/protein-structure-align/<TARGET>/<PREFIX>.foldseek_search.tsv
+      - optional-file:output/protein-structure-align/<TARGET>/<PREFIX>.foldseek_search.top_hits.tsv
+      - optional-file:output/protein-structure-align/<TARGET>/<PREFIX>.foldseek_cluster_clu.tsv
+      - optional-file:output/protein-structure-align/<TARGET>/<PREFIX>.foldseek_cluster_clu.summary.tsv
+      - optional-file:output/protein-structure-align/<TARGET>/protein_structure_foldseek_web.result.json
+      - optional-file:output/protein-structure-align/<TARGET>/<PREFIX>.foldseek_web_result.json
+      - optional-file:output/protein-structure-align/<TARGET>/<PREFIX>.foldseek_web_hits.tsv
+      - optional-file:output/protein-structure-align/<TARGET>/<PREFIX>.foldseek_web_top_hits.tsv
+      - optional-html:output/protein-structure-align/<TARGET>/<PREFIX>.foldseek_web_results.html
+    fallbacks:
+      - ask-for-second-structure-if-only-one-source-is-provided
+      - specify-chain1-chain2-if-no-common-ca-pairs-are-found
+      - restrict-residue-range-for-domain-specific-rmsd
+      - use-pairing-order-only-for-already-matched-renumbered-local-structures
+      - install-tmalign-or-use-no-tmalign-if-tm-score-is-not-required
+      - install-foldseek-or-pass-foldseek-bin-for-structure-search-or-clustering
+      - ask-before-installing-foldseek-downloading-public-databases-or-building-large-indexes
+      - ask-for-pdb-alphafold-uniprot-or-local-target-when-foldseek-target-is-missing
+      - use-foldseek-web-api-for-online-search-after-remote-upload-confirmation
+      - use-list-databases-for-unclear-foldseek-web-database-paths
+      - avoid-foldseek-web-api-for-sensitive-structures-unless-user-approves-upload
+      - use-foldseek-search-for-database-similarity-and-foldseek-cluster-for-structure-sets
+      - provide-pae-json-for-non-alphafold-structures
+      - install-requirements-if-runtime-dependencies-are-missing
+    retry_policy: clarify-structure-pair-then-chain-or-range-retry-once
+  protein-domain-motif-annotation:
+    assumptions:
+      - protein-fasta-is-required-for-standard-runs
+      - interproscan6-and-eggnog-mapper-are-heavy-local-workflows-not-hosted-apis
+      - when-conda-or-mamba-is-missing-prefer-bootstrap-miniforge-or-miniconda-after-user-approval
+      - interproscan6-version-and-data-release-should-be-pinned-for-reproducibility
+      - interproscan6-test-profile-should-run-before-production-to-cache-data-and-container-images
+      - eggnog-mapper-requires-local-eggnog-data-dir-and-search-backend
+      - eggnog-database-must-be-downloaded-before-production-emapper-runs
+      - dry-run-command-plan-is-valid-output-before-production-execution
+    runnable_steps:
+      - python skills/protein-domain-motif-annotation/scripts/run_real_protein_domain_motif_annotation_workflow.py --input <PROTEINS_FASTA> --tools both --interpro-datadir <INTERPRO_DATA_DIR> --eggnog-data-dir <EGGNOG_DATA_DIR> --outdir output/protein-domain-motif-annotation/<RUN_ID>
+      - python skills/protein-domain-motif-annotation/scripts/run_real_protein_domain_motif_annotation_workflow.py --input <PROTEINS_FASTA> --tools interproscan6 --interpro-profile singularity --interpro-datadir <INTERPRO_DATA_DIR> --outdir output/protein-domain-motif-annotation/<RUN_ID> --execute
+      - python skills/protein-domain-motif-annotation/scripts/run_real_protein_domain_motif_annotation_workflow.py --input <PROTEINS_FASTA> --tools eggnog --eggnog-data-dir <EGGNOG_DATA_DIR> --eggnog-cpu 32 --outdir output/protein-domain-motif-annotation/<RUN_ID> --execute
+      - awk 'NR<=140{print}' playbooks/protein-domain-motif-annotation/README.md
+    expected_outputs:
+      - plan-json:protein-domain-motif-annotation
+      - expected-file:output/protein-domain-motif-annotation/<RUN_ID>/protein_domain_motif_annotation.result.json
+      - expected-file:output/protein-domain-motif-annotation/<RUN_ID>/commands.sh
+      - optional-file:output/protein-domain-motif-annotation/<RUN_ID>/interproscan6/<RUN_ID>/<OUTPREFIX>.tsv
+      - optional-file:output/protein-domain-motif-annotation/<RUN_ID>/interproscan6/<RUN_ID>/<OUTPREFIX>.json
+      - optional-file:output/protein-domain-motif-annotation/<RUN_ID>/interproscan6/<RUN_ID>/<OUTPREFIX>.gff3
+      - optional-file:output/protein-domain-motif-annotation/<RUN_ID>/eggnog/<RUN_ID>.emapper.annotations
+      - optional-file:output/protein-domain-motif-annotation/<RUN_ID>/eggnog/<RUN_ID>.emapper.seed_orthologs
+      - optional-file:output/protein-domain-motif-annotation/<RUN_ID>/logs/<RUN_ID>.interproscan6.log
+      - optional-file:output/protein-domain-motif-annotation/<RUN_ID>/logs/<RUN_ID>.eggnog.log
+    fallbacks:
+      - ask-for-protein-fasta-if-input-is-missing
+      - ask-for-tool-selection-if-user-mentions-only-general-annotation
+      - run-wrapper-without-execute-first-to-validate-command-plan
+      - activate-interpro-environment-if-nextflow-is-missing
+      - activate-eggnog-environment-if-emapper-or-diamond-is-missing
+      - install-miniforge-or-miniconda-first-when-conda-or-mamba-is-unavailable-and-user-approves
+      - use-python-venv-and-standalone-nextflow-only-when-conda-style-installation-is-blocked
+      - ask-for-eggnog-data-dir-if-not-provided
+      - run-download-eggnog-data-before-production-if-eggnog-data-dir-is-empty
+      - run-interproscan6-test-profile-before-production-if-data-or-container-cache-is-missing
+      - rerun-interproscan6-with-resume-only-when-input-version-datadir-and-workdir-match
+    retry_policy: dry-run-then-clarify-environment-or-database-paths-once
+  protein-conservation-assessment:
+    assumptions:
+      - conservation-skill-is-sequence-first-and-does-not-require-a-structure
+      - conservation-scores-require-a-homolog-set-or-existing-msa
+      - local-database-downloads-must-be-user-approved-before-execution
+      - dedicated-conda-environment-should-include-biotite-matplotlib-mafft-hmmer-mmseqs2
+      - ebi-hmmer-refprot-means-uniprot-reference-proteomes-not-uniref90
+      - residue-and-region-coordinates-are-1-based-query-protein-positions
+      - homolog-scope-and-database-choice-dominate-biological-interpretation
+    runnable_steps:
+      - python skills/protein-conservation-assessment/scripts/protein_conservation_assessment.py --alignment <ALIGNED_FASTA_OR_STOCKHOLM> --query-id <QUERY_ID> --outdir output/protein-conservation-assessment/<RUN_ID>
+      - python skills/protein-conservation-assessment/scripts/protein_conservation_assessment.py --sequence <AA_SEQUENCE> --sequence-name <QUERY_ID> --homolog-fasta <HOMOLOGS_FASTA> --msa-backend auto --outdir output/protein-conservation-assessment/<RUN_ID>
+      - python skills/protein-conservation-assessment/scripts/protein_conservation_assessment.py --sequence <AA_SEQUENCE> --sequence-name <QUERY_ID> --search-backend local-hmmer --target-db <PROTEIN_DATABASE_FASTA> --db-choice swissprot --db-dir "$HOME/biodata/protein_conservation" --outdir output/protein-conservation-assessment/<RUN_ID>_plan
+      - python skills/protein-conservation-assessment/scripts/protein_conservation_assessment.py --sequence <AA_SEQUENCE> --sequence-name <QUERY_ID> --search-backend local-hmmer --target-db <PROTEIN_DATABASE_FASTA> --execute --outdir output/protein-conservation-assessment/<RUN_ID>
+      - awk 'NR<=140{print}' playbooks/protein-conservation-assessment/README.md
+    expected_outputs:
+      - plan-json:protein-conservation-assessment
+      - expected-file:output/protein-conservation-assessment/<RUN_ID>/protein_conservation_summary.tsv
+      - expected-file:output/protein-conservation-assessment/<RUN_ID>/protein_conservation_sites.tsv
+      - expected-file:output/protein-conservation-assessment/<RUN_ID>/protein_conserved_regions.tsv
+      - expected-file:output/protein-conservation-assessment/<RUN_ID>/protein_conservation_assessment.result.json
+      - expected-file:output/protein-conservation-assessment/<RUN_ID>/commands.sh
+      - expected-file:output/protein-conservation-assessment/<RUN_ID>/database_download_plan.sh
+      - optional-file:output/protein-conservation-assessment/<RUN_ID>/normalized_input.fasta
+      - optional-file:output/protein-conservation-assessment/<RUN_ID>/homologs.filtered.fasta
+      - optional-file:output/protein-conservation-assessment/<RUN_ID>/alignment.fasta
+      - optional-file:output/protein-conservation-assessment/<RUN_ID>/plots/*.html
+      - optional-plot:output/protein-conservation-assessment/<RUN_ID>/plots/*.svg
+    output_columns:
+      summary:
+        - query_id
+        - query_length
+        - alignment_sequence_count
+        - homolog_sequence_count
+        - alignment_length
+        - search_backend
+        - target_database
+        - msa_backend
+        - mean_conservation_score
+        - mean_gap_fraction
+        - fraction_conserved
+        - fraction_variable
+        - fraction_gap_rich
+        - n_conserved_residues
+        - n_variable_residues
+        - n_conserved_regions
+        - longest_conserved_region
+        - conserved_threshold
+        - variable_threshold
+        - warnings
+      sites:
+        - query_id
+        - position
+        - residue
+        - alignment_column
+        - n_sequences
+        - n_non_gap
+        - gap_fraction
+        - consensus_residue
+        - consensus_fraction
+        - query_residue_fraction
+        - entropy
+        - conservation_score
+        - conservation_grade
+        - status
+        - note
+      regions:
+        - query_id
+        - region_type
+        - start
+        - end
+        - length
+        - mean_conservation_score
+        - mean_gap_fraction
+        - max_conservation_score
+        - min_conservation_score
+        - evidence
+        - note
+    fallbacks:
+      - ask-for-amino-acid-sequence-fasta-homolog-fasta-or-msa-if-query-is-missing
+      - run-wrapper-without-execute-first-to-create-command-and-database-download-plans
+      - ask-user-before-downloading-uniref-or-reference-proteome-databases
+      - use-swissprot-or-user-provided-protein-fasta-when-uniref90-is-too-large
+      - import-existing-msa-when-mafft-biotite-or-hmmer-are-unavailable
+      - route-to-protein-structure-visualize-when-user-only-needs-3d-conservation-coloring
+    retry_policy: clarify-sequence-homologs-msa-or-database-then-dry-run-once
+  protein-degron-annotation:
+    assumptions:
+      - degron-skill-identifies-candidate-degradation-signals-not-confirmed-degrons
+      - local-ELM-scan-uses-ELM-DEG-classes-and-degron-like-ELM-classes-from-elms_classes-tsv
+      - local-DEGRONOPEDIA-scan-uses-the-downloadable-degron-dataset-xlsx-or-tsv
+      - QCDPred-scoring-uses-the-published-17-aa-quality-control-degron-logistic-model
+      - database-downloads-must-be-approved-by-user-before-execution
+      - ELM-hosted-api-is-rate-limited-and-not-preferred-for-batch-use
+      - DEGRONOPEDIA-web-service-is-one-protein-at-a-time-and-not-a-local-batch-api
+      - degronopedia-license-fields-must-be-preserved-before-commercial-or-shared-use
+      - qcdpred-intervals-are-quality-control-degron-candidates-not-E3-specific-motif-assignments
+      - coordinates-are-1-based-closed-query-residue-positions
+    runnable_steps:
+      - python skills/protein-degron-annotation/scripts/protein_degron_annotation.py --sequence <AA_SEQUENCE> --sequence-name <QUERY_ID> --data-dir "$HOME/biodata/protein_degron" --outdir output/protein-degron-annotation/<RUN_ID>_plan
+      - python skills/protein-degron-annotation/scripts/protein_degron_annotation.py --fasta <PROTEINS_FASTA> --elm-classes-tsv <ELMS_CLASSES_TSV> --degronopedia-xlsx <DEGRONOPEDIA_degron_dataset.xlsx> --outdir output/protein-degron-annotation/<RUN_ID>
+      - python skills/protein-degron-annotation/scripts/protein_degron_annotation.py --sequence <AA_SEQUENCE> --sequence-name <QUERY_ID> --tools qcdpred --qcdpred-threshold 0.85 --qcdpred-padding 8 --outdir output/protein-degron-annotation/<RUN_ID>_qcdpred
+      - python skills/protein-degron-annotation/scripts/protein_degron_annotation.py --fasta <PROTEINS_FASTA> --tools qcdpred --qcdpred-output <QCDPRED_OUTPUT_TXT> --outdir output/protein-degron-annotation/<RUN_ID>_qcdpred_import
+      - python skills/protein-degron-annotation/scripts/protein_degron_annotation.py --sequence <AA_SEQUENCE> --sequence-name <QUERY_ID> --tools custom --custom-degron "MY_DEGRON=R..L" --outdir output/protein-degron-annotation/<RUN_ID>
+      - awk 'NR<=140{print}' playbooks/protein-degron-annotation/README.md
+    expected_outputs:
+      - plan-json:protein-degron-annotation
+      - expected-file:output/protein-degron-annotation/<RUN_ID>/protein_degron_summary.tsv
+      - expected-file:output/protein-degron-annotation/<RUN_ID>/protein_degron_features.tsv
+      - expected-file:output/protein-degron-annotation/<RUN_ID>/protein_degron_annotation.result.json
+      - expected-file:output/protein-degron-annotation/<RUN_ID>/commands.sh
+      - expected-file:output/protein-degron-annotation/<RUN_ID>/database_download_plan.sh
+      - optional-file:output/protein-degron-annotation/<RUN_ID>/qcdpred_profile.tsv
+      - optional-file:output/protein-degron-annotation/<RUN_ID>/normalized_input.fasta
+    output_columns:
+      summary:
+        - query_id
+        - input_type
+        - length
+        - sequence_sha256
+        - tools
+        - elm_degron_hits
+        - degronopedia_hits
+        - qcdpred_hits
+        - qcdpred_avg_score
+        - qcdpred_median_score
+        - qcdpred_max_score
+        - custom_degron_hits
+        - n_degron_candidates
+        - n_terminal_degrons
+        - n_internal_degrons
+        - n_phosphodegrons
+        - n_unique_motifs
+        - warnings
+      features:
+        - query_id
+        - source
+        - feature_type
+        - start
+        - end
+        - length
+        - accession
+        - name
+        - description
+        - database
+        - score
+        - evidence
+        - note
+        - matched_sequence
+        - degron_location
+        - degron_regex
+        - e3_ligase_or_ups_component
+        - license
+        - free_for_any_use
+        - references
+    fallbacks:
+      - generate-database-download-plan-if-ELM-or-DEGRONOPEDIA-files-are-missing
+      - use-custom-degron-regex-when-public-datasets-are-unavailable
+      - ask-user-to-run-DEGRONOPEDIA-web-and-import-xlsx-when-full-server-context-is-required
+      - combine-with-IDR-conservation-localization-and-structure-skills-for-biological-interpretation
+    retry_policy: clarify-sequence-database-files-or-custom-motifs-then-dry-run-once
+  protein-immunopresentation-annotation:
+    assumptions:
+      - immunopresentation-results-are-candidate-annotations-not-confirmed-immunogenicity
+      - remote-IEDB-submission-must-be-user-approved-for-private-or-unpublished-sequences
+      - IEDB-legacy-Tools-API-supports-MHC-I-binding-and-processing-POST-requests
+      - IEDB-next-generation-mhci-metadata-documents-current-predictors-and-parameters
+      - local-IEDB-execution-requires-official-IEDB-NG-TC1-src-tcell-mhci-py
+      - qinti2023-IEDB-wrapper-repo-does-not-bundle-official-IEDB-tools
+      - IEDB-NG-TC1-split-aggregate-is-experimental-and-logs-must-be-preserved
+      - binding-rank-thresholds-default-to-strong-0.5-and-weak-2.0-percentile
+      - IC50-thresholds-default-to-strong-50nM-and-weak-500nM
+      - processing-scores-support-but-do-not-replace-MHC-binding-evidence
+      - coordinates-are-1-based-closed-query-residue-positions
+    runnable_steps:
+      - python skills/protein-immunopresentation-annotation/scripts/protein_immunopresentation_annotation.py --fasta <PROTEINS_FASTA> --alleles 'HLA-A*02:01,HLA-B*07:02' --peptide-lengths 8,9,10,11 --outdir output/protein-immunopresentation-annotation/<RUN_ID>_plan
+      - python skills/protein-immunopresentation-annotation/scripts/protein_immunopresentation_annotation.py --fasta <PROTEINS_FASTA> --iedb-local-tools-dir <IEDB_NG_TC1_DIR> --execute-local --local-workdir output/protein-immunopresentation-annotation/<RUN_ID>_iedb_work --outdir output/protein-immunopresentation-annotation/<RUN_ID>_local
+      - python skills/protein-immunopresentation-annotation/scripts/protein_immunopresentation_annotation.py --fasta <PROTEINS_FASTA> --local-result-json <IEDB_WORKDIR>/aggregate/aggregated_result.json --context-features-tsv <FEATURES_TSV> --outdir output/protein-immunopresentation-annotation/<RUN_ID>_import
+      - python skills/protein-immunopresentation-annotation/scripts/protein_immunopresentation_annotation.py --fasta <PROTEINS_FASTA> --api-result-tsv <IEDB_MHCI_TSV> --processing-result-tsv <IEDB_PROCESSING_TSV> --immunogenicity-result-tsv <IEDB_IMMUNOGENICITY_TSV> --outdir output/protein-immunopresentation-annotation/<RUN_ID>
+      - python skills/protein-immunopresentation-annotation/scripts/protein_immunopresentation_annotation.py --fasta <PROTEINS_FASTA> --api-result-json <aggregated_result.json> --context-features-tsv <FEATURES_TSV> --outdir output/protein-immunopresentation-annotation/<RUN_ID>_import
+      - awk 'NR<=140{print}' playbooks/protein-immunopresentation-annotation/README.md
+    expected_outputs:
+      - plan-json:protein-immunopresentation-annotation
+      - expected-file:output/protein-immunopresentation-annotation/<RUN_ID>/mhci_peptides.tsv
+      - expected-file:output/protein-immunopresentation-annotation/<RUN_ID>/mhci_binding_predictions.tsv
+      - expected-file:output/protein-immunopresentation-annotation/<RUN_ID>/mhci_processing_predictions.tsv
+      - expected-file:output/protein-immunopresentation-annotation/<RUN_ID>/mhci_immunogenicity_predictions.tsv
+      - expected-file:output/protein-immunopresentation-annotation/<RUN_ID>/immunopresentation_candidates.tsv
+      - expected-file:output/protein-immunopresentation-annotation/<RUN_ID>/protein_immunopresentation_summary.tsv
+      - expected-file:output/protein-immunopresentation-annotation/<RUN_ID>/protein_immunopresentation_annotation.result.json
+      - expected-file:output/protein-immunopresentation-annotation/<RUN_ID>/commands.sh
+      - expected-file:output/protein-immunopresentation-annotation/<RUN_ID>/local_iedb/iedb_ng_tc1_input.json
+      - expected-file:output/protein-immunopresentation-annotation/<RUN_ID>/local_iedb/local_pipeline_plan.sh
+      - expected-file:output/protein-immunopresentation-annotation/<RUN_ID>/local_iedb/local_pipeline_manifest.json
+      - optional-file:output/protein-immunopresentation-annotation/<RUN_ID>/api_requests/iedb_legacy_requests.jsonl
+      - optional-file:output/protein-immunopresentation-annotation/<RUN_ID>/api_requests/iedb_nextgen_request.json
+      - optional-file:output/protein-immunopresentation-annotation/<RUN_ID>/normalized_input.fasta
+      - optional-file:output/protein-immunopresentation-annotation/<RUN_ID>/local_iedb/work/aggregate/aggregated_result.json
+    output_columns:
+      summary:
+        - query_id
+        - input_type
+        - protein_length
+        - sequence_sha256
+        - n_peptides_generated
+        - n_predictions
+        - n_strong_binder_peptides
+        - n_weak_binder_peptides
+        - n_high_confidence_candidates
+        - n_weak_candidates
+        - n_unlikely_candidates
+        - alleles
+        - peptide_lengths
+        - predictors
+        - warnings
+      candidates:
+        - query_id
+        - peptide_start
+        - peptide_end
+        - peptide_length
+        - peptide_sequence
+        - strong_binding_alleles
+        - weak_binding_alleles
+        - best_el_rank
+        - best_ba_rank
+        - best_ic50_nm
+        - processing_support
+        - immunogenicity_score
+        - overlaps_signal_peptide
+        - overlaps_tm
+        - overlaps_idr
+        - overlaps_domain
+        - overlaps_conserved_region
+        - candidate_grade
+    fallbacks:
+      - run-dry-plan-and-generate-local-IEDB-input-json-before-production-execution
+      - import-qinti2023-IEDB-aggregate-json-when-local-jobs-were-run-outside-wrapper
+      - run-dry-plan-and-generate-api-payloads-if-local-IEDB-tools-are-missing-and-remote-submission-is-approved
+      - use-user-provided-HLA-genotypes-over-default-reference-alleles
+      - combine-with-localization-TM-IDR-domain-and-conservation-skills-for-context-overlaps
+    retry_policy: clarify-sequence-HLA-alleles-local-IEDB-tools-aggregate-json-or-remote-submission-policy-then-dry-run-once
+  protein-annotation-report:
+    assumptions:
+      - report-skill-normalizes-existing-evidence-and-does-not-run-heavy-interproscan6-or-eggnog-workloads
+      - unknown-sequence-only-reports-include-local-sequence-summary-and-heuristic-motif-candidates
+      - reliable-domain-and-function-evidence-for-novel-sequences-should-come-from-interproscan6-and-eggnog-outputs
+      - idr-disorder-evidence-is-imported-from-protein-idr-disorder-annotation-outputs-and-treated-as-threshold-derived-predicted-sequence-features
+      - llps-and-aggregation-evidence-is-imported-from-protein-idr-disorder-annotation-llps-outputs-and-treated-as-predicted-sequence-features
+      - degron-evidence-is-imported-from-protein-degron-annotation-outputs-and-treated-as-candidate-degradation-signals
+      - uniprot-gene-and-protein-name-lookups-use-public-uniprot-rest-api-and-need-organism-context-when-ambiguous
+      - uniprot-exports-functional-and-structural-feature-types-by-default-use-all-uniprot-features-for-variants
+      - normalized-residue-coordinates-are-1-based-closed-when-source-convention-is-known
+    runnable_steps:
+      - python skills/protein-annotation-report/scripts/protein_annotation_report.py --sequence <AA_SEQUENCE> --sequence-name <RUN_ID> --outdir output/protein-annotation-report/<RUN_ID>
+      - python skills/protein-annotation-report/scripts/protein_annotation_report.py --gene <GENE_SYMBOL> --organism human --outdir output/protein-annotation-report/<GENE_SYMBOL>
+      - python skills/protein-annotation-report/scripts/protein_annotation_report.py --uniprot <ACCESSION> --outdir output/protein-annotation-report/<ACCESSION>
+      - python skills/protein-annotation-report/scripts/protein_annotation_report.py --fasta <PROTEINS_FASTA> --annotation-result-json <protein_domain_motif_annotation.result.json> --outdir output/protein-annotation-report/<RUN_ID>
+      - python skills/protein-annotation-report/scripts/protein_annotation_report.py --fasta <PROTEINS_FASTA> --annotation-result-json <protein_domain_motif_annotation.result.json> --idr-result-json <protein_idr_disorder_annotation.result.json> --outdir output/protein-annotation-report/<RUN_ID>
+      - python skills/protein-annotation-report/scripts/protein_annotation_report.py --fasta <PROTEINS_FASTA> --interpro-tsv <INTERPROSCAN_TSV> --eggnog-annotations <EMAPPER_ANNOTATIONS> --outdir output/protein-annotation-report/<RUN_ID>
+      - python skills/protein-annotation-report/scripts/protein_annotation_report.py --idr-summary-tsv <protein_idr_summary.tsv> --idr-regions-tsv <protein_idr_regions.tsv> --outdir output/protein-annotation-report/<RUN_ID>
+      - python skills/protein-annotation-report/scripts/protein_annotation_report.py --idr-summary-tsv <protein_idr_summary.tsv> --idr-regions-tsv <protein_idr_regions.tsv> --llps-summary-tsv <protein_llps_summary.tsv> --llps-features-tsv <protein_llps_features.tsv> --outdir output/protein-annotation-report/<RUN_ID>
+      - python skills/protein-annotation-report/scripts/protein_annotation_report.py --fasta <PROTEINS_FASTA> --degron-result-json <protein_degron_annotation.result.json> --outdir output/protein-annotation-report/<RUN_ID>
+      - awk 'NR<=140{print}' playbooks/protein-annotation-report/README.md
+    expected_outputs:
+      - plan-json:protein-annotation-report
+      - expected-file:output/protein-annotation-report/<RUN_ID>/protein_annotation_summary.tsv
+      - expected-file:output/protein-annotation-report/<RUN_ID>/protein_annotation_features.tsv
+      - expected-file:output/protein-annotation-report/<RUN_ID>/protein_annotation_report.json
+      - optional-file:output/protein-annotation-report/<RUN_ID>/<ACCESSION>.uniprot.json
+    output_columns:
+      summary:
+        - query_id
+        - input_type
+        - source_ids
+        - uniprot_accession
+        - reviewed
+        - protein_name
+        - gene_names
+        - organism
+        - length
+        - sequence_sha256
+        - molecular_weight_da
+        - gravy
+        - aromaticity
+        - predicted_function
+        - subcellular_location
+        - domains
+        - motifs
+        - degrons
+        - interpro_ids
+        - pfam_ids
+        - eggnog_ogs
+        - go_terms
+        - ec_numbers
+        - kegg_ko
+        - pathways
+        - mean_disorder_score
+        - fraction_disordered
+        - n_disordered_residues
+        - n_idr_regions
+        - longest_idr
+        - n_binding_regions
+        - n_linker_regions
+        - pLLPS
+        - mean_aggregation_score
+        - fraction_aggregation_prone
+        - n_aggregation_prone_residues
+        - n_aggregation_regions
+        - n_dpr_regions
+        - n_hotspot_regions
+        - n_degron_candidates
+        - n_terminal_degrons
+        - n_phosphodegrons
+        - feature_count
+        - annotation_sources
+        - warnings
+      features:
+        - query_id
+        - source
+        - feature_type
+        - start
+        - end
+        - length
+        - accession
+        - name
+        - description
+        - database
+        - interpro_accession
+        - interpro_description
+        - go_terms
+        - pathways
+        - score
+        - evalue
+        - evidence
+        - note
+    fallbacks:
+      - ask-for-sequence-gene-uniprot-or-annotation-output-files-if-query-is-missing
+      - use-no-uniprot-mode-when-network-is-unavailable-and-local-sequence-or-output-files-exist
+      - run-protein-domain-motif-annotation-first-when-user-needs-novel-sequence-domain-or-orthology-evidence
+      - retry-uniprot-lookup-with-accession-or-organism-when-gene-or-protein-name-is-ambiguous
+      - import-existing-features-and-motifs-tsv-when-full-interpro-or-eggnog-output-is-unavailable
+      - run-protein-idr-disorder-annotation-first-when-user-needs-idr-disorder-regions-in-the-report
+      - import-protein-llps-summary-and-features-tsv-when-user-needs-llps-or-aggregation-reporting
+    retry_policy: clarify-query-or-source-files-then-run-report-once
+  protein-idr-disorder-annotation:
+    assumptions:
+      - idr-skill-normalizes-idr-prediction-scores-and-regions-not-domain-or-orthology-annotation
+      - metapredict-current-default-is-v3-and-should-be-preferred-for-fast-local-idr-screening
+      - aiupred-cli-and-nextflow-are-distinct-execution-paths
+      - iupred3-rest-is-accession-oriented-and-network-dependent
+      - local-iupred3-fasta-mode-loops-one-sequence-at-a-time-when-no-custom-batch-wrapper-exists
+      - gget-elm-is-motif-context-not-a-disorder-predictor
+      - fuzdrop-web-submission-may-require-recaptcha-so-json-import-is-the-default-reproducible-path
+      - aggrescanai-local-execution-is-heavy-and-csv-import-from-colab-or-local-runner-output-is-supported
+      - built-in-profile-plots-are-html-svg-and-do-not-require-matplotlib
+      - threshold-derived-regions-must-record-threshold-min-length-and-merge-gap
+    runnable_steps:
+      - python skills/protein-idr-disorder-annotation/scripts/protein_idr_disorder_annotation.py --sequence <AA_SEQUENCE> --sequence-name <RUN_ID> --tools metapredict+aiupred --outdir output/protein-idr-disorder-annotation/<RUN_ID>
+      - python skills/protein-idr-disorder-annotation/scripts/protein_idr_disorder_annotation.py --fasta <PROTEIN_FASTA> --tools metapredict+aiupred --outdir output/protein-idr-disorder-annotation/<RUN_ID>
+      - python skills/protein-idr-disorder-annotation/scripts/protein_idr_disorder_annotation.py --fasta <PROTEIN_FASTA> --tools aiupred --aiupred-binding --aiupred-linker --execute --outdir output/protein-idr-disorder-annotation/<RUN_ID>
+      - python skills/protein-idr-disorder-annotation/scripts/protein_idr_disorder_annotation.py --uniprot <ACCESSION> --tools iupred3 --iupred3-type long --execute --outdir output/protein-idr-disorder-annotation/<ACCESSION>
+      - python skills/protein-idr-disorder-annotation/scripts/protein_idr_disorder_annotation.py --fasta <PROTEIN_FASTA> --tools iupred3 --iupred3-local-bin <IUPRED3_SCRIPT> --iupred3-local-input-format fasta --execute --outdir output/protein-idr-disorder-annotation/<RUN_ID>
+      - python skills/protein-idr-disorder-annotation/scripts/protein_idr_disorder_annotation.py --tools fuzdrop+aggrescanai --fuzdrop-json <FUZDROP_JSON> --aggrescanai-csv <AGGRESCANAI_CSV> --execute --outdir output/protein-idr-disorder-annotation/<RUN_ID>
+      - awk 'NR<=140{print}' playbooks/protein-idr-disorder-annotation/README.md
+    expected_outputs:
+      - plan-json:protein-idr-disorder-annotation
+      - expected-file:output/protein-idr-disorder-annotation/<RUN_ID>/protein_idr_summary.tsv
+      - expected-file:output/protein-idr-disorder-annotation/<RUN_ID>/protein_idr_regions.tsv
+      - expected-file:output/protein-idr-disorder-annotation/<RUN_ID>/protein_idr_residue_scores.tsv
+      - expected-file:output/protein-idr-disorder-annotation/<RUN_ID>/protein_idr_disorder_annotation.result.json
+      - expected-file:output/protein-idr-disorder-annotation/<RUN_ID>/protein_llps_summary.tsv
+      - expected-file:output/protein-idr-disorder-annotation/<RUN_ID>/protein_llps_features.tsv
+      - expected-file:output/protein-idr-disorder-annotation/<RUN_ID>/commands.sh
+      - expected-file:output/protein-idr-disorder-annotation/<RUN_ID>/normalized_input.fasta
+      - optional-file:output/protein-idr-disorder-annotation/<RUN_ID>/plots/*.html
+      - optional-plot:output/protein-idr-disorder-annotation/<RUN_ID>/plots/*.svg
+    output_columns:
+      summary:
+        - query_id
+        - length
+        - sources
+        - mean_disorder_score
+        - fraction_disordered
+        - n_disordered_residues
+        - n_idr_regions
+        - longest_idr
+        - n_binding_regions
+        - n_linker_regions
+        - warnings
+      regions:
+        - query_id
+        - source
+        - region_type
+        - start
+        - end
+        - length
+        - mean_score
+        - max_score
+        - threshold
+        - evidence
+      residue_scores:
+        - query_id
+        - source
+        - score_type
+        - position
+        - residue
+        - score
+        - threshold
+        - above_threshold
+      llps_summary:
+        - query_id
+        - length
+        - sources
+        - pLLPS
+        - mean_aggregation_score
+        - fraction_aggregation_prone
+        - n_aggregation_prone_residues
+        - n_aggregation_regions
+        - n_dpr_regions
+        - n_hotspot_regions
+        - n_dor_regions
+        - n_ddr_regions
+        - n_cdr_regions
+        - warnings
+      llps_features:
+        - query_id
+        - source
+        - feature_type
+        - start
+        - end
+        - length
+        - score
+        - threshold
+        - evidence
+        - note
+    fallbacks:
+      - ask-for-amino-acid-sequence-fasta-or-uniprot-accession-if-query-is-missing
+      - run-wrapper-without-execute-first-to-validate-command-plan
+      - use-metapredict-or-aiupred-when-iupred3-rest-is-unavailable-for-raw-sequences
+      - use-iupred3-local-fasta-mode-for-multiple-sequences-when-no-iupred-qt-batch-wrapper-is-available
+      - use-aiupred-force-cpu-or-cpu-nextflow-profile-when-gpu-is-unavailable
+      - import-fuzdrop-json-when-recaptcha-blocks-unattended-api-submission
+      - import-aggrescanai-csv-when-local-prott5-tensorflow-runner-is-too-heavy
+      - rebuild-clean-python-environment-when-metapredict-torch-numpy-dependencies-conflict
+      - use-gget-elm-only-as-motif-context-and-intersect-with-idr-regions-afterward
+    retry_policy: clarify-sequence-or-accession-and-tool-selection-then-dry-run-once
+  protein-localization-signal-annotation:
+    assumptions:
+      - localization-skill-normalizes-subcellular-localization-and-targeting-signal-predictions-not-transmembrane-topology
+      - deeploc-2-1-is-used-for-eukaryotic-multilabel-localization-membrane-association-and-sorting-signal-context
+      - signalp-6-0-is-used-for-signal-peptide-type-and-cleavage-site-prediction
+      - targetp-2-0-is-used-for-n-terminal-sp-mtp-ctp-and-ltp-presequence-prediction
+      - dtu-web-services-accept-protein-fasta-but-do-not-provide-a-stable-public-batch-api-in-this-wrapper
+      - local-dtu-software-downloads-may-require-license-or-academic-eligibility-and-should-not-be-auto-downloaded
+      - import-mode-is-the-default-reproducible-path-when-web-or-local-results-already-exist
+    runnable_steps:
+      - python skills/protein-localization-signal-annotation/scripts/protein_localization_signal_annotation.py --sequence <AA_SEQUENCE> --sequence-name <RUN_ID> --tools deeploc+signalp+targetp --outdir output/protein-localization-signal-annotation/<RUN_ID>
+      - python skills/protein-localization-signal-annotation/scripts/protein_localization_signal_annotation.py --fasta <PROTEIN_FASTA> --tools deeploc+signalp+targetp --outdir output/protein-localization-signal-annotation/<RUN_ID>
+      - python skills/protein-localization-signal-annotation/scripts/protein_localization_signal_annotation.py --fasta <PROTEIN_FASTA> --deeploc-output <DEEPLOC_TABLE> --signalp-output <SIGNALP_TABLE> --targetp-output <TARGETP_TABLE> --outdir output/protein-localization-signal-annotation/<RUN_ID>
+      - python skills/protein-localization-signal-annotation/scripts/protein_localization_signal_annotation.py --fasta <PROTEIN_FASTA> --tools signalp --signalp-gff3 <SIGNALP_GFF3> --outdir output/protein-localization-signal-annotation/<RUN_ID>
+      - python skills/protein-localization-signal-annotation/scripts/protein_localization_signal_annotation.py --fasta <PROTEIN_FASTA> --targetp-organism plant --targetp-output <TARGETP_TABLE> --outdir output/protein-localization-signal-annotation/<RUN_ID>
+      - awk 'NR<=140{print}' playbooks/protein-localization-signal-annotation/README.md
+    expected_outputs:
+      - plan-json:protein-localization-signal-annotation
+      - expected-file:output/protein-localization-signal-annotation/<RUN_ID>/protein_localization_summary.tsv
+      - expected-file:output/protein-localization-signal-annotation/<RUN_ID>/protein_localization_features.tsv
+      - expected-file:output/protein-localization-signal-annotation/<RUN_ID>/protein_localization_scores.tsv
+      - expected-file:output/protein-localization-signal-annotation/<RUN_ID>/protein_localization_signal_annotation.result.json
+      - expected-file:output/protein-localization-signal-annotation/<RUN_ID>/commands.sh
+      - optional-file:output/protein-localization-signal-annotation/<RUN_ID>/normalized_input.fasta
+      - optional-file:output/protein-localization-signal-annotation/<RUN_ID>/web_submission/*.fasta
+      - optional-file:output/protein-localization-signal-annotation/<RUN_ID>/plots/*.html
+      - optional-plot:output/protein-localization-signal-annotation/<RUN_ID>/plots/*.svg
+    output_columns:
+      summary:
+        - query_id
+        - length
+        - sources
+        - deeploc_top_localization
+        - deeploc_localizations
+        - deeploc_membrane_association
+        - deeploc_signals
+        - signalp_prediction
+        - signalp_signal_peptide
+        - signalp_cleavage_site
+        - signalp_probability
+        - targetp_prediction
+        - targetp_presequence
+        - targetp_cleavage_site
+        - targetp_probability
+        - integrated_localization
+        - secretory_pathway_evidence
+        - warnings
+      features:
+        - query_id
+        - source
+        - feature_type
+        - start
+        - end
+        - length
+        - label
+        - score
+        - evidence
+        - note
+      scores:
+        - query_id
+        - source
+        - score_type
+        - label
+        - score
+        - threshold
+        - above_threshold
+    fallbacks:
+      - ask-for-amino-acid-sequence-fasta-or-localization-output-files-if-query-is-missing
+      - run-wrapper-without-execute-first-to-create-web-submission-fasta-and-command-plan
+      - import-dtu-web-output-tables-when-local-licensed-tools-are-unavailable
+      - use-targetp-plant-mode-for-plastid-containing-organisms-otherwise-non-plant
+      - route-to-protein-tm-topology-annotation-when-user-needs-transmembrane-topology-as-primary-task
+    retry_policy: clarify-sequence-tool-selection-or-output-files-then-run-wrapper-once
+  protein-tm-topology-annotation:
+    assumptions:
+      - tm-skill-normalizes-transmembrane-topology-not-general-domain-orthology-or-idr-annotation
+      - deeptmhmm-is-preferred-for-current-alpha-helical-and-beta-barrel-topology-prediction
+      - tmhmm-is-legacy-but-supported-for-explicit-tmhmm-requests-and-comparison
+      - gff3-start-end-are-treated-as-1-based-closed-protein-residue-coordinates
+      - gff3-derived-plots-are-topology-state-plots-not-tmhmm-posterior-probability-curves
+      - deeptmhmm-web-may-not-generate-native-plots-for-multiple-sequence-submissions
+      - external-deeptmhmm-command-shape-is-installation-dependent-use-command-template-when-needed
+    runnable_steps:
+      - python skills/protein-tm-topology-annotation/scripts/protein_tm_topology_annotation.py --fasta <PROTEIN_FASTA> --tools deeptmhmm --deeptmhmm-gff3 <DEEPTMHMM_GFF3> --outdir output/protein-tm-topology-annotation/<RUN_ID>
+      - python skills/protein-tm-topology-annotation/scripts/protein_tm_topology_annotation.py --fasta <PROTEIN_FASTA> --tools tmhmm --tmhmm-output <TMHMM_LONG_OUTPUT> --outdir output/protein-tm-topology-annotation/<RUN_ID>
+      - python skills/protein-tm-topology-annotation/scripts/protein_tm_topology_annotation.py --fasta <PROTEIN_FASTA> --tools tmhmm+deeptmhmm --tmhmm-output <TMHMM_LONG_OUTPUT> --deeptmhmm-gff3 <DEEPTMHMM_GFF3> --outdir output/protein-tm-topology-annotation/<RUN_ID>
+      - python skills/protein-tm-topology-annotation/scripts/protein_tm_topology_annotation.py --sequence <AA_SEQUENCE> --sequence-name <RUN_ID> --tools tmhmm --tmhmm-bin tmhmm --execute --outdir output/protein-tm-topology-annotation/<RUN_ID>
+      - awk 'NR<=140{print}' playbooks/protein-tm-topology-annotation/README.md
+    expected_outputs:
+      - plan-json:protein-tm-topology-annotation
+      - expected-file:output/protein-tm-topology-annotation/<RUN_ID>/protein_tm_topology_summary.tsv
+      - expected-file:output/protein-tm-topology-annotation/<RUN_ID>/protein_tm_topology_regions.tsv
+      - expected-file:output/protein-tm-topology-annotation/<RUN_ID>/protein_tm_topology_residue_states.tsv
+      - expected-file:output/protein-tm-topology-annotation/<RUN_ID>/protein_tm_topology_annotation.result.json
+      - expected-file:output/protein-tm-topology-annotation/<RUN_ID>/commands.sh
+      - optional-file:output/protein-tm-topology-annotation/<RUN_ID>/normalized_input.fasta
+      - optional-file:output/protein-tm-topology-annotation/<RUN_ID>/plots/*.html
+      - optional-plot:output/protein-tm-topology-annotation/<RUN_ID>/plots/*.svg
+    output_columns:
+      summary:
+        - query_id
+        - length
+        - sources
+        - topology_class
+        - n_tm_helices
+        - n_beta_strands
+        - n_signal_peptides
+        - n_inside_regions
+        - n_outside_regions
+        - n_periplasmic_regions
+        - n_other_regions
+        - topology_string
+        - warnings
+      regions:
+        - query_id
+        - source
+        - feature_type
+        - start
+        - end
+        - length
+        - score
+        - strand
+        - phase
+        - evidence
+        - attributes
+        - note
+      residue_states:
+        - query_id
+        - source
+        - position
+        - residue
+        - state
+        - state_detail
+        - feature_type
+        - feature_id
+        - score
+        - attributes
+    fallbacks:
+      - ask-for-amino-acid-sequence-fasta-or-tmhmm-deeptmhmm-output-if-query-is-missing
+      - run-wrapper-without-execute-first-to-validate-command-plan
+      - import-deeptmhmm-gff3-when-web-or-biolib-execution-is-not-available
+      - import-tmhmm-long-output-when-local-tmhmm-binary-is-unavailable
+      - generate-standardized-state-plots-when-native-deeptmhmm-plots-are-absent-for-batches
+      - preserve-native-plot-artifacts-when-probability-curves-are-needed
+    retry_policy: clarify-sequence-or-output-files-then-run-wrapper-once

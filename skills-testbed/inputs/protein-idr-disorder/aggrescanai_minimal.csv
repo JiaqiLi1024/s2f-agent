@@ -1,0 +1,13 @@
+uniprot_id,position,residue,aggrescanai_score
+agg_test,1,A,0.10
+agg_test,2,C,0.12
+agg_test,3,D,0.20
+agg_test,4,E,0.35
+agg_test,5,F,0.50
+agg_test,6,G,0.62
+agg_test,7,H,0.66
+agg_test,8,I,0.70
+agg_test,9,K,0.60
+agg_test,10,L,0.52
+agg_test,11,M,0.40
+agg_test,12,N,0.22

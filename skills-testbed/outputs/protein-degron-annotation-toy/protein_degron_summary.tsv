@@ -1,0 +1,2 @@
+query_id	input_type	length	sequence_sha256	tools	elm_degron_hits	degronopedia_hits	custom_degron_hits	n_degron_candidates	n_terminal_degrons	n_internal_degrons	n_phosphodegrons	n_unique_motifs	warnings
+toy_degron	fasta	23	dae558d187c34734f13bbb9e3c0e32915779e19295b08b29bdf8efad659c5ba9	elm,degronopedia	4	8	0	12	8	4	0	11	

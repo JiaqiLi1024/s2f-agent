@@ -1,0 +1,16 @@
+accession: 
+entry_name: 
+esmfold_confidence_scale: 0-1
+esmfold_mean_confidence_0_100: 50.12
+esmfold_mean_confidence_raw: 0.501
+esmfold_pdb: skills-testbed/outputs/test-peptide-esmfold/test_peptide.esmfold.pdb
+gene_name: 
+organism: 
+organism_query: 
+protein_name: 
+query_gene: 
+query_sequence_name: test_peptide
+query_uniprot: 
+seq_length: 40
+sequence_sha256: 3f58c67c36a585628d33015ae2cd0a227b34f8cbb0e7fcdfaa4c4b3de45c415d
+status: ok

@@ -1,0 +1,53 @@
+{
+  "errors": [],
+  "finished_utc": "2026-06-28T08:11:09Z",
+  "modules": {
+    "esmfold": {
+      "confidence_scale": "0-1",
+      "max_confidence_raw": 0.63,
+      "mean_confidence_0_100": 50.12,
+      "mean_confidence_raw": 0.501,
+      "min_confidence_raw": 0.28,
+      "n_atoms": 334,
+      "sequence_length": 40,
+      "sequence_sha256": "3f58c67c36a585628d33015ae2cd0a227b34f8cbb0e7fcdfaa4c4b3de45c415d",
+      "status": "ok"
+    }
+  },
+  "outputs": {
+    "esmfold_pdb": "skills-testbed/outputs/test-peptide-esmfold/test_peptide.esmfold.pdb",
+    "esmfold_tsv": "skills-testbed/outputs/test-peptide-esmfold/test_peptide.esmfold.tsv",
+    "result_json": "skills-testbed/outputs/test-peptide-esmfold/protein_structure_get.result.json",
+    "sequence_fasta": "skills-testbed/outputs/test-peptide-esmfold/test_peptide.sequence.fasta",
+    "summary_tsv": "skills-testbed/outputs/test-peptide-esmfold/protein_structure_summary.tsv",
+    "summary_txt": "skills-testbed/outputs/test-peptide-esmfold/summary.txt"
+  },
+  "query": {
+    "allow_ambiguous_aa": false,
+    "download_format": "cif",
+    "download_structure": false,
+    "esmfold_max_length": 400,
+    "esmfold_min_length": 15,
+    "gene": null,
+    "max_pdb": 20,
+    "modules": [
+      "esmfold"
+    ],
+    "organism": "human",
+    "sequence_length": 40,
+    "sequence_name": "test_peptide",
+    "sequence_sha256": "3f58c67c36a585628d33015ae2cd0a227b34f8cbb0e7fcdfaa4c4b3de45c415d",
+    "timeout_sec": 30,
+    "uniprot": null
+  },
+  "resolved": {
+    "alphabet": "canonical",
+    "seq_length": 40,
+    "sequence_name": "test_peptide",
+    "sequence_sha256": "3f58c67c36a585628d33015ae2cd0a227b34f8cbb0e7fcdfaa4c4b3de45c415d",
+    "source": "amino_acid_sequence"
+  },
+  "started_utc": "2026-06-28T08:11:08Z",
+  "status": "ok",
+  "warnings": []
+}

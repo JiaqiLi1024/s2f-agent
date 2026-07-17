@@ -1,0 +1,2 @@
+query_id	length	sources	mean_disorder_score	fraction_disordered	n_disordered_residues	n_idr_regions	longest_idr	n_binding_regions	n_linker_regions	warnings
+P04637	393	IUPred3	0.5692	0.5038	198	5	66	0	0	
