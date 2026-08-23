@@ -1,0 +1,9 @@
+query_id	region_type	start	end	length	mean_conservation_score	mean_gap_fraction	max_conservation_score	min_conservation_score	evidence	note
+P04637/1-393	conserved	132	136	5	0.84923	0.07355	0.937234	0.774787	MSA entropy conservation	
+P04637/1-393	conserved	138	142	5	0.823471	0.070674	0.905909	0.794134	MSA entropy conservation	
+P04637/1-393	conserved	193	200	8	0.839465	0.054986	0.933189	0.771812	MSA entropy conservation	
+P04637/1-393	conserved	236	242	7	0.899494	0.041119	0.994655	0.776292	MSA entropy conservation	
+P04637/1-393	conserved	244	251	8	0.904718	0.045969	0.961092	0.829044	MSA entropy conservation	
+P04637/1-393	conserved	273	282	10	0.914846	0.044979	0.992407	0.801189	MSA entropy conservation	
+P04637/1-393	conserved	332	336	5	0.852997	0.164781	0.963375	0.77253	MSA entropy conservation	
+P04637/1-393	conserved	343	350	8	0.85602	0.180045	0.969978	0.771013	MSA entropy conservation	

@@ -1,0 +1,10 @@
+query_id	source	feature_type	start	end	length	label	score	evidence	note
+secreted_test	DeepLoc-2.1	subcellular_location				Extracellular	0.8200	deeploc_prediction	
+secreted_test	DeepLoc-2.1	membrane_association				Soluble	0.9100	deeploc_prediction	
+secreted_test	DeepLoc-2.1	sorting_signal				Signal peptide		deeploc_prediction	
+mito_test	DeepLoc-2.1	subcellular_location				Mitochondrion	0.7600	deeploc_prediction	
+mito_test	DeepLoc-2.1	membrane_association				Soluble	0.8800	deeploc_prediction	
+mito_test	DeepLoc-2.1	sorting_signal				Transit peptide		deeploc_prediction	
+secreted_test	SignalP-6.0	signal_peptide	1	22	22	Sec/SPI	0.9300	signalp_prediction	signal_peptide_end_inferred_from_cleavage_site
+secreted_test	TargetP-2.0	signal_peptide	1	22	22	SP	0.8800	targetp_prediction	signal_peptide_end_inferred_from_cleavage_site
+mito_test	TargetP-2.0	mitochondrial_transit_peptide	1	31	31	mTP	0.8100	targetp_prediction	signal_peptide_end_inferred_from_cleavage_site

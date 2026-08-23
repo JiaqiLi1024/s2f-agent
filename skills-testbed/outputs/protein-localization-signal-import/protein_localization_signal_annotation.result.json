@@ -1,0 +1,67 @@
+{
+  "counts": {
+    "features": 9,
+    "records": 2,
+    "scores": 24,
+    "summary_rows": 2
+  },
+  "errors": [],
+  "execution": {},
+  "native_plots": [],
+  "outputs": {
+    "commands_sh": "skills-testbed/outputs/protein-localization-signal-import/commands.sh",
+    "features_tsv": "skills-testbed/outputs/protein-localization-signal-import/protein_localization_features.tsv",
+    "normalized_input_fasta": "skills-testbed/outputs/protein-localization-signal-import/normalized_input.fasta",
+    "plots": [
+      "skills-testbed/outputs/protein-localization-signal-import/plots/protein_localization_summary.svg",
+      "skills-testbed/outputs/protein-localization-signal-import/plots/protein_localization_summary.html"
+    ],
+    "result_json": "skills-testbed/outputs/protein-localization-signal-import/protein_localization_signal_annotation.result.json",
+    "scores_tsv": "skills-testbed/outputs/protein-localization-signal-import/protein_localization_scores.tsv",
+    "summary_tsv": "skills-testbed/outputs/protein-localization-signal-import/protein_localization_summary.tsv",
+    "web_submission_inputs": {
+      "deeploc": "skills-testbed/outputs/protein-localization-signal-import/web_submission/deeploc_2_1_input.fasta",
+      "signalp": "skills-testbed/outputs/protein-localization-signal-import/web_submission/signalp_6_0_input.fasta",
+      "targetp": "skills-testbed/outputs/protein-localization-signal-import/web_submission/targetp_2_0_input.fasta"
+    }
+  },
+  "plans": {
+    "deeploc": {
+      "input": "skills-testbed/outputs/protein-localization-signal-import/web_submission/deeploc_2_1_input.fasta",
+      "mode": "web_or_import",
+      "url": "https://services.healthtech.dtu.dk/services/DeepLoc-2.1/"
+    },
+    "signalp": {
+      "input": "skills-testbed/outputs/protein-localization-signal-import/web_submission/signalp_6_0_input.fasta",
+      "mode": "web_or_import",
+      "url": "https://services.healthtech.dtu.dk/services/SignalP-6.0/"
+    },
+    "targetp": {
+      "input": "skills-testbed/outputs/protein-localization-signal-import/web_submission/targetp_2_0_input.fasta",
+      "mode": "web_or_import",
+      "url": "https://services.healthtech.dtu.dk/services/TargetP-2.0/"
+    }
+  },
+  "run_id": "protein-localization-signal-import",
+  "skill": "protein-localization-signal-annotation",
+  "source_files": {
+    "deeploc": [
+      "skills-testbed/inputs/protein-localization-signal/deeploc_minimal.tsv"
+    ],
+    "signalp": [
+      "skills-testbed/inputs/protein-localization-signal/signalp_minimal.tsv"
+    ],
+    "targetp": [
+      "skills-testbed/inputs/protein-localization-signal/targetp_minimal.tsv"
+    ]
+  },
+  "tools": [
+    "deeploc",
+    "signalp",
+    "targetp"
+  ],
+  "warnings": {
+    "mito_test": [],
+    "secreted_test": []
+  }
+}

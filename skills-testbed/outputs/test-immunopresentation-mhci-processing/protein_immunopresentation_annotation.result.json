@@ -1,0 +1,62 @@
+{
+  "skill": "protein-immunopresentation-annotation",
+  "status": "warning",
+  "run_id": "test_mhci_protein",
+  "created_utc": "2026-07-06T08:32:58Z",
+  "parameters": {
+    "alleles": [
+      "HLA-A*02:01"
+    ],
+    "peptide_lengths": [
+      8,
+      9,
+      10,
+      11
+    ],
+    "binding_predictors": [
+      "netmhcpan_el",
+      "netmhcpan_ba"
+    ],
+    "processing_predictor": "netmhcpan_ba",
+    "proteasome": "immuno",
+    "execute_api": true,
+    "api_mode": "legacy",
+    "api_url": "https://tools-cluster-interface.iedb.org/tools_api/mhci/",
+    "strong_rank_cutoff": 0.5,
+    "weak_rank_cutoff": 2.0,
+    "strong_ic50_cutoff": 50.0,
+    "weak_ic50_cutoff": 500.0
+  },
+  "counts": {
+    "queries": 1,
+    "peptides_generated": 370,
+    "binding_prediction_rows": 556,
+    "processing_prediction_rows": 0,
+    "immunogenicity_rows": 0,
+    "context_features": 0,
+    "candidate_rows": 370
+  },
+  "artifacts": {
+    "api_requests_dir": "skills-testbed/outputs/test-immunopresentation-mhci-processing/api_requests",
+    "iedb_legacy_requests_jsonl": "skills-testbed/outputs/test-immunopresentation-mhci-processing/api_requests/iedb_legacy_requests.jsonl",
+    "iedb_nextgen_request_json": "skills-testbed/outputs/test-immunopresentation-mhci-processing/api_requests/iedb_nextgen_request.json",
+    "commands_sh": "skills-testbed/outputs/test-immunopresentation-mhci-processing/commands.sh",
+    "normalized_input_fasta": "skills-testbed/outputs/test-immunopresentation-mhci-processing/normalized_input.fasta",
+    "raw_api_results_dir": "skills-testbed/outputs/test-immunopresentation-mhci-processing/raw_api_results",
+    "mhci_peptides_tsv": "skills-testbed/outputs/test-immunopresentation-mhci-processing/mhci_peptides.tsv",
+    "mhci_binding_predictions_tsv": "skills-testbed/outputs/test-immunopresentation-mhci-processing/mhci_binding_predictions.tsv",
+    "mhci_processing_predictions_tsv": "skills-testbed/outputs/test-immunopresentation-mhci-processing/mhci_processing_predictions.tsv",
+    "mhci_immunogenicity_predictions_tsv": "skills-testbed/outputs/test-immunopresentation-mhci-processing/mhci_immunogenicity_predictions.tsv",
+    "immunopresentation_candidates_tsv": "skills-testbed/outputs/test-immunopresentation-mhci-processing/immunopresentation_candidates.tsv",
+    "summary_tsv": "skills-testbed/outputs/test-immunopresentation-mhci-processing/protein_immunopresentation_summary.tsv",
+    "result_json": "skills-testbed/outputs/test-immunopresentation-mhci-processing/protein_immunopresentation_annotation.result.json"
+  },
+  "warnings": [
+    "mhci_api_failed:netmhcpan_el:len10:<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1000)>",
+    "mhci_api_failed:netmhcpan_ba:len10:<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1000)>",
+    "processing_api_failed:len8:<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1000)>",
+    "processing_api_failed:len9:HTTP Error 500: Internal Server Error",
+    "processing_api_failed:len10:HTTP Error 500: Internal Server Error",
+    "processing_api_failed:len11:HTTP Error 500: Internal Server Error"
+  ]
+}

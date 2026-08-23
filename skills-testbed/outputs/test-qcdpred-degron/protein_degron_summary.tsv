@@ -1,0 +1,2 @@
+query_id	input_type	length	sequence_sha256	tools	elm_degron_hits	degronopedia_hits	qcdpred_hits	qcdpred_avg_score	qcdpred_median_score	qcdpred_max_score	custom_degron_hits	n_degron_candidates	n_terminal_degrons	n_internal_degrons	n_phosphodegrons	n_unique_motifs	warnings
+test_qcdpred_degron	raw_sequence	324	557f7218a0b70f8aaa8efe36f8a95baa3a6126eb4b10be90b55716c7292ec780	qcdpred	0	0	5	0.73721	0.86582	0.99511	0	5	1	4	0	1	

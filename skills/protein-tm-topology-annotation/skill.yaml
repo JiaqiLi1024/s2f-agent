@@ -1,0 +1,81 @@
+schema_version: 1
+id: protein-tm-topology-annotation
+title: Protein TM Topology Annotation
+path: skills/protein-tm-topology-annotation
+status: active
+family: protein-sequence-annotation
+tasks:
+  - protein-tm-topology-annotation
+  - protein-transmembrane-region-annotation
+  - protein-topology-annotation
+  - protein-localization-topology
+  - protein-tm-residue-state-annotation
+  - protein-tm-plot
+  - environment-setup
+  - troubleshooting
+triggers:
+  - protein-tm-topology-annotation
+  - protein TM annotation
+  - transmembrane topology
+  - transmembrane region
+  - transmembrane helix
+  - TM helix
+  - TMHMM
+  - DeepTMHMM
+  - DeppTMHMM
+  - membrane protein topology
+  - inside outside topology
+  - per residue topology state
+  - topology plot
+  - beta barrel topology
+required_inputs:
+  - protein-tm-query
+optional_inputs:
+  - amino-acid-sequence
+  - protein-fasta
+  - tm-tool-selection
+  - tm-output-files
+  - output-dir
+  - runtime-context
+input_mappings:
+  - protein-tm-query|query_tokens=amino acid sequence,protein fasta,tmhmm,deeptmhmm,deppTMHMM,transmembrane,tm helix,topology,gff3|script_flags=--sequence,--fasta,--tmhmm-gff3,--deeptmhmm-gff3,--gff3,--tmhmm-output
+  - amino-acid-sequence|query_tokens=sequence,amino acid sequence,protein sequence,unknown sequence,氨基酸序列|script_flags=--sequence,--sequence-name,--allow-ambiguous-aa
+  - protein-fasta|query_tokens=fasta,proteins.fa,protein fasta,proteome,translated proteins,蛋白fasta|script_flags=--fasta
+  - tm-tool-selection|query_tokens=tmhmm,deeptmhmm,deppTMHMM,TMHMM2.0,deep tmhmm|script_flags=--tools,--tmhmm-bin,--tmhmm-extra-args,--deeptmhmm-command-template
+  - tm-output-files|query_tokens=gff3,tmhmm output,tmhmm long output,deeptmhmm gff3,TMRs.gff3,native plot|script_flags=--tmhmm-gff3,--deeptmhmm-gff3,--gff3,--tmhmm-output,--native-plot
+  - output-dir|query_tokens=output,outdir,results,plot,svg,html,tsv,json,保存,输出目录|script_flags=--outdir,--no-plots
+  - runtime-context|query_tokens=python,tmhmm,biolib,deepTMHMM,web service,local runner,linux,mac,license|script_flags=--execute,--timeout-sec
+required_env_any: []
+constraints:
+  - standard-output-includes-summary-regions-residue-states-plots-and-result-json
+  - normalized-coordinates-are-1-based-closed-protein-residue-positions
+  - gff3-derived-plots-are-topology-state-plots-not-posterior-probability-curves
+  - deeptmhmm-is-preferred-for-current-alpha-helix-and-beta-barrel-topology
+  - tmhmm-is-legacy-and-useful-for-comparison-or-explicit-tmhmm-requests
+  - deeptmhmm-web-may-not-generate-native-plots-for-multiple-sequences
+tools:
+  - scripts/protein_tm_topology_annotation.py
+tool_contracts:
+  - tool: scripts/protein_tm_topology_annotation.py
+    inputs:
+      - protein-tm-query
+      - optional-local-topology-output-files
+      - optional-runtime-context
+      - output-dir
+    outputs:
+      - protein-tm-topology-summary-tsv
+      - protein-tm-topology-regions-tsv
+      - protein-tm-topology-residue-states-tsv
+      - protein-tm-topology-result-json
+      - optional-profile-plots-html-svg
+      - optional-command-plan
+    side_effects:
+      - writes-output-artifacts
+      - may-run-local-tmhmm
+      - may-run-user-provided-deeptmhmm-command-template
+    failure_codes:
+      - 1
+priority_rules:
+  - prefer-when-user-mentions-tmhmm-deeptmhmm-deppTMHMM-transmembrane-helix-tm-region-membrane-topology-inside-outside-or-beta-barrel-topology
+  - prefer-when-task-needs-residue-level-topology-states-or-tm-topology-plots-from-protein-sequence
+  - do-not-use-for-general-domain-motif-orthology-idr-llps-or-structure-visualization-unless-tm-topology-is-primary-objective

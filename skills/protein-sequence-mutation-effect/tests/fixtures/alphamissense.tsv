@@ -1,0 +1,3 @@
+uniprot_id	protein_variant	am_pathogenicity	am_class
+PTEST	A1V	0.82	likely_pathogenic
+POTHER	A1V	0.12	likely_benign

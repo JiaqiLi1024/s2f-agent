@@ -1,0 +1,21 @@
+pdb_id	title	method	resolution_A	n_protein_chains	n_atoms	pubmed_id	authors	deposition_date	rcsb_url
+1A1U	SOLUTION STRUCTURE DETERMINATION OF A P53 MUTANT DIMERIZATION DOMAIN, NMR, MINIMIZED AVERAGE STRUCTURE	NMR		1	514	9321402	Mccoy, M.A.; Stavridi, E.S.; Waterman, J.L.F.; et al. (+3)	1998-04-08T00:00:00Z	https://www.rcsb.org/structure/1A1U
+1AIE	P53 TETRAMERIZATION DOMAIN CRYSTAL STRUCTURE	X-ray	1.5	1	335	9761820	Mittl, P.R.E.; Chene, P.; Gruetter, M.G.	1997-06-16T00:00:00Z	https://www.rcsb.org/structure/1AIE
+1C26	CRYSTAL STRUCTURE OF P53 TETRAMERIZATION DOMAIN	X-ray	1.7	1	306	7878469	Jeffrey, P.D.; Gorina, S.; Pavletich, N.P.	1999-07-27T00:00:00Z	https://www.rcsb.org/structure/1C26
+1DT7	SOLUTION STRUCTURE OF THE C-TERMINAL NEGATIVE REGULATORY DOMAIN OF P53 IN A COMPLEX WITH CA2+-BOUND S100B(BB)	NMR		2	1856	10876243	Rustandi, R.R.; Baldisseri, D.M.; Weber, D.J.	2000-07-26T00:00:00Z	https://www.rcsb.org/structure/1DT7
+1GZH	Crystal structure of the BRCT domains of human 53BP1 bound to the p53 tumor supressor	X-ray	2.6	3	6630	12110597	Derbyshire, D.J.; Doherty, A.J.	2002-06-27T00:00:00Z	https://www.rcsb.org/structure/1GZH
+1H26	CDK2/CyclinA in complex with an 11-residue recruitment peptide from p53	X-ray	2.24	3	8981	12501191	Tews, I.; Cheng, K.Y.; Lowe, E.D.; et al. (+5)	2003-02-01T00:00:00Z	https://www.rcsb.org/structure/1H26
+1HS5	NMR SOLUTION STRUCTURE OF DESIGNED P53 DIMER	NMR		1	580	11254385	Davison, T.S.; Nie, X.; Ma, W.; et al. (+4)	2001-01-10T00:00:00Z	https://www.rcsb.org/structure/1HS5
+1JSP	NMR Structure of CBP Bromodomain in complex with p53 peptide	NMR		2	1183	14759370	He, Y.; Mujtaba, S.; Zeng, L.; et al. (+2)	2002-08-17T00:00:00Z	https://www.rcsb.org/structure/1JSP
+1KZY	Crystal Structure of the 53bp1 BRCT Region Complexed to Tumor Suppressor P53	X-ray	2.5	2	6986	11877378	Joo, W.S.; Jeffrey, P.D.; Cantor, S.B.; et al. (+3)	2002-03-20T00:00:00Z	https://www.rcsb.org/structure/1KZY
+1MA3	Structure of a Sir2 enzyme bound to an acetylated p53 peptide	X-ray	2.0	2	2123	12408821	Avalos, J.L.; Celic, I.; Muhammad, S.; et al. (+3)	2002-10-16T00:00:00Z	https://www.rcsb.org/structure/1MA3
+1OLG	HIGH-RESOLUTION SOLUTION STRUCTURE OF THE OLIGOMERIZATION DOMAIN OF P53 BY MULTI-DIMENSIONAL NMR	NMR		1	1392	8023159	Clore, G.M.; Omichinski, J.G.; Gronenborn, A.M.	1995-01-26T00:00:00Z	https://www.rcsb.org/structure/1OLG
+1OLH	HIGH-RESOLUTION SOLUTION STRUCTURE OF THE OLIGOMERIZATION DOMAIN OF P53 BY MULTI-DIMENSIONAL NMR	NMR		1	1392	8023159	Clore, G.M.; Omichinski, J.G.; Gronenborn, A.M.	1995-03-31T00:00:00Z	https://www.rcsb.org/structure/1OLH
+1PES	NMR SOLUTION STRUCTURE OF THE TETRAMERIC MINIMUM TRANSFORMING DOMAIN OF P53	NMR		1	1060	7773777	Lee, W.; Harvey, T.S.; Yin, Y.; et al. (+3)	1995-02-07T00:00:00Z	https://www.rcsb.org/structure/1PES
+1PET	NMR SOLUTION STRUCTURE OF THE TETRAMERIC MINIMUM TRANSFORMING DOMAIN OF P53	NMR		1	1060	7773777	Lee, W.; Harvey, T.S.; Yin, Y.; et al. (+3)	1995-02-07T00:00:00Z	https://www.rcsb.org/structure/1PET
+1SAE	HIGH RESOLUTION SOLUTION NMR STRUCTURE OF THE OLIGOMERIZATION DOMAIN OF P53 BY MULTI-DIMENSIONAL NMR (SAC STRUCTURES)	NMR		1	1396	7796267	Clore, G.M.; Omichinski, J.G.; Gronenborn, A.M.	1995-10-15T00:00:00Z	https://www.rcsb.org/structure/1SAE
+1SAF	HIGH RESOLUTION SOLUTION NMR STRUCTURE OF THE OLIGOMERIZATION DOMAIN OF P53 BY MULTI-DIMENSIONAL NMR (SAD STRUCTURES)	NMR		1	1396	7796267	Clore, G.M.; Omichinski, J.G.; Gronenborn, A.M.	1995-10-15T00:00:00Z	https://www.rcsb.org/structure/1SAF
+1SAK	HIGH RESOLUTION SOLUTION NMR STRUCTURE OF THE OLIGOMERIZATION DOMAIN OF P53 BY MULTI-DIMENSIONAL NMR (SAC STRUCTURES)	NMR		1	1396	7796267	Clore, G.M.; Omichinski, J.G.; Gronenborn, A.M.	1995-10-15T00:00:00Z	https://www.rcsb.org/structure/1SAK
+1SAL	HIGH RESOLUTION SOLUTION NMR STRUCTURE OF THE OLIGOMERIZATION DOMAIN OF P53 BY MULTI-DIMENSIONAL NMR (SAD STRUCTURES)	NMR		1	1396	7796267	Clore, G.M.; Omichinski, J.G.; Gronenborn, A.M.	1995-10-15T00:00:00Z	https://www.rcsb.org/structure/1SAL
+1TSR	P53 CORE DOMAIN IN COMPLEX WITH DNA	X-ray	2.2	1	5828	8023157	Cho, Y.; Gorina, S.; Jeffrey, P.; et al. (+1)	1996-01-29T00:00:00Z	https://www.rcsb.org/structure/1TSR
+1TUP	TUMOR SUPPRESSOR P53 COMPLEXED WITH DNA	X-ray	2.2	1	5828	8023157	Cho, Y.; Gorina, S.; Jeffrey, P.D.; et al. (+1)	1995-07-11T00:00:00Z	https://www.rcsb.org/structure/1TUP

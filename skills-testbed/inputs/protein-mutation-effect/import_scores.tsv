@@ -1,0 +1,4 @@
+protein_id	variant_id	mutation_group	model_family	model_id	model_revision	score_name	effect_axis	raw_score	score_unit	higher_is
+toy	v1	A1V	sequence	esm1v	esm1v_t33_650M_UR90S_1	masked_marginal_log_odds	sequence_plausibility	-1.25	log_ratio	more_tolerated
+toy	v1	A1V	structure	thermompnn	example_revision	predicted_ddg	stability	0.82	backend_documented	backend_documented
+toy	v2	C2A:D3E	sequence	esm1v	esm1v_t33_650M_UR90S_1	masked_marginal_log_odds	sequence_plausibility	-3.10	log_ratio	more_tolerated

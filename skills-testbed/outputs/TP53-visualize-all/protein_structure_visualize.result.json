@@ -1,0 +1,98 @@
+{
+  "finished_at": "2026-06-28T05:40:04Z",
+  "outputs": {
+    "bfactor": [
+      "skills-testbed/outputs/TP53-visualize-all/AF_P04637.bfactor.pdf",
+      "skills-testbed/outputs/TP53-visualize-all/AF_P04637.bfactor.png",
+      "skills-testbed/outputs/TP53-visualize-all/AF_P04637.bfactor.tsv"
+    ],
+    "conservation": [
+      "skills-testbed/outputs/TP53-visualize-all/AF_P04637.conservation.html",
+      "skills-testbed/outputs/TP53-visualize-all/AF_P04637.conservation.pdf",
+      "skills-testbed/outputs/TP53-visualize-all/AF_P04637.conservation.png"
+    ],
+    "contact_map": [
+      "skills-testbed/outputs/TP53-visualize-all/AF_P04637.ca_distances.tsv",
+      "skills-testbed/outputs/TP53-visualize-all/AF_P04637.contact_map.pdf",
+      "skills-testbed/outputs/TP53-visualize-all/AF_P04637.contact_map.png"
+    ],
+    "pocket": [
+      "skills-testbed/outputs/TP53-visualize-all/AF_P04637.pocket_residues.tsv",
+      "skills-testbed/outputs/TP53-visualize-all/AF_P04637.pocket_surface.html",
+      "skills-testbed/outputs/TP53-visualize-all/AF_P04637.pockets.pdf",
+      "skills-testbed/outputs/TP53-visualize-all/AF_P04637.pockets.png",
+      "skills-testbed/outputs/TP53-visualize-all/AF_P04637.pockets.tsv",
+      "skills-testbed/outputs/TP53-visualize-all/AF_P04637.sasa_per_residue.tsv"
+    ],
+    "ppi": [
+      "skills-testbed/outputs/TP53-visualize-all/AF_P04637.ppi_interactions.tsv",
+      "skills-testbed/outputs/TP53-visualize-all/AF_P04637.ppi_network.pdf",
+      "skills-testbed/outputs/TP53-visualize-all/AF_P04637.ppi_network.png"
+    ],
+    "secondary": [
+      "skills-testbed/outputs/TP53-visualize-all/AF_P04637.secondary_structure.pdf",
+      "skills-testbed/outputs/TP53-visualize-all/AF_P04637.secondary_structure.png",
+      "skills-testbed/outputs/TP53-visualize-all/AF_P04637.secondary_structure.tsv"
+    ],
+    "structure": [
+      "skills-testbed/outputs/TP53-visualize-all/AF_P04637.pdb"
+    ],
+    "summary": [
+      "skills-testbed/outputs/TP53-visualize-all/structure_summary.tsv",
+      "skills-testbed/outputs/TP53-visualize-all/summary.txt"
+    ],
+    "viewer": [
+      "skills-testbed/outputs/TP53-visualize-all/AF_P04637.full_view.html"
+    ]
+  },
+  "query": {
+    "chain": null,
+    "color_scheme": "bfactor",
+    "contact_threshold_A": 8.0,
+    "gene": "TP53",
+    "modules": [
+      "bfactor",
+      "conservation",
+      "contact_map",
+      "pocket",
+      "ppi",
+      "secondary",
+      "view"
+    ],
+    "pdb_file": null,
+    "pdb_id": null,
+    "probe_radius_A": 1.4,
+    "top_pockets": 5,
+    "uniprot": "P04637",
+    "zoom_end": null,
+    "zoom_start": null
+  },
+  "skill": "protein-structure-visualize",
+  "started_at": "2026-06-28T05:39:53Z",
+  "status": "success",
+  "structure": {
+    "available_chains": [
+      "A"
+    ],
+    "chain_used": "A",
+    "is_alphafold": true,
+    "n_residues": 393,
+    "pdb_path": "skills-testbed/outputs/TP53-visualize-all/AF_P04637.pdb",
+    "source": "alphafold_db",
+    "structure_id": "AF_P04637"
+  },
+  "summary": {
+    "chain_used": "A",
+    "conservation_residues": 393,
+    "is_alphafold": true,
+    "mean_conservation": 0.5,
+    "modules": "bfactor,conservation,contact_map,pocket,ppi,secondary,view",
+    "n_pockets_found": 5,
+    "n_ppi_partners": 100,
+    "n_residues": 393,
+    "pdb_path": "skills-testbed/outputs/TP53-visualize-all/AF_P04637.pdb",
+    "structure_id": "AF_P04637",
+    "top_pocket_residues": 12
+  },
+  "warnings": []
+}

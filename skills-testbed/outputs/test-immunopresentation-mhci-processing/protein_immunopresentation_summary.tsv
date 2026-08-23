@@ -1,0 +1,2 @@
+query_id	input_type	protein_length	sequence_sha256	n_peptides_generated	n_predictions	n_strong_binder_peptides	n_weak_binder_peptides	n_high_confidence_candidates	n_weak_candidates	n_unlikely_candidates	alleles	peptide_lengths	predictors	warnings
+test_mhci_protein	raw_sequence	101	60cea817916622ba047101515df9daacee0be385f22bbbe0bd0e39f76d132e95	370	278	11	17	0	21	349	HLA-A*02:01	8,9,10,11	netmhcpan_el,netmhcpan_ba	

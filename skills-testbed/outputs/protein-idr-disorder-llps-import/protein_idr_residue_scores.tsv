@@ -1,0 +1,13 @@
+query_id	source	score_type	position	residue	score	threshold	above_threshold
+agg_test	AggrescanAI	aggregation	1	A	0.1000	0.3000	false
+agg_test	AggrescanAI	aggregation	2	C	0.1200	0.3000	false
+agg_test	AggrescanAI	aggregation	3	D	0.2000	0.3000	false
+agg_test	AggrescanAI	aggregation	4	E	0.3500	0.3000	true
+agg_test	AggrescanAI	aggregation	5	F	0.5000	0.3000	true
+agg_test	AggrescanAI	aggregation	6	G	0.6200	0.3000	true
+agg_test	AggrescanAI	aggregation	7	H	0.6600	0.3000	true
+agg_test	AggrescanAI	aggregation	8	I	0.7000	0.3000	true
+agg_test	AggrescanAI	aggregation	9	K	0.6000	0.3000	true
+agg_test	AggrescanAI	aggregation	10	L	0.5200	0.3000	true
+agg_test	AggrescanAI	aggregation	11	M	0.4000	0.3000	true
+agg_test	AggrescanAI	aggregation	12	N	0.2200	0.3000	false

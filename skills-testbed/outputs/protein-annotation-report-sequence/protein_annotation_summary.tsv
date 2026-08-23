@@ -1,0 +1,2 @@
+query_id	input_type	source_ids	uniprot_accession	reviewed	protein_name	gene_names	organism	length	sequence_sha256	molecular_weight_da	gravy	aromaticity	predicted_function	subcellular_location	domains	motifs	interpro_ids	pfam_ids	eggnog_ogs	go_terms	ec_numbers	kegg_ko	pathways	feature_count	annotation_sources	warnings
+test_protein	raw_sequence							40	3f58c67c36a585628d33015ae2cd0a227b34f8cbb0e7fcdfaa4c4b3de45c415d	4773	-0.49	0.15												0	local_sequence	

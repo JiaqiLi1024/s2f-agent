@@ -1,0 +1,1524 @@
+type	description	start	end	length
+Chain	Cellular tumor antigen p53	1	393	393
+DNA binding	DNA binding	102	292	191
+Region	Interaction with CCAR2	1	320	320
+Region	Interaction with HRMT1L2	1	83	83
+Region	Transcription activation (acidic)	1	44	44
+Region	Disordered	50	96	47
+Region	Interaction with WWOX	66	110	45
+Region	Interaction with HIPK1	100	370	271
+Region	Required for interaction with ZNF385A	100	300	201
+Region	Required for interaction with FBXO42	113	236	124
+Region	Interaction with AXIN1	116	292	177
+Region	Interaction with the 53BP2 SH3 domain	241	248	8
+Region	Interaction with E4F1	256	294	39
+Region	Interaction with DNA	273	280	8
+Region	Disordered	282	325	44
+Region	Interaction with CARM1	300	393	94
+Region	Interaction with HIPK2	319	360	42
+Region	Oligomerization	325	356	32
+Region	Disordered	351	393	43
+Region	Interaction with USP7	359	363	5
+Region	Basic (repression of DNA-binding)	368	387	20
+Region	Interaction with MORN3	374	393	20
+Motif	TADI	17	25	9
+Motif	TADII	48	56	9
+Motif	Bipartite nuclear localization signal	305	321	17
+Motif	Nuclear export signal	339	350	12
+Motif	[KR]-[STA]-K motif	370	372	3
+Compositional bias	Pro residues	69	90	22
+Compositional bias	Basic and acidic residues	282	299	18
+Compositional bias	Basic residues	365	384	20
+Binding site	Binding site	176	176	1
+Binding site	Binding site	179	179	1
+Binding site	Binding site	238	238	1
+Binding site	Binding site	242	242	1
+Site	Interaction with DNA	120	120	1
+Modified residue	Phosphoserine; by HIPK4	9	9	1
+Modified residue	Phosphoserine; by CDK5, PRPK, AMPK, NUAK1 and ATM	15	15	1
+Modified residue	Phosphothreonine; by CK1, VRK1 and VRK2	18	18	1
+Modified residue	Phosphoserine; by CHEK2, CK1 and PLK3	20	20	1
+Modified residue	Phosphoserine; by CDK5 and CDK7	33	33	1
+Modified residue	Phosphoserine; by MAPKAPK5	37	37	1
+Modified residue	Phosphoserine; by CDK5, DYRK2, HIPK2 and PKC/PRKCG	46	46	1
+Modified residue	Phosphothreonine; by TAF1 and GRK5	55	55	1
+Modified residue	N6-acetyllysine	120	120	1
+Modified residue	N6-lactoyllysine	120	120	1
+Modified residue	N6-lactoyllysine	139	139	1
+Modified residue	Phosphoserine; by AURKB	183	183	1
+Modified residue	Phosphoserine; by AURKB	269	269	1
+Modified residue	Phosphothreonine; by AURKB	284	284	1
+Modified residue	N6-acetyllysine	305	305	1
+Modified residue	Phosphoserine; by AURKA, CDK1 and CDK2	315	315	1
+Modified residue	N6-acetyllysine	321	321	1
+Modified residue	Omega-N-methylarginine; by PRMT5	333	333	1
+Modified residue	Symmetric dimethylarginine; by PRMT5	335	335	1
+Modified residue	Symmetric dimethylarginine; by PRMT5	337	337	1
+Modified residue	N6,N6-dimethyllysine; alternate	370	370	1
+Modified residue	N6-methyllysine; by SMYD2; alternate	370	370	1
+Modified residue	N6-methyllysine; by SETD7	372	372	1
+Modified residue	N6,N6-dimethyllysine; by EHMT1 and EHMT2; alternate	373	373	1
+Modified residue	N6-acetyllysine; alternate	373	373	1
+Modified residue	N6-acetyllysine	381	381	1
+Modified residue	N6,N6-dimethyllysine; alternate	382	382	1
+Modified residue	N6-acetyllysine; alternate	382	382	1
+Modified residue	N6-methyllysine; by KMT5A; alternate	382	382	1
+Modified residue	Phosphoserine; by CK2, CDK2 and NUAK1	392	392	1
+Cross-link	Glycyl lysine isopeptide (Lys-Gly) (interchain with G-Cter in ubiquitin)	24	24	1
+Cross-link	Glycyl lysine isopeptide (Lys-Gly) (interchain with G-Cter in ubiquitin)	291	291	1
+Cross-link	Glycyl lysine isopeptide (Lys-Gly) (interchain with G-Cter in ubiquitin)	292	292	1
+Cross-link	Glycyl lysine isopeptide (Lys-Gly) (interchain with G-Cter in ubiquitin)	351	351	1
+Cross-link	Glycyl lysine isopeptide (Lys-Gly) (interchain with G-Cter in ubiquitin)	357	357	1
+Cross-link	Glycyl lysine isopeptide (Lys-Gly) (interchain with G-Cter in SUMO)	386	386	1
+Alternative sequence	in isoform 7, isoform 8 and isoform 9	1	132	132
+Alternative sequence	in isoform 4, isoform 5 and isoform 6	1	39	39
+Alternative sequence	in isoform 3, isoform 6 and isoform 9	332	346	15
+Alternative sequence	in isoform 2, isoform 5 and isoform 8	332	341	10
+Alternative sequence	in isoform 2, isoform 5 and isoform 8	342	393	52
+Alternative sequence	in isoform 3, isoform 6 and isoform 9	347	393	47
+Natural variant	in a sporadic cancer; somatic mutation; abolishes strongly phosphorylation	5	5	1
+Natural variant	in a sporadic cancer; somatic mutation; reduces interaction with ZNF385A	6	6	1
+Natural variant	in a sporadic cancer; somatic mutation; dbSNP:rs587782646	7	7	1
+Natural variant	in a sporadic cancer; somatic mutation	8	8	1
+Natural variant	in a sporadic cancer; somatic mutation; dbSNP:rs535274413	10	10	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs201382018	11	11	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs201382018	11	11	1
+Natural variant	in a sporadic cancer; somatic mutation	15	15	1
+Natural variant	in a sporadic cancer; somatic mutation	16	16	1
+Natural variant	in a sporadic cancer; somatic mutation	17	17	1
+Natural variant	in a sporadic cancer; somatic mutation	24	24	1
+Natural variant	in a sporadic cancer; somatic mutation	28	28	1
+Natural variant	in a sporadic cancer; somatic mutation	29	30	2
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs201753350	31	31	1
+Natural variant	in a sporadic cancer; somatic mutation	33	33	1
+Natural variant	in a sporadic cancer; somatic mutation	34	34	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs121912661	35	35	1
+Natural variant	in a sporadic cancer; somatic mutation; dbSNP:rs587781866	36	36	1
+Natural variant	in a sporadic cancer; somatic mutation	37	37	1
+Natural variant	in a sporadic cancer; somatic mutation	37	37	1
+Natural variant	in a sporadic cancer; somatic mutation	39	39	1
+Natural variant	in a sporadic cancer; somatic mutation; dbSNP:rs1353016807	39	39	1
+Natural variant	in a sporadic cancer; somatic mutation	42	42	1
+Natural variant	in a sporadic cancer; somatic mutation	43	43	1
+Natural variant	in a sporadic cancer; somatic mutation; dbSNP:rs1060501190	44	44	1
+Natural variant	in a sporadic cancer; somatic mutation	44	44	1
+Natural variant	in a sporadic cancer; somatic mutation	44	44	1
+Natural variant	in a sporadic cancer; somatic mutation	45	45	1
+Natural variant	in sporadic cancers; somatic mutation	46	46	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs876659630	46	46	1
+Natural variant	in sporadic cancers; somatic mutation	47	47	1
+Natural variant	in dbSNP:rs1800371	47	47	1
+Natural variant	in a sporadic cancer; somatic mutation	48	48	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs587780728	49	49	1
+Natural variant	in a sporadic cancer; somatic mutation; dbSNP:rs587780728	49	49	1
+Natural variant	in sporadic cancers; somatic mutation	49	49	1
+Natural variant	in a sporadic cancer; somatic mutation	52	52	1
+Natural variant	in sporadic cancers; somatic mutation	53	53	1
+Natural variant	in a sporadic cancer; somatic mutation	53	53	1
+Natural variant	in a sporadic cancer; somatic mutation; dbSNP:rs1555526742	54	54	1
+Natural variant	in a sporadic cancer; somatic mutation	54	54	1
+Natural variant	in sporadic cancers; somatic mutation	56	56	1
+Natural variant	in a sporadic cancer; somatic mutation	56	56	1
+Natural variant	in a sporadic cancer; somatic mutation	58	58	1
+Natural variant	in a sporadic cancer; somatic mutation	58	58	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1237722021	59	59	1
+Natural variant	in sporadic cancers; somatic mutation	59	59	1
+Natural variant	in a sporadic cancer; somatic mutation; requires 2 nucleotide substitutions	59	59	1
+Natural variant	in sporadic cancers; somatic mutation	60	60	1
+Natural variant	in a sporadic cancer; somatic mutation	60	60	1
+Natural variant	in a sporadic cancer; somatic mutation	60	60	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1460793472	61	61	1
+Natural variant	in sporadic cancers; somatic mutation	61	61	1
+Natural variant	in a sporadic cancer; somatic mutation	62	62	1
+Natural variant	in a sporadic cancer; somatic mutation; dbSNP:rs876658902	63	63	1
+Natural variant	in a sporadic cancer; somatic mutation; dbSNP:rs372201428	63	63	1
+Natural variant	in a sporadic cancer; somatic mutation; dbSNP:rs1060501210	65	65	1
+Natural variant	in a sporadic cancer; somatic mutation; dbSNP:rs1555526711	66	66	1
+Natural variant	in a sporadic cancer; somatic mutation	66	66	1
+Natural variant	in sporadic cancers; somatic mutation	67	67	1
+Natural variant	in a sporadic cancer; somatic mutation	67	67	1
+Natural variant	in sporadic cancers; somatic mutation	67	67	1
+Natural variant	in sporadic cancers; somatic mutation	68	68	1
+Natural variant	in a sporadic cancer; somatic mutation	68	68	1
+Natural variant	in a sporadic cancer; somatic mutation	69	69	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs756233241	69	69	1
+Natural variant	in a sporadic cancer; somatic mutation	69	69	1
+Natural variant	in a sporadic cancer; somatic mutation; dbSNP:rs756233241	69	69	1
+Natural variant	in a sporadic cancer; somatic mutation	70	70	1
+Natural variant	in a sporadic cancer; somatic mutation	71	71	1
+Natural variant	in sporadic cancers; somatic mutation; requires 2 nucleotide substitutions; dbSNP:rs730882014	72	72	1
+Natural variant	in sporadic cancers; somatic mutation; requires 2 nucleotide substitutions	72	72	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1042522	72	72	1
+Natural variant	in a sporadic cancer; somatic mutation	72	72	1
+Natural variant	in dbSNP:rs1042522	72	72	1
+Natural variant	in a sporadic cancer; somatic mutation	73	73	1
+Natural variant	in sporadic cancers; somatic mutation	73	73	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs587782423	73	73	1
+Natural variant	in a sporadic cancer; somatic mutation	74	74	1
+Natural variant	in sporadic cancers; somatic mutation	75	75	1
+Natural variant	in sporadic cancers; somatic mutation	75	75	1
+Natural variant	in a sporadic cancer; somatic mutation	75	75	1
+Natural variant	in a sporadic cancer; somatic mutation	76	76	1
+Natural variant	in a sporadic cancer; somatic mutation	76	76	1
+Natural variant	in sporadic cancers; somatic mutation	77	77	1
+Natural variant	in sporadic cancers; somatic mutation	78	78	1
+Natural variant	in a sporadic cancer; somatic mutation	79	79	1
+Natural variant	in a sporadic cancer; somatic mutation	79	79	1
+Natural variant	in sporadic cancers; somatic mutation	79	79	1
+Natural variant	in a sporadic cancer; somatic mutation	80	80	1
+Natural variant	in a sporadic cancer; somatic mutation; dbSNP:rs1060501204	80	80	1
+Natural variant	in sporadic cancers; somatic mutation	81	81	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs534447939	82	82	1
+Natural variant	in sporadic cancers; somatic mutation	82	82	1
+Natural variant	in a sporadic cancer; somatic mutation; dbSNP:rs201717599	83	83	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs201717599	83	83	1
+Natural variant	in sporadic cancers; somatic mutation	84	84	1
+Natural variant	in sporadic cancers; somatic mutation	84	84	1
+Natural variant	in sporadic cancers; somatic mutation	85	85	1
+Natural variant	in sporadic cancers; somatic mutation	85	85	1
+Natural variant	in a sporadic cancer; somatic mutation	86	86	1
+Natural variant	in sporadic cancers; somatic mutation	87	87	1
+Natural variant	in a sporadic cancer; somatic mutation	88	88	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1555526631	88	88	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs730881994	89	89	1
+Natural variant	in sporadic cancers; somatic mutation	89	89	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1555526625	90	90	1
+Natural variant	in a sporadic cancer; somatic mutation	90	90	1
+Natural variant	in a sporadic cancer; somatic mutation	91	91	1
+Natural variant	in a sporadic cancer; somatic mutation	92	92	1
+Natural variant	in a sporadic cancer; somatic mutation; dbSNP:rs1210700121	92	92	1
+Natural variant	in a sporadic cancer; somatic mutation	92	92	1
+Natural variant	in a sporadic cancer; somatic mutation	93	93	1
+Natural variant	in a sporadic cancer; somatic mutation	93	93	1
+Natural variant	in sporadic cancers; somatic mutation	94	94	1
+Natural variant	in sporadic cancers; somatic mutation	94	94	1
+Natural variant	in sporadic cancers; somatic mutation	95	95	1
+Natural variant	in a sporadic cancer; somatic mutation	95	95	1
+Natural variant	in a sporadic cancer; somatic mutation	96	96	1
+Natural variant	in sporadic cancers; somatic mutation	96	96	1
+Natural variant	in a sporadic cancer; somatic mutation	96	96	1
+Natural variant	in a sporadic cancer; somatic mutation	97	97	1
+Natural variant	in a sporadic cancer; somatic mutation	97	97	1
+Natural variant	in familial cancer not matching LFS; germline mutation and in a sporadic cancer; somatic mutation; dbSNP:rs730882023	97	97	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1245723119	98	98	1
+Natural variant	in sporadic cancers; somatic mutation	98	98	1
+Natural variant	in sporadic cancers; somatic mutation	99	99	1
+Natural variant	in a sporadic cancer; somatic mutation	99	99	1
+Natural variant	in a sporadic cancer; somatic mutation	100	100	1
+Natural variant	in a sporadic cancer; somatic mutation; dbSNP:rs878854069	101	101	1
+Natural variant	in sporadic cancers; somatic mutation	101	101	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs786202717	102	102	1
+Natural variant	in sporadic cancers; somatic mutation	104	104	1
+Natural variant	in a sporadic cancer; somatic mutation	104	104	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation	105	105	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs587781504	105	105	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1060501195	105	105	1
+Natural variant	in a sporadic cancer; somatic mutation; dbSNP:rs1060501195	105	105	1
+Natural variant	in sporadic cancers; somatic mutation	105	105	1
+Natural variant	in a sporadic cancer; somatic mutation	106	106	1
+Natural variant	in a familial cancer not matching LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs1555526581	106	106	1
+Natural variant	in a sporadic cancer; somatic mutation; dbSNP:rs587782447	107	107	1
+Natural variant	in sporadic cancers; somatic mutation	107	107	1
+Natural variant	in a sporadic cancer; somatic mutation; dbSNP:rs368771578	107	107	1
+Natural variant	in a sporadic cancer; somatic mutation	108	108	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs587782461	108	108	1
+Natural variant	in sporadic cancers; somatic mutation	109	109	1
+Natural variant	in a sporadic cancer; somatic mutation	109	109	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1064796722	109	109	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs587781371	110	110	1
+Natural variant	in a sporadic cancer; somatic mutation	110	110	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs11540654	110	110	1
+Natural variant	in a familial cancer not matching LFS; germline mutation and in sporadic cancers; somatic mutation; does not induce SNAI1 degradation; dbSNP:rs11540654	110	110	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs11540654	110	110	1
+Natural variant	in a sporadic cancer; somatic mutation; dbSNP:rs587781371	110	110	1
+Natural variant	in a sporadic cancer; somatic mutation	111	111	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057519997	111	111	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057519997	111	111	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057519997	111	111	1
+Natural variant	in sporadic cancers; somatic mutation	112	112	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1423803759	112	112	1
+Natural variant	in sporadic cancers; somatic mutation	113	113	1
+Natural variant	in a sporadic cancer; somatic mutation; requires 2 nucleotide substitutions	113	113	1
+Natural variant	in a sporadic cancer; somatic mutation	113	113	1
+Natural variant	in sporadic cancers; somatic mutation	113	113	1
+Natural variant	in sporadic cancers; somatic mutation	113	113	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs587781642	113	113	1
+Natural variant	in sporadic cancers; somatic mutation	115	115	1
+Natural variant	in sporadic cancers; somatic mutation	116	116	1
+Natural variant	in a sporadic cancer; somatic mutation	116	116	1
+Natural variant	in a sporadic cancer; somatic mutation	116	116	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs755238756	117	117	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1555526518	117	117	1
+Natural variant	in a sporadic cancer; somatic mutation	118	118	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1064794141	118	118	1
+Natural variant	in a sporadic cancer; somatic mutation	118	118	1
+Natural variant	in a sporadic cancer; somatic mutation	119	119	1
+Natural variant	in a sporadic cancer; somatic mutation	119	119	1
+Natural variant	in sporadic cancers; somatic mutation; abolished acetylation; impaired ability to induce proapoptotic program; mimics lactylation, leading to decreased ability to undergo liquid-liquid phase separation and activate the transcription factor activity; dbSNP:rs121912658	120	120	1
+Natural variant	in sporadic cancers; somatic mutation	120	120	1
+Natural variant	in a sporadic cancer; somatic mutation; mimics lactylation, leading to decreased ability to undergo liquid-liquid phase separation and activate the transcription factor activity; dbSNP:rs121912658	120	120	1
+Natural variant	in sporadic cancers; somatic mutation	120	120	1
+Natural variant	in sporadic cancers; somatic mutation	121	121	1
+Natural variant	in a sporadic cancer; somatic mutation	122	122	1
+Natural variant	in a sporadic cancer; somatic mutation; dbSNP:rs1555526486	123	123	1
+Natural variant	in a sporadic cancer; somatic mutation	123	123	1
+Natural variant	in a sporadic cancer; somatic mutation; dbSNP:rs730881997	124	124	1
+Natural variant	in sporadic cancers; somatic mutation	124	124	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs730881997	124	124	1
+Natural variant	in a sporadic cancer; somatic mutation	124	124	1
+Natural variant	in a sporadic cancer; somatic mutation	124	124	1
+Natural variant	in a sporadic cancer; somatic mutation	125	125	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs786201057	125	125	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs786201057	125	125	1
+Natural variant	in a sporadic cancer; somatic mutation; dbSNP:rs1057520003	125	125	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs786201057	125	125	1
+Natural variant	in a familial cancer not matching LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs1555526335	126	126	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs886039483	126	126	1
+Natural variant	in a sporadic cancer; somatic mutation	126	126	1
+Natural variant	in a sporadic cancer; somatic mutation; requires 2 nucleotide substitutions	126	126	1
+Natural variant	in sporadic cancers; somatic mutation	126	126	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs886039483	126	126	1
+Natural variant	in sporadic cancers; somatic mutation	126	126	1
+Natural variant	in a sporadic cancer; somatic mutation; dbSNP:rs730881999	127	127	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs730881999	127	127	1
+Natural variant	in sporadic cancers; somatic mutation	127	127	1
+Natural variant	in sporadic cancers; somatic mutation	127	127	1
+Natural variant	in sporadic cancers; somatic mutation	127	127	1
+Natural variant	in sporadic cancers; somatic mutation	128	128	1
+Natural variant	in sporadic cancers; somatic mutation	128	128	1
+Natural variant	in sporadic cancers; somatic mutation	128	128	1
+Natural variant	in sporadic cancers; somatic mutation	128	128	1
+Natural variant	in sporadic cancers; somatic mutation	129	129	1
+Natural variant	in a sporadic cancer; somatic mutation	129	129	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1438095083	129	129	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs137852792	129	129	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs863224683	130	130	1
+Natural variant	in sporadic cancers; somatic mutation	130	130	1
+Natural variant	in a sporadic cancer; somatic mutation	130	130	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1131691013	130	130	1
+Natural variant	in sporadic cancers; somatic mutation	130	130	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs863224683	130	130	1
+Natural variant	in a sporadic cancer; somatic mutation	131	131	1
+Natural variant	in sporadic cancers; somatic mutation	131	131	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1131691037	131	131	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs769270327	131	131	1
+Natural variant	in sporadic cancers; somatic mutation	131	131	1
+Natural variant	in a sporadic cancer; somatic mutation	131	131	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs587782160	131	131	1
+Natural variant	in a sporadic cancer; somatic mutation	132	133	2
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs747342068	132	132	1
+Natural variant	in a sporadic cancer; somatic mutation; requires 2 nucleotide substitutions	132	132	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057519996	132	132	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs866775781	132	132	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs747342068	132	132	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057519996	132	132	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057519996	132	132	1
+Natural variant	in a sporadic cancer; somatic mutation; requires 2 nucleotide substitutions	132	132	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1064795139	133	133	1
+Natural variant	in sporadic cancers; somatic mutation	133	133	1
+Natural variant	in sporadic cancers; somatic mutation	133	133	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation	133	133	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs28934873	133	133	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057280220	133	133	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs780442292	134	134	1
+Natural variant	in sporadic cancers; somatic mutation	134	134	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs267605077	134	134	1
+Natural variant	in sporadic cancers; somatic mutation	134	134	1
+Natural variant	in sporadic cancers; somatic mutation	134	134	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs587781991	135	135	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057519975	135	135	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057519975	135	135	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057519975	135	135	1
+Natural variant	in a sporadic cancer; somatic mutation; requires 2 nucleotide substitutions	135	135	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057519976	135	135	1
+Natural variant	in sporadic cancers; somatic mutation; decreased E6-mediated binding to E6-AP; dbSNP:rs587781991	135	135	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1555526268	136	136	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs758781593	136	136	1
+Natural variant	in a sporadic cancer; somatic mutation	136	136	1
+Natural variant	in sporadic cancers; somatic mutation	136	136	1
+Natural variant	in sporadic cancers; somatic mutation	136	136	1
+Natural variant	in sporadic cancers; somatic mutation	137	137	1
+Natural variant	in sporadic cancers; somatic mutation	137	137	1
+Natural variant	in sporadic cancers; somatic mutation	137	137	1
+Natural variant	in sporadic cancers; somatic mutation	137	137	1
+Natural variant	in sporadic cancers; somatic mutation	138	138	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs28934875	138	138	1
+Natural variant	in LFS; germline mutation	138	138	1
+Natural variant	in sporadic cancers; somatic mutation	138	138	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs750600586	138	138	1
+Natural variant	in sporadic cancers; somatic mutation; mimics lactylation, leading to decreased ability to undergo liquid-liquid phase separation and activate the transcription factor activity; dbSNP:rs1212996409	139	139	1
+Natural variant	in sporadic cancers; somatic mutation; mimics lactylation, leading to decreased ability to undergo liquid-liquid phase separation and activate the transcription factor activity	139	139	1
+Natural variant	in sporadic cancers; somatic mutation; mimics lactylation, leading to decreased ability to undergo liquid-liquid phase separation and activate the transcription factor activity	139	139	1
+Natural variant	in sporadic cancers; somatic mutation	139	139	1
+Natural variant	in sporadic cancers; somatic mutation; mimics lactylation, leading to decreased ability to undergo liquid-liquid phase separation and activate the transcription factor activity	139	139	1
+Natural variant	in sporadic cancers; somatic mutation	140	140	1
+Natural variant	in sporadic cancers; somatic mutation	140	140	1
+Natural variant	in a sporadic cancer; somatic mutation; dbSNP:rs786202561	140	140	1
+Natural variant	in a sporadic cancer; somatic mutation	140	140	1
+Natural variant	in sporadic cancers; somatic mutation	140	140	1
+Natural variant	in a sporadic cancer; somatic mutation; requires 2 nucleotide substitutions	141	141	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs587781288	141	141	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057519978	141	141	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057519978	141	141	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057519978	141	141	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057519977	141	141	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs587781288	141	141	1
+Natural variant	in sporadic cancers; somatic mutation	142	142	1
+Natural variant	in sporadic cancers; somatic mutation; requires 2 nucleotide substitutions	142	142	1
+Natural variant	in sporadic cancers; somatic mutation	142	142	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs779196500	142	142	1
+Natural variant	in a sporadic cancer; somatic mutation	142	142	1
+Natural variant	in sporadic cancers; somatic mutation	142	142	1
+Natural variant	in sporadic cancers; somatic mutation	142	142	1
+Natural variant	in sporadic cancers; somatic mutation; strong DNA binding ability at 32.5 degrees Celsius; strong reduction of transcriptional activity at 37.5 degrees Celsius; severely represses interaction with ZNF385A	143	143	1
+Natural variant	in sporadic cancers; somatic mutation	143	143	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1555526241	143	143	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs587782620	143	143	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs587782620	143	143	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs786201419	144	144	1
+Natural variant	in sporadic cancers; somatic mutation	144	144	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs786203071	144	144	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs786203071	144	144	1
+Natural variant	in sporadic cancers; somatic mutation	144	144	1
+Natural variant	in sporadic cancers; somatic mutation	145	145	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs587782197	145	145	1
+Natural variant	in sporadic cancers; somatic mutation	145	145	1
+Natural variant	in sporadic cancers; somatic mutation	145	145	1
+Natural variant	in sporadic cancers; somatic mutation	145	145	1
+Natural variant	in a sporadic cancer; somatic mutation	146	146	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs786203064	146	146	1
+Natural variant	in sporadic cancers; somatic mutation	146	146	1
+Natural variant	in sporadic cancers; somatic mutation	146	146	1
+Natural variant	in sporadic cancers; somatic mutation	146	146	1
+Natural variant	in sporadic cancers; somatic mutation	147	147	1
+Natural variant	in sporadic cancers; somatic mutation	147	147	1
+Natural variant	in sporadic cancers; somatic mutation	147	147	1
+Natural variant	in a sporadic cancer; somatic mutation	147	147	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1453167097	147	147	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1555526226	147	147	1
+Natural variant	in a sporadic cancer; somatic mutation; dbSNP:rs1046611742	148	148	1
+Natural variant	in sporadic cancers; somatic mutation	148	148	1
+Natural variant	in a sporadic cancer; somatic mutation	148	148	1
+Natural variant	in sporadic cancers; somatic mutation	148	148	1
+Natural variant	in sporadic cancers; somatic mutation	148	148	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1131691007	148	148	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1555526214	149	149	1
+Natural variant	in sporadic cancers; somatic mutation	149	149	1
+Natural variant	in sporadic cancers; somatic mutation	149	149	1
+Natural variant	in a sporadic cancer; somatic mutation	150	150	1
+Natural variant	in sporadic cancers; somatic mutation	150	150	1
+Natural variant	in sporadic cancers; somatic mutation	150	150	1
+Natural variant	in a sporadic cancer; somatic mutation	150	150	1
+Natural variant	in a sporadic cancer; somatic mutation	150	150	1
+Natural variant	in a sporadic cancer; somatic mutation	150	150	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs28934874	151	151	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057520000	151	151	1
+Natural variant	in sporadic cancers; somatic mutation	151	151	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057520000	151	151	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs28934874	151	151	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs28934874	151	151	1
+Natural variant	in sporadic cancers; somatic mutation	152	152	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs587782705	152	152	1
+Natural variant	in sporadic cancers; somatic mutation	152	152	1
+Natural variant	in sporadic cancers; somatic mutation	152	152	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs767328513	152	152	1
+Natural variant	in sporadic cancers; somatic mutation	152	152	1
+Natural variant	in sporadic cancers; somatic mutation	153	153	1
+Natural variant	in a sporadic cancer; somatic mutation; requires 2 nucleotide substitutions	153	153	1
+Natural variant	in a sporadic cancer; somatic mutation	153	153	1
+Natural variant	in sporadic cancers; somatic mutation	153	153	1
+Natural variant	in a sporadic cancer; somatic mutation	153	153	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1064795860	153	153	1
+Natural variant	in sporadic cancers; somatic mutation	153	153	1
+Natural variant	in sporadic cancers; somatic mutation	154	154	1
+Natural variant	in a sporadic cancer; somatic mutation	154	154	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs762846821	154	154	1
+Natural variant	in sporadic cancers; somatic mutation; requires 2 nucleotide substitutions	154	154	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs137852789	154	154	1
+Natural variant	in a brain tumor with no family history; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs762846821	154	154	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs772683278	155	155	1
+Natural variant	in sporadic cancers; somatic mutation	155	155	1
+Natural variant	in a sporadic cancer; somatic mutation	155	155	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs786202752	155	155	1
+Natural variant	in sporadic cancers; somatic mutation; does not induce SNAI1 degradation	155	155	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs786202752	155	155	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs563378859	156	156	1
+Natural variant	in sporadic cancers; somatic mutation	156	156	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs371524413	156	156	1
+Natural variant	in sporadic cancers; somatic mutation	156	156	1
+Natural variant	in sporadic cancers; somatic mutation	156	156	1
+Natural variant	in sporadic cancers; somatic mutation	156	156	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1131691023	157	157	1
+Natural variant	in sporadic cancers; somatic mutation	157	157	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs121912654	157	157	1
+Natural variant	in sporadic cancers; somatic mutation	157	157	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs121912654	157	157	1
+Natural variant	in sporadic cancers; somatic mutation	157	157	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs587780068	158	158	1
+Natural variant	in a sporadic cancer; somatic mutation; requires 2 nucleotide substitutions	158	158	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation	158	158	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs587782144	158	158	1
+Natural variant	in sporadic cancers; somatic mutation	158	158	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs587782144	158	158	1
+Natural variant	in a sporadic cancer; somatic mutation	158	158	1
+Natural variant	in sporadic cancers; somatic mutation	158	158	1
+Natural variant	in a sporadic cancer; somatic mutation; requires 2 nucleotide substitutions	158	158	1
+Natural variant	in sporadic cancers; somatic mutation	159	159	1
+Natural variant	in a sporadic cancer; somatic mutation; requires 2 nucleotide substitutions; dbSNP:rs730882022	159	159	1
+Natural variant	in sporadic cancers; somatic mutation	159	159	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs730882000	159	159	1
+Natural variant	in sporadic cancers; somatic mutation	159	159	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs730882000	159	159	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1555526131	159	159	1
+Natural variant	in a sporadic cancer; somatic mutation	160	161	2
+Natural variant	in sporadic cancers; somatic mutation	160	161	2
+Natural variant	in a sporadic cancer; somatic mutation	160	161	2
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs772354334	160	160	1
+Natural variant	in sporadic cancers; somatic mutation	160	160	1
+Natural variant	in a sporadic cancer; somatic mutation	160	160	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs377274728	160	160	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1064795691	161	161	1
+Natural variant	in a sporadic cancer; somatic mutation; requires 2 nucleotide substitutions	161	161	1
+Natural variant	in sporadic cancers; somatic mutation	161	161	1
+Natural variant	in sporadic cancers; somatic mutation	161	161	1
+Natural variant	in sporadic cancers; somatic mutation	161	161	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs193920817	161	161	1
+Natural variant	in sporadic cancers; somatic mutation	161	161	1
+Natural variant	in sporadic cancers; somatic mutation	162	162	1
+Natural variant	in sporadic cancers; somatic mutation	162	162	1
+Natural variant	in a breast cancer with no family history; germline mutation and in sporadic cancers; somatic mutation	162	162	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs587780069	162	162	1
+Natural variant	in sporadic cancers; somatic mutation	162	162	1
+Natural variant	in sporadic cancers; somatic mutation	162	162	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs148924904	163	163	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs786203436	163	163	1
+Natural variant	in a sporadic cancer; somatic mutation	163	163	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs786203436	163	163	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs786203436	163	163	1
+Natural variant	in sporadic cancers; somatic mutation	163	163	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs879254249	164	164	1
+Natural variant	in sporadic cancers; somatic mutation	164	164	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1131691034	164	164	1
+Natural variant	in sporadic cancers; somatic mutation	164	164	1
+Natural variant	in sporadic cancers; somatic mutation	164	164	1
+Natural variant	in sporadic cancers; somatic mutation	164	164	1
+Natural variant	in sporadic cancers; somatic mutation	165	165	1
+Natural variant	in a sporadic cancer; somatic mutation	165	165	1
+Natural variant	in sporadic cancers; somatic mutation	165	165	1
+Natural variant	in sporadic cancers; somatic mutation	165	165	1
+Natural variant	in sporadic cancers; somatic mutation	165	165	1
+Natural variant	in sporadic cancers; somatic mutation	166	166	1
+Natural variant	in a sporadic cancer; somatic mutation	166	166	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1555526101	166	166	1
+Natural variant	in sporadic cancers; somatic mutation	166	166	1
+Natural variant	in sporadic cancers; somatic mutation	166	166	1
+Natural variant	in a sporadic cancer; somatic mutation	167	168	2
+Natural variant	in a sporadic cancer; somatic mutation	167	168	2
+Natural variant	in sporadic cancers; somatic mutation	167	167	1
+Natural variant	in LFS; germline mutation and in a sporadic cancer; somatic mutation	167	167	1
+Natural variant	in sporadic cancers; somatic mutation	167	167	1
+Natural variant	in sporadic cancers; somatic mutation	167	167	1
+Natural variant	in a sporadic cancer; somatic mutation	168	169	2
+Natural variant	in sporadic cancers; somatic mutation	168	168	1
+Natural variant	in sporadic cancers; somatic mutation	168	168	1
+Natural variant	in sporadic cancers; somatic mutation	168	168	1
+Natural variant	in sporadic cancers; somatic mutation	168	168	1
+Natural variant	in sporadic cancers; somatic mutation	168	168	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs867114783	168	168	1
+Natural variant	in a sporadic cancer; somatic mutation; requires 2 nucleotide substitutions	168	168	1
+Natural variant	in sporadic cancers; somatic mutation	168	168	1
+Natural variant	in a sporadic cancer; somatic mutation	169	170	2
+Natural variant	in sporadic cancers; somatic mutation	169	169	1
+Natural variant	in sporadic cancers; somatic mutation	169	169	1
+Natural variant	in sporadic cancers; somatic mutation	169	169	1
+Natural variant	in sporadic cancers; somatic mutation	169	169	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs587780729	170	170	1
+Natural variant	in a sporadic cancer; somatic mutation	170	170	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs779000871	170	170	1
+Natural variant	in a sporadic cancer; somatic mutation	170	170	1
+Natural variant	in sporadic cancers; somatic mutation	170	170	1
+Natural variant	in a sporadic cancer; somatic mutation	171	171	1
+Natural variant	in sporadic cancers; somatic mutation	171	171	1
+Natural variant	in sporadic cancers; somatic mutation	171	171	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs587781845	171	171	1
+Natural variant	in a sporadic cancer; somatic mutation	171	171	1
+Natural variant	in sporadic cancers; somatic mutation	171	171	1
+Natural variant	in sporadic cancers; somatic mutation	172	172	1
+Natural variant	in sporadic cancers; somatic mutation	172	172	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs1131691043	172	172	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1131691021	172	172	1
+Natural variant	in sporadic cancers; somatic mutation	172	172	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057519747	173	173	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057519747	173	173	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057519747	173	173	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs876660754	173	173	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs876660754	173	173	1
+Natural variant	in a sporadic cancer; somatic mutation; requires 2 nucleotide substitutions	173	173	1
+Natural variant	in LFS; germline mutation and in a sporadic cancer; somatic mutation; dbSNP:rs864622115	174	174	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1064796681	174	174	1
+Natural variant	in sporadic cancers; somatic mutation	174	174	1
+Natural variant	in sporadic cancers; somatic mutation	174	174	1
+Natural variant	in a sporadic cancer; somatic mutation	174	174	1
+Natural variant	in sporadic cancers; somatic mutation	174	174	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs138729528	175	175	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs138729528	175	175	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; does not induce SNAI1 degradation; reduces interaction with ZNF385A; dbSNP:rs28934578	175	175	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs28934578	175	175	1
+Natural variant	in sporadic cancers; somatic mutation	175	175	1
+Natural variant	in a sporadic cancer; somatic mutation	175	175	1
+Natural variant	in sporadic cancers; somatic mutation	175	175	1
+Natural variant	in a sporadic cancer; somatic mutation	176	177	2
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs786202962	176	176	1
+Natural variant	in sporadic cancers; somatic mutation	176	176	1
+Natural variant	in sporadic cancers; somatic mutation	176	176	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs967461896	176	176	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057519980	176	176	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs786202962	176	176	1
+Natural variant	in a sporadic cancer; somatic mutation	177	177	1
+Natural variant	in sporadic cancers; somatic mutation; requires 2 nucleotide substitutions	177	177	1
+Natural variant	in sporadic cancers; somatic mutation	177	177	1
+Natural variant	in a sporadic cancer; somatic mutation; requires 2 nucleotide substitutions	177	177	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs751477326	177	177	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs751477326	177	177	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs147002414	177	177	1
+Natural variant	in a sporadic cancer; somatic mutation	177	177	1
+Natural variant	in a sporadic cancer; somatic mutation	178	179	2
+Natural variant	in sporadic cancers; somatic mutation	178	178	1
+Natural variant	in a Burkitt lymphoma	178	178	1
+Natural variant	in a sporadic cancer; somatic mutation	178	178	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1064795203	178	178	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1555526004	178	178	1
+Natural variant	in sporadic cancers; somatic mutation	178	178	1
+Natural variant	in sporadic cancers; somatic mutation	178	178	1
+Natural variant	in sporadic cancers; somatic mutation	178	178	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs587780070	179	179	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057519991	179	179	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs587780070	179	179	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057519991	179	179	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs876660821	179	179	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057519991	179	179	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs587780070	179	179	1
+Natural variant	in a sporadic cancer; somatic mutation	180	180	1
+Natural variant	in sporadic cancers; somatic mutation	180	180	1
+Natural variant	in a sporadic cancer; somatic mutation	180	180	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs879253911	180	180	1
+Natural variant	in sporadic cancers; somatic mutation	180	180	1
+Natural variant	in a sporadic cancer; somatic mutation	180	180	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs587782596	181	181	1
+Natural variant	in sporadic cancers; somatic mutation	181	181	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs397514495	181	181	1
+Natural variant	in a familial cancer not matching LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs397514495	181	181	1
+Natural variant	in a familial cancer not matching LFS; germline mutation and in sporadic cancers; somatic mutation	181	181	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs587782596	181	181	1
+Natural variant	in sporadic cancers; somatic mutation	182	182	1
+Natural variant	in sporadic cancers; somatic mutation	182	182	1
+Natural variant	in sporadic cancers; somatic mutation	182	182	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1555525970	183	183	1
+Natural variant	in sporadic cancers; somatic mutation	183	183	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1060501209	184	184	1
+Natural variant	in sporadic cancers; somatic mutation	184	184	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs72661117	184	184	1
+Natural variant	in sporadic cancers; somatic mutation	184	184	1
+Natural variant	in sporadic cancers; somatic mutation	184	184	1
+Natural variant	in a sporadic cancer; somatic mutation	185	185	1
+Natural variant	in sporadic cancers; somatic mutation	185	185	1
+Natural variant	in sporadic cancers; somatic mutation	185	185	1
+Natural variant	in a sporadic cancer; somatic mutation; dbSNP:rs150607408	185	185	1
+Natural variant	in sporadic cancers; somatic mutation	185	185	1
+Natural variant	in a sporadic cancer; somatic mutation	185	185	1
+Natural variant	in a sporadic cancer; somatic mutation; dbSNP:rs375275361	186	186	1
+Natural variant	in sporadic cancers; somatic mutation	186	186	1
+Natural variant	in sporadic cancers; somatic mutation	186	186	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1060501206	186	186	1
+Natural variant	in sporadic cancers; somatic mutation	186	186	1
+Natural variant	in a sporadic cancer; somatic mutation	186	186	1
+Natural variant	in sporadic cancers; somatic mutation	187	187	1
+Natural variant	in sporadic cancers; somatic mutation	187	187	1
+Natural variant	in a sporadic cancer; somatic mutation; requires 2 nucleotide substitutions	187	187	1
+Natural variant	in sporadic cancers; somatic mutation	187	187	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs776167460	187	187	1
+Natural variant	in sporadic cancers; somatic mutation	187	187	1
+Natural variant	in a sporadic cancer; somatic mutation; dbSNP:rs1199893366	188	188	1
+Natural variant	in sporadic cancers; somatic mutation	188	188	1
+Natural variant	in a sporadic cancer; somatic mutation	189	189	1
+Natural variant	in sporadic cancers; somatic mutation	189	189	1
+Natural variant	in sporadic cancers; somatic mutation	189	189	1
+Natural variant	in a sporadic cancer; somatic mutation; dbSNP:rs1555525921	189	189	1
+Natural variant	in sporadic cancers; somatic mutation	189	189	1
+Natural variant	in a familial cancer not matching LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs121912665	189	189	1
+Natural variant	in sporadic cancers; somatic mutation	190	190	1
+Natural variant	in a sporadic cancer; somatic mutation	190	190	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs876660825	190	190	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs876660825	190	190	1
+Natural variant	in sporadic cancers; somatic mutation	190	190	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs876660254	190	190	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs587778718	191	191	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs587778718	191	191	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs587778718	191	191	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs868590738	191	191	1
+Natural variant	in sporadic cancers; somatic mutation	191	191	1
+Natural variant	in a sporadic cancer; somatic mutation	192	193	2
+Natural variant	in a sporadic cancer; somatic mutation	192	193	2
+Natural variant	in sporadic cancers; somatic mutation	192	192	1
+Natural variant	in a sporadic cancer; somatic mutation	192	192	1
+Natural variant	in sporadic cancers; somatic mutation	192	192	1
+Natural variant	in sporadic cancers; somatic mutation	192	192	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs730882002	192	192	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs876658468	193	193	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs786201838	193	193	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs876658468	193	193	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs786201838	193	193	1
+Natural variant	in sporadic cancers; somatic mutation	193	193	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs786201838	193	193	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs876658468	193	193	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs587780071	194	194	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057519998	194	194	1
+Natural variant	in sporadic cancers; somatic mutation	194	194	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057519998	194	194	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057519998	194	194	1
+Natural variant	in sporadic cancers; somatic mutation	194	194	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs942158624	195	195	1
+Natural variant	in a sporadic cancer; somatic mutation	195	195	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs760043106	195	195	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs760043106	195	195	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs760043106	195	195	1
+Natural variant	in a sporadic cancer; somatic mutation	195	195	1
+Natural variant	in a sporadic cancer; somatic mutation; requires 2 nucleotide substitutions	195	195	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs397516435	196	196	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs483352697	196	196	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs483352697	196	196	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs483352697	196	196	1
+Natural variant	in a sporadic cancer; somatic mutation	196	196	1
+Natural variant	in a familial cancer not matching LFS; germline mutation and in sporadic cancers; somatic mutation	197	197	1
+Natural variant	in sporadic cancers; somatic mutation	197	197	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs786204041	197	197	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs786204041	197	197	1
+Natural variant	in a sporadic cancer; somatic mutation	198	198	1
+Natural variant	in sporadic cancers; somatic mutation	198	198	1
+Natural variant	in sporadic cancers; somatic mutation	198	198	1
+Natural variant	in sporadic cancers; somatic mutation	198	198	1
+Natural variant	in a sporadic cancer; somatic mutation	198	198	1
+Natural variant	in a sporadic cancer; somatic mutation	199	199	1
+Natural variant	in sporadic cancers; somatic mutation	199	199	1
+Natural variant	in sporadic cancers; somatic mutation	199	199	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1555525857	199	199	1
+Natural variant	in sporadic cancers; somatic mutation	200	200	1
+Natural variant	in sporadic cancers; somatic mutation	200	200	1
+Natural variant	in a sporadic cancer; somatic mutation	200	200	1
+Natural variant	in a sporadic cancer; somatic mutation; requires 2 nucleotide substitutions	200	200	1
+Natural variant	in sporadic cancers; somatic mutation	200	200	1
+Natural variant	in a sporadic cancer; somatic mutation	200	200	1
+Natural variant	in a sporadic cancer; somatic mutation	201	202	2
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs730882024	201	201	1
+Natural variant	in a sporadic cancer; somatic mutation	201	201	1
+Natural variant	in a sporadic cancer; somatic mutation	201	201	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs587780072	202	202	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs587780072	202	202	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs587778719	202	202	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs587778719	202	202	1
+Natural variant	in sporadic cancers; somatic mutation	202	202	1
+Natural variant	in sporadic cancers; somatic mutation	202	202	1
+Natural variant	in a sporadic cancer; somatic mutation	203	204	2
+Natural variant	in sporadic cancers; somatic mutation	203	203	1
+Natural variant	in sporadic cancers; somatic mutation	203	203	1
+Natural variant	in sporadic cancers; somatic mutation	203	203	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs730882003	203	203	1
+Natural variant	in a sporadic cancer; somatic mutation; requires 2 nucleotide substitutions	203	203	1
+Natural variant	in sporadic cancers; somatic mutation	204	204	1
+Natural variant	in sporadic cancers; somatic mutation	204	204	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1260903787	204	204	1
+Natural variant	in sporadic cancers; somatic mutation	204	204	1
+Natural variant	in a sporadic cancer; somatic mutation	204	204	1
+Natural variant	in a sporadic cancer; somatic mutation	204	204	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057520007	205	205	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057520008	205	205	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057520007	205	205	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057520008	205	205	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057520008	205	205	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057520007	205	205	1
+Natural variant	in a sporadic cancer; somatic mutation	206	206	1
+Natural variant	in a sporadic cancer; somatic mutation	206	206	1
+Natural variant	in a sporadic cancer; somatic mutation	207	208	2
+Natural variant	in sporadic cancers; somatic mutation	207	207	1
+Natural variant	in sporadic cancers; somatic mutation	207	207	1
+Natural variant	in sporadic cancers; somatic mutation	207	207	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs923100890	207	207	1
+Natural variant	in a sporadic cancer; somatic mutation	207	207	1
+Natural variant	in a sporadic cancer; somatic mutation	207	207	1
+Natural variant	in sporadic cancers; somatic mutation	208	208	1
+Natural variant	in sporadic cancers; somatic mutation	208	208	1
+Natural variant	in a sporadic cancer; somatic mutation	208	208	1
+Natural variant	in a sporadic cancer; somatic mutation; requires 2 nucleotide substitutions	208	208	1
+Natural variant	in sporadic cancers; somatic mutation	208	208	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1464727668	208	208	1
+Natural variant	in a sporadic cancer; somatic mutation	208	208	1
+Natural variant	in sporadic cancers; somatic mutation	209	209	1
+Natural variant	in sporadic cancers; somatic mutation	209	209	1
+Natural variant	in a sporadic cancer; somatic mutation	209	209	1
+Natural variant	in sporadic cancers; somatic mutation	209	209	1
+Natural variant	in sporadic cancers; somatic mutation	210	210	1
+Natural variant	in sporadic cancers; somatic mutation	210	210	1
+Natural variant	in a sporadic cancer; somatic mutation	210	210	1
+Natural variant	in a sporadic cancer; somatic mutation	210	210	1
+Natural variant	in sporadic cancers; somatic mutation	210	210	1
+Natural variant	in a sporadic cancer; somatic mutation	210	210	1
+Natural variant	in a familial cancer not matching LFS; germline mutation; dbSNP:rs1060501200	210	210	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1060501198	211	211	1
+Natural variant	in sporadic cancers; somatic mutation	211	211	1
+Natural variant	in sporadic cancers; somatic mutation	211	211	1
+Natural variant	in a sporadic cancer; somatic mutation	211	211	1
+Natural variant	in sporadic cancers; somatic mutation	211	211	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1064795766	212	212	1
+Natural variant	in sporadic cancers; somatic mutation	212	212	1
+Natural variant	in sporadic cancers; somatic mutation	212	212	1
+Natural variant	in a sporadic cancer; somatic mutation	212	212	1
+Natural variant	in sporadic cancers; somatic mutation	212	212	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs397516436	213	213	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs587778720	213	213	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs587778720	213	213	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs587778720	213	213	1
+Natural variant	in sporadic cancers; somatic mutation	213	213	1
+Natural variant	in sporadic cancers; somatic mutation	214	214	1
+Natural variant	in a sporadic cancer; somatic mutation; dbSNP:rs1057519992	214	214	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs587781386	214	214	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057519992	214	214	1
+Natural variant	in sporadic cancers; somatic mutation	214	214	1
+Natural variant	in sporadic cancers; somatic mutation	215	215	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs886039484	215	215	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs587782177	215	215	1
+Natural variant	in sporadic cancers; somatic mutation; requires 2 nucleotide substitutions	215	215	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs587782177	215	215	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057520001	215	215	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs587782177	215	215	1
+Natural variant	in sporadic cancers; somatic mutation	216	216	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057520004	216	216	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057520004	216	216	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs730882025	216	216	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs730882025	216	216	1
+Natural variant	in a sporadic cancer; somatic mutation; requires 2 nucleotide substitutions	216	216	1
+Natural variant	in sporadic cancers; somatic mutation	217	217	1
+Natural variant	in sporadic cancers; somatic mutation	217	217	1
+Natural variant	in sporadic cancers; somatic mutation	217	217	1
+Natural variant	in a sporadic cancer; somatic mutation	217	217	1
+Natural variant	in sporadic cancers; somatic mutation	217	217	1
+Natural variant	in dbSNP:rs35163653	217	217	1
+Natural variant	in sporadic cancers; somatic mutation	218	218	1
+Natural variant	in sporadic cancers; somatic mutation	218	218	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1555525743	218	218	1
+Natural variant	in sporadic cancers; somatic mutation	218	218	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs878854072	218	218	1
+Natural variant	in a sporadic cancer; somatic mutation; requires 2 nucleotide substitutions	219	219	1
+Natural variant	in a sporadic cancer; somatic mutation	219	219	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1420675064	219	219	1
+Natural variant	in a sporadic cancer; somatic mutation	219	219	1
+Natural variant	in a familial cancer not matching LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs879253894	219	219	1
+Natural variant	in sporadic cancers; somatic mutation	219	219	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs121912666	220	220	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs530941076	220	220	1
+Natural variant	in a sporadic cancer; somatic mutation	220	220	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs530941076	220	220	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs530941076	220	220	1
+Natural variant	in a brain tumor with no family history; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs121912666	220	220	1
+Natural variant	in sporadic cancers; somatic mutation	221	221	1
+Natural variant	in sporadic cancers; somatic mutation	221	221	1
+Natural variant	in sporadic cancers; somatic mutation	221	221	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs786201592	221	221	1
+Natural variant	in sporadic cancers; somatic mutation	221	221	1
+Natural variant	in a sporadic cancer; somatic mutation	222	222	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs146340390	222	222	1
+Natural variant	in sporadic cancers; somatic mutation	222	222	1
+Natural variant	in a sporadic cancer; somatic mutation	222	222	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1060501203	222	222	1
+Natural variant	in sporadic cancers; somatic mutation	222	222	1
+Natural variant	in a sporadic cancer; somatic mutation	223	223	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs138983188	223	223	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs138983188	223	223	1
+Natural variant	in a sporadic cancer; somatic mutation	223	223	1
+Natural variant	in a sporadic cancer; somatic mutation	223	223	1
+Natural variant	in a sporadic cancer; somatic mutation	223	223	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs267605076	224	224	1
+Natural variant	in sporadic cancers; somatic mutation	224	224	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1555525707	224	224	1
+Natural variant	in a sporadic cancer; somatic mutation	224	224	1
+Natural variant	in sporadic cancers; somatic mutation	225	225	1
+Natural variant	in a sporadic cancer; somatic mutation	225	225	1
+Natural variant	in sporadic cancers; somatic mutation	225	225	1
+Natural variant	in a sporadic cancer; somatic mutation	225	225	1
+Natural variant	in sporadic cancers; somatic mutation	225	225	1
+Natural variant	in a sporadic cancer; somatic mutation; dbSNP:rs746504075	225	225	1
+Natural variant	in sporadic cancers; somatic mutation	226	226	1
+Natural variant	in sporadic cancers; somatic mutation	226	226	1
+Natural variant	in a sporadic cancer; somatic mutation; requires 2 nucleotide substitutions	226	226	1
+Natural variant	in sporadic cancers; somatic mutation	226	226	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs970212462	226	226	1
+Natural variant	in sporadic cancers; somatic mutation	227	227	1
+Natural variant	in sporadic cancers; somatic mutation	227	227	1
+Natural variant	in a sporadic cancer; somatic mutation	227	227	1
+Natural variant	in LFS; germline mutation and in a sporadic cancer; somatic mutation	227	227	1
+Natural variant	in sporadic cancers; somatic mutation	228	228	1
+Natural variant	in sporadic cancers; somatic mutation	228	228	1
+Natural variant	in sporadic cancers; somatic mutation	228	228	1
+Natural variant	in sporadic cancers; somatic mutation	228	228	1
+Natural variant	in sporadic cancers; somatic mutation	228	228	1
+Natural variant	in a sporadic cancer; somatic mutation; requires 2 nucleotide substitutions	228	228	1
+Natural variant	in sporadic cancers; somatic mutation	228	228	1
+Natural variant	in sporadic cancers; somatic mutation	228	228	1
+Natural variant	in a sporadic cancer; somatic mutation	229	229	1
+Natural variant	in a sporadic cancer; somatic mutation; requires 2 nucleotide substitutions	229	229	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1064794312	229	229	1
+Natural variant	in sporadic cancers; somatic mutation	229	229	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1064793603	229	229	1
+Natural variant	in sporadic cancers; somatic mutation	230	230	1
+Natural variant	in sporadic cancers; somatic mutation	230	230	1
+Natural variant	in sporadic cancers; somatic mutation	230	230	1
+Natural variant	in sporadic cancers; somatic mutation	230	230	1
+Natural variant	in sporadic cancers; somatic mutation	230	230	1
+Natural variant	in sporadic cancers; somatic mutation	231	231	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1555525564	231	231	1
+Natural variant	in sporadic cancers; somatic mutation	231	231	1
+Natural variant	in sporadic cancers; somatic mutation	231	231	1
+Natural variant	in sporadic cancers; somatic mutation	232	232	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1555525562	232	232	1
+Natural variant	in sporadic cancers; somatic mutation	232	232	1
+Natural variant	in sporadic cancers; somatic mutation; does not induce SNAI1 degradation	232	232	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs587781589	232	232	1
+Natural variant	in sporadic cancers; somatic mutation	232	232	1
+Natural variant	in LFS; germline mutation and in a sporadic cancer; somatic mutation	233	233	1
+Natural variant	in sporadic cancers; somatic mutation	233	233	1
+Natural variant	in a sporadic cancer; somatic mutation	233	233	1
+Natural variant	in sporadic cancers; somatic mutation	233	233	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs879254233	233	233	1
+Natural variant	in sporadic cancers; somatic mutation	233	233	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs587780073	234	234	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs864622237	234	234	1
+Natural variant	in a sporadic cancer; somatic mutation	234	234	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs864622237	234	234	1
+Natural variant	in a sporadic cancer; somatic mutation; requires 2 nucleotide substitutions	234	234	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs864622237	234	234	1
+Natural variant	in a sporadic cancer; somatic mutation; requires 2 nucleotide substitutions	234	234	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs587780073	234	234	1
+Natural variant	in an adrenocortical carcinoma with no family history; germline mutation and in sporadic cancers; somatic mutation	235	235	1
+Natural variant	in a sporadic cancer; somatic mutation	235	235	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs144340710	235	235	1
+Natural variant	in a sporadic cancer; somatic mutation; requires 2 nucleotide substitutions	235	235	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs144340710	235	235	1
+Natural variant	in sporadic cancers; somatic mutation	235	235	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs786204145	235	235	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs730882026	236	236	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs587782289	236	236	1
+Natural variant	in a sporadic cancer; somatic mutation	236	236	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs587782289	236	236	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs587782289	236	236	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs730882026	236	236	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs587782664	237	237	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs765848205	237	237	1
+Natural variant	in sporadic cancers; somatic mutation	237	237	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs765848205	237	237	1
+Natural variant	in sporadic cancers; somatic mutation	237	237	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs730882004	237	237	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs730882005	238	238	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs1057519981	238	238	1
+Natural variant	in a sporadic cancer; somatic mutation; requires 2 nucleotide substitutions	238	238	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057519981	238	238	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs730882005	238	238	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs193920789	238	238	1
+Natural variant	in a familial cancer not matching LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs730882005	238	238	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs876660807	239	239	1
+Natural variant	in a sporadic cancer; somatic mutation	239	239	1
+Natural variant	in a sporadic cancer; somatic mutation	239	239	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057522275	239	239	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057519999	239	239	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057519999	239	239	1
+Natural variant	in sporadic cancers; somatic mutation	239	239	1
+Natural variant	in sporadic cancers; somatic mutation	240	240	1
+Natural variant	in sporadic cancers; somatic mutation	240	240	1
+Natural variant	in sporadic cancers; somatic mutation	240	240	1
+Natural variant	in sporadic cancers; somatic mutation	240	240	1
+Natural variant	in a sporadic cancer; somatic mutation	240	240	1
+Natural variant	in sporadic cancers; somatic mutation	240	240	1
+Natural variant	in sporadic cancers; somatic mutation	240	240	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057520002	241	241	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs28934573	241	241	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs28934573	241	241	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057520002	241	241	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation	241	241	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs28934573	241	241	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs121912655	242	242	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057519982	242	242	1
+Natural variant	in sporadic cancers; somatic mutation	242	242	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs121912655	242	242	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs375874539	242	242	1
+Natural variant	in a familial cancer not matching LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs121912655	242	242	1
+Natural variant	in a sporadic cancer; somatic mutation	243	244	2
+Natural variant	in a sporadic cancer; somatic mutation	243	244	2
+Natural variant	in sporadic cancers; somatic mutation	243	243	1
+Natural variant	in sporadic cancers; somatic mutation	243	243	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs786203117	243	243	1
+Natural variant	in sporadic cancers; somatic mutation	243	243	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs730882006	243	243	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs786203117	243	243	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs985033810	244	244	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057519989	244	244	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs1057517983	244	244	1
+Natural variant	in a sporadic cancer; somatic mutation	244	244	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057519989	244	244	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057519989	244	244	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs985033810	244	244	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs121912656	245	245	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs28934575	245	245	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs121912656	245	245	1
+Natural variant	in a sporadic cancer; somatic mutation	245	245	1
+Natural variant	in sporadic cancers; somatic mutation; requires 2 nucleotide substitutions	245	245	1
+Natural variant	in a sporadic cancer; somatic mutation; requires 2 nucleotide substitutions	245	245	1
+Natural variant	in sporadic cancers; somatic mutation; requires 2 nucleotide substitutions	245	245	1
+Natural variant	in sporadic cancers; somatic mutation; requires 2 nucleotide substitutions	245	245	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs28934575	245	245	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs28934575	245	245	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs121912656	245	245	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1019340046	246	246	1
+Natural variant	in sporadic cancers; somatic mutation	246	246	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs483352695	246	246	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs587780074	246	246	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs587780074	246	246	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs483352695	246	246	1
+Natural variant	in a sporadic cancer; somatic mutation	247	248	2
+Natural variant	in sporadic cancers; somatic mutation	247	248	2
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1452189221	247	247	1
+Natural variant	in a sporadic cancer; somatic mutation; requires 2 nucleotide substitutions	247	247	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs786201762	247	247	1
+Natural variant	in sporadic cancers; somatic mutation	247	247	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs786201762	247	247	1
+Natural variant	in sporadic cancers; somatic mutation	247	247	1
+Natural variant	in sporadic cancers; somatic mutation	247	247	1
+Natural variant	in a sporadic cancer; somatic mutation	248	248	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs121912651	248	248	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs11540652	248	248	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs11540652	248	248	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs11540652	248	248	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs121912651	248	248	1
+Natural variant	in a sporadic cancer; somatic mutation	249	250	2
+Natural variant	in sporadic cancers; somatic mutation	249	250	2
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs587782082	249	249	1
+Natural variant	in a sporadic cancer; somatic mutation	249	249	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs587782329	249	249	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs587782329	249	249	1
+Natural variant	in a sporadic cancer; somatic mutation; requires 2 nucleotide substitutions	249	249	1
+Natural variant	in sporadic cancers; somatic mutation; does not induce SNAI1 degradation; dbSNP:rs28934571	249	249	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs587782329	249	249	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs587782082	249	249	1
+Natural variant	in sporadic cancers; somatic mutation	250	250	1
+Natural variant	in sporadic cancers; somatic mutation; requires 2 nucleotide substitutions	250	250	1
+Natural variant	in sporadic cancers; somatic mutation	250	250	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1064794311	250	250	1
+Natural variant	in sporadic cancers; somatic mutation; requires 2 nucleotide substitutions	250	250	1
+Natural variant	in sporadic cancers; somatic mutation	250	250	1
+Natural variant	in sporadic cancers; somatic mutation	250	250	1
+Natural variant	in sporadic cancers; somatic mutation	250	250	1
+Natural variant	in sporadic cancers; somatic mutation	251	251	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs730882007	251	251	1
+Natural variant	in LFS; germline mutation; dbSNP:rs878854074	251	251	1
+Natural variant	in sporadic cancers; somatic mutation	251	251	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs730882027	251	251	1
+Natural variant	in sporadic cancers; somatic mutation	251	251	1
+Natural variant	in sporadic cancers; somatic mutation	251	251	1
+Natural variant	in sporadic cancers; somatic mutation	252	252	1
+Natural variant	in a sporadic cancer; somatic mutation	252	252	1
+Natural variant	in sporadic cancers; somatic mutation	252	252	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs121912653	252	252	1
+Natural variant	in a sporadic cancer; somatic mutation	252	252	1
+Natural variant	in sporadic cancers; somatic mutation	253	253	1
+Natural variant	in sporadic cancers; somatic mutation	253	253	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1555525465	253	253	1
+Natural variant	in sporadic cancers; somatic mutation	253	253	1
+Natural variant	in sporadic cancers; somatic mutation	253	253	1
+Natural variant	in sporadic cancers; somatic mutation; requires 2 nucleotide substitutions	254	254	1
+Natural variant	in a sporadic cancer; somatic mutation	254	254	1
+Natural variant	in a sporadic cancer; somatic mutation	254	254	1
+Natural variant	in a sporadic cancer; somatic mutation	254	254	1
+Natural variant	in sporadic cancers; somatic mutation	254	254	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1330865474	254	254	1
+Natural variant	in sporadic cancers; somatic mutation	254	254	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs746601313	254	254	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057519995	255	255	1
+Natural variant	in sporadic cancers; somatic mutation	255	255	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs876659675	255	255	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs876659675	255	255	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs876659675	255	255	1
+Natural variant	in sporadic cancers; somatic mutation	255	255	1
+Natural variant	in a brain tumor with no family history; germline mutation and in sporadic cancers; somatic mutation	256	256	1
+Natural variant	in sporadic cancers; somatic mutation	256	256	1
+Natural variant	in sporadic cancers; somatic mutation	256	256	1
+Natural variant	in sporadic cancers; somatic mutation	256	256	1
+Natural variant	in sporadic cancers; somatic mutation	257	257	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs28934577	257	257	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs28934577	257	257	1
+Natural variant	in sporadic cancers; somatic mutation	257	257	1
+Natural variant	in sporadic cancers; somatic mutation	258	258	1
+Natural variant	in sporadic cancers; somatic mutation	258	258	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1060501201	258	258	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs121912652	258	258	1
+Natural variant	in a sporadic cancer; somatic mutation; requires 2 nucleotide substitutions	258	258	1
+Natural variant	in sporadic cancers; somatic mutation	258	258	1
+Natural variant	in sporadic cancers; somatic mutation	258	258	1
+Natural variant	in a sporadic cancer; somatic mutation	259	259	1
+Natural variant	in sporadic cancers; somatic mutation	259	259	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs745425759	259	259	1
+Natural variant	in sporadic cancers; somatic mutation	259	259	1
+Natural variant	in sporadic cancers; somatic mutation	259	259	1
+Natural variant	in a sporadic cancer; somatic mutation; requires 2 nucleotide substitutions	259	259	1
+Natural variant	in a sporadic cancer; somatic mutation; requires 2 nucleotide substitutions	259	259	1
+Natural variant	in sporadic cancers; somatic mutation	259	259	1
+Natural variant	in sporadic cancers; somatic mutation	259	259	1
+Natural variant	in sporadic cancers; somatic mutation	260	260	1
+Natural variant	in sporadic cancers; somatic mutation	260	260	1
+Natural variant	in sporadic cancers; somatic mutation	260	260	1
+Natural variant	in sporadic cancers; somatic mutation	260	260	1
+Natural variant	in a sporadic cancer; somatic mutation	260	260	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs876658916	260	260	1
+Natural variant	in a sporadic cancer; somatic mutation	261	261	1
+Natural variant	in sporadic cancers; somatic mutation	261	261	1
+Natural variant	in sporadic cancers; somatic mutation	261	261	1
+Natural variant	in a sporadic cancer; somatic mutation	261	261	1
+Natural variant	in sporadic cancers; somatic mutation	261	261	1
+Natural variant	in a sporadic cancer; somatic mutation	262	263	2
+Natural variant	in a sporadic cancer; somatic mutation; dbSNP:rs200579969	262	262	1
+Natural variant	in sporadic cancers; somatic mutation	262	262	1
+Natural variant	in a sporadic cancer; somatic mutation; requires 2 nucleotide substitutions	262	262	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs200579969	262	262	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1131691025	262	262	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs72661119	263	263	1
+Natural variant	in sporadic cancers; somatic mutation	263	263	1
+Natural variant	in sporadic cancers; somatic mutation	263	263	1
+Natural variant	in a sporadic cancer; somatic mutation	263	263	1
+Natural variant	in a sporadic cancer; somatic mutation	263	263	1
+Natural variant	in sporadic cancers; somatic mutation	264	264	1
+Natural variant	in a sporadic cancer; somatic mutation; dbSNP:rs1555525353	264	264	1
+Natural variant	in a sporadic cancer; somatic mutation	264	264	1
+Natural variant	in sporadic cancers; somatic mutation	264	264	1
+Natural variant	in a sporadic cancer; somatic mutation	264	264	1
+Natural variant	in sporadic cancers; somatic mutation	265	265	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs879253942	265	265	1
+Natural variant	in sporadic cancers; somatic mutation	265	265	1
+Natural variant	in sporadic cancers; somatic mutation	265	265	1
+Natural variant	in sporadic cancers; somatic mutation	266	266	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs193920774	266	266	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057519990	266	266	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs193920774	266	266	1
+Natural variant	in sporadic cancers; somatic mutation	267	267	1
+Natural variant	in a sporadic cancer; somatic mutation	267	267	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs587780075	267	267	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs587780075	267	267	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs55832599	267	267	1
+Natural variant	in a sporadic cancer; somatic mutation; requires 2 nucleotide substitutions	268	268	1
+Natural variant	in sporadic cancers; somatic mutation	268	268	1
+Natural variant	in sporadic cancers; somatic mutation	268	268	1
+Natural variant	in a sporadic cancer; somatic mutation	268	268	1
+Natural variant	in sporadic cancers; somatic mutation	268	268	1
+Natural variant	in a sporadic cancer; somatic mutation	268	268	1
+Natural variant	in sporadic cancers; somatic mutation	269	269	1
+Natural variant	in sporadic cancers; somatic mutation	269	269	1
+Natural variant	in a sporadic cancer; somatic mutation	269	269	1
+Natural variant	in sporadic cancers; somatic mutation	269	269	1
+Natural variant	in sporadic cancers; somatic mutation	269	269	1
+Natural variant	in a sporadic cancer; somatic mutation	269	269	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057519986	270	270	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057519988	270	270	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057519987	270	270	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057519986	270	270	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057519988	270	270	1
+Natural variant	in sporadic cancers; somatic mutation	270	270	1
+Natural variant	in sporadic cancers; somatic mutation	271	271	1
+Natural variant	in sporadic cancers; somatic mutation	271	271	1
+Natural variant	in sporadic cancers; somatic mutation	271	271	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1060501191	271	271	1
+Natural variant	in a sporadic cancer; somatic mutation; requires 2 nucleotide substitutions	271	271	1
+Natural variant	in sporadic cancers; somatic mutation	271	271	1
+Natural variant	in a sporadic cancer; somatic mutation; requires 2 nucleotide substitutions	271	271	1
+Natural variant	in an osteosarcoma with no family history; germline mutation and in sporadic cancers; somatic mutation	271	271	1
+Natural variant	in a familial cancer not matching LFS; germline mutation and in sporadic cancers; somatic mutation	272	272	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs876660333	272	272	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs876660333	272	272	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs121912657	272	272	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs121912657	272	272	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs121913343	273	273	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation	273	273	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; abolishes sequence-specific DNA binding; does not induce SNAI1 degradation; dbSNP:rs28934576	273	273	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs28934576	273	273	1
+Natural variant	in a sporadic cancer; somatic mutation; requires 2 nucleotide substitutions	273	273	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs28934576	273	273	1
+Natural variant	in sporadic cancers; somatic mutation	273	273	1
+Natural variant	in a familial cancer not matching LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs121913343	273	273	1
+Natural variant	in a sporadic cancer; somatic mutation; requires 2 nucleotide substitutions	273	273	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057520006	274	274	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057520006	274	274	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057520005	274	274	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057520006	274	274	1
+Natural variant	in sporadic cancers; somatic mutation	274	274	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057520005	274	274	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs863224451	275	275	1
+Natural variant	in sporadic cancers; somatic mutation	275	275	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057519983	275	275	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs863224451	275	275	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1555525279	275	275	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs863224451	275	275	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs786202082	276	276	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs786202082	276	276	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1131691029	276	276	1
+Natural variant	in sporadic cancers; somatic mutation	276	276	1
+Natural variant	in sporadic cancers; somatic mutation	276	276	1
+Natural variant	in sporadic cancers; somatic mutation	276	276	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs763098116	277	277	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1064795369	277	277	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1064795369	277	277	1
+Natural variant	in sporadic cancers; somatic mutation	277	277	1
+Natural variant	in sporadic cancers; somatic mutation	277	277	1
+Natural variant	in an osteosarcoma with no family history; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs763098116	277	277	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs17849781	278	278	1
+Natural variant	in sporadic cancers; somatic mutation; requires 2 nucleotide substitutions	278	278	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs876659802	278	278	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs876659802	278	278	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs876659802	278	278	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs17849781	278	278	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs17849781	278	278	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1064793881	279	279	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1555525248	279	279	1
+Natural variant	in sporadic cancers; somatic mutation	279	279	1
+Natural variant	in sporadic cancers; somatic mutation	279	279	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs753660142	280	280	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs121912660	280	280	1
+Natural variant	in a familial cancer not matching LFS; germline mutation and in sporadic cancers; somatic mutation; no effect on interaction with CCAR2; dbSNP:rs121912660	280	280	1
+Natural variant	in a sporadic cancer; somatic mutation	280	280	1
+Natural variant	in sporadic cancers; somatic mutation	280	280	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs121912660	280	280	1
+Natural variant	in sporadic cancers; somatic mutation	281	282	2
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs587781525	281	281	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057519984	281	281	1
+Natural variant	in a brain tumor with no family history; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs587781525	281	281	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs764146326	281	281	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs764146326	281	281	1
+Natural variant	in a sporadic cancer; somatic mutation; requires 2 nucleotide substitutions	281	281	1
+Natural variant	in a familial cancer not matching LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs587781525	281	281	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs764146326	281	281	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs28934574	282	282	1
+Natural variant	in a sporadic cancer; somatic mutation	282	282	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs730882008	282	282	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs730882008	282	282	1
+Natural variant	in a familial cancer not matching LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs730882008	282	282	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; does not induce SNAI1 degradation; dbSNP:rs28934574	282	282	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs149633775	283	283	1
+Natural variant	in sporadic cancers; somatic mutation	283	283	1
+Natural variant	in a brain tumor with no family history; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs371409680	283	283	1
+Natural variant	in sporadic cancers; somatic mutation	283	283	1
+Natural variant	in sporadic cancers; somatic mutation	283	283	1
+Natural variant	in a sporadic cancer; somatic mutation; dbSNP:rs149633775	283	283	1
+Natural variant	in sporadic cancers; somatic mutation	284	284	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs863224685	284	284	1
+Natural variant	in sporadic cancers; somatic mutation	284	284	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1204379654	284	284	1
+Natural variant	in a sporadic cancer; somatic mutation	285	285	1
+Natural variant	in sporadic cancers; somatic mutation	285	285	1
+Natural variant	in sporadic cancers; somatic mutation	285	285	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs112431538	285	285	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation	285	285	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs121912667	285	285	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs1057519985	286	286	1
+Natural variant	in sporadic cancers; somatic mutation	286	286	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057519985	286	286	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs786201059	286	286	1
+Natural variant	in a sporadic cancer; somatic mutation; requires 2 nucleotide substitutions	286	286	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs786201059	286	286	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1057519985	286	286	1
+Natural variant	in a sporadic cancer; somatic mutation	287	287	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs748891343	287	287	1
+Natural variant	in sporadic cancers; somatic mutation	287	287	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs587782006	287	287	1
+Natural variant	in sporadic cancers; somatic mutation	287	287	1
+Natural variant	in a sporadic cancer; somatic mutation	288	288	1
+Natural variant	in sporadic cancers; somatic mutation	288	288	1
+Natural variant	in sporadic cancers; somatic mutation	288	288	1
+Natural variant	in sporadic cancers; somatic mutation	288	288	1
+Natural variant	in sporadic cancers; somatic mutation	288	288	1
+Natural variant	in sporadic cancers; somatic mutation	289	289	1
+Natural variant	in sporadic cancers; somatic mutation	289	289	1
+Natural variant	in sporadic cancers; somatic mutation	289	289	1
+Natural variant	in a sporadic cancer; somatic mutation	289	289	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1555525154	289	289	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs770374782	290	290	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs55819519	290	290	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation	290	290	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1555525126	291	291	1
+Natural variant	in sporadic cancers; somatic mutation	291	291	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs372613518	291	291	1
+Natural variant	in sporadic cancers; somatic mutation	291	291	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs781490101	291	291	1
+Natural variant	in sporadic cancers; somatic mutation	291	291	1
+Natural variant	in sporadic cancers; somatic mutation	292	292	1
+Natural variant	in a sporadic cancer; somatic mutation; requires 2 nucleotide substitutions	292	292	1
+Natural variant	in LFS; germline mutation and in a sporadic cancer; somatic mutation; dbSNP:rs121912663	292	292	1
+Natural variant	in sporadic cancers; somatic mutation	292	292	1
+Natural variant	in a sporadic cancer; somatic mutation	292	292	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs121912663	292	292	1
+Natural variant	in sporadic cancers; somatic mutation	292	292	1
+Natural variant	in a sporadic cancer; somatic mutation	293	293	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs587780076	293	293	1
+Natural variant	in sporadic cancers; somatic mutation	293	293	1
+Natural variant	in a brain tumor with no family history; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs587780076	293	293	1
+Natural variant	in a sporadic cancer; somatic mutation	294	294	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1305324490	294	294	1
+Natural variant	in sporadic cancers; somatic mutation	294	294	1
+Natural variant	in sporadic cancers; somatic mutation	294	294	1
+Natural variant	in sporadic cancers; somatic mutation	294	294	1
+Natural variant	in sporadic cancers; somatic mutation	294	294	1
+Natural variant	in a sporadic cancer; somatic mutation	295	295	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs751713111	295	295	1
+Natural variant	in a sporadic cancer; somatic mutation; dbSNP:rs751713111	295	295	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1131691006	295	295	1
+Natural variant	in sporadic cancers; somatic mutation; requires 2 nucleotide substitutions	296	296	1
+Natural variant	in sporadic cancers; somatic mutation	296	296	1
+Natural variant	in sporadic cancers; somatic mutation	296	296	1
+Natural variant	in sporadic cancers; somatic mutation	296	296	1
+Natural variant	in a sporadic cancer; somatic mutation	296	296	1
+Natural variant	in sporadic cancers; somatic mutation	296	296	1
+Natural variant	in a sporadic cancer; somatic mutation; dbSNP:rs483352696	296	296	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs672601296	296	296	1
+Natural variant	in a sporadic cancer; somatic mutation	297	297	1
+Natural variant	in a sporadic cancer; somatic mutation	297	297	1
+Natural variant	in sporadic cancers; somatic mutation	297	297	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs876659477	297	297	1
+Natural variant	in sporadic cancers; somatic mutation	297	297	1
+Natural variant	in a sporadic cancer; somatic mutation	298	298	1
+Natural variant	in sporadic cancers; somatic mutation	298	298	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs201744589	298	298	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs201744589	298	298	1
+Natural variant	in sporadic cancers; somatic mutation	298	298	1
+Natural variant	in sporadic cancers; somatic mutation	299	299	1
+Natural variant	in sporadic cancers; somatic mutation	299	299	1
+Natural variant	in a sporadic cancer; somatic mutation	299	299	1
+Natural variant	in a sporadic cancer; somatic mutation	299	299	1
+Natural variant	in sporadic cancers; somatic mutation	300	300	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs909643864	300	300	1
+Natural variant	in a sporadic cancer; somatic mutation	300	300	1
+Natural variant	in sporadic cancers; somatic mutation	300	300	1
+Natural variant	in sporadic cancers; somatic mutation	301	301	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1555525067	301	301	1
+Natural variant	in sporadic cancers; somatic mutation	301	301	1
+Natural variant	in sporadic cancers; somatic mutation	301	301	1
+Natural variant	in a sporadic cancer; somatic mutation	301	301	1
+Natural variant	in a sporadic cancer; somatic mutation	302	302	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1060501202	302	302	1
+Natural variant	in a sporadic cancer; somatic mutation; dbSNP:rs863224686	302	302	1
+Natural variant	in a sporadic cancer; somatic mutation	302	302	1
+Natural variant	in sporadic cancers; somatic mutation	303	303	1
+Natural variant	in sporadic cancers; somatic mutation	303	303	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs876658714	303	303	1
+Natural variant	in sporadic cancers; somatic mutation	303	303	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs587782654	304	304	1
+Natural variant	in sporadic cancers; somatic mutation	304	304	1
+Natural variant	in a sporadic cancer; somatic mutation	304	304	1
+Natural variant	in a sporadic cancer; somatic mutation	304	304	1
+Natural variant	in a sporadic cancer; somatic mutation	305	305	1
+Natural variant	in a familial cancer not matching LFS; germline mutation and in sporadic cancers; somatic mutation	305	305	1
+Natural variant	in sporadic cancers; somatic mutation; loss of nuclear localization	305	305	1
+Natural variant	in sporadic cancers; somatic mutation	305	305	1
+Natural variant	in a sporadic cancer; somatic mutation	305	305	1
+Natural variant	in LFS; germline mutation and in a sporadic cancer; somatic mutation	306	306	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1048095040	306	306	1
+Natural variant	in a sporadic cancer; somatic mutation	307	307	1
+Natural variant	in sporadic cancers; somatic mutation	307	307	1
+Natural variant	in sporadic cancers; somatic mutation	307	307	1
+Natural variant	in sporadic cancers; somatic mutation	308	308	1
+Natural variant	in a sporadic cancer; somatic mutation	308	308	1
+Natural variant	in a sporadic cancer; somatic mutation	309	309	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs1555525012	309	309	1
+Natural variant	in a sporadic cancer; somatic mutation	310	310	1
+Natural variant	in sporadic cancers; somatic mutation	310	310	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1555525007	311	311	1
+Natural variant	in a sporadic cancer; somatic mutation	311	311	1
+Natural variant	in a sporadic cancer; somatic mutation; dbSNP:rs56184981	311	311	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs56184981	311	311	1
+Natural variant	in sporadic cancers; somatic mutation	312	312	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs145151284	312	312	1
+Natural variant	in a sporadic cancer; somatic mutation	313	313	1
+Natural variant	in a sporadic cancer; somatic mutation	313	313	1
+Natural variant	in a sporadic cancer; somatic mutation	313	313	1
+Natural variant	in a sporadic cancer; somatic mutation; dbSNP:rs1367492395	313	313	1
+Natural variant	in a sporadic cancer; somatic mutation; dbSNP:rs751440465	314	314	1
+Natural variant	in a sporadic cancer; somatic mutation	315	315	1
+Natural variant	in a sporadic cancer; somatic mutation	315	315	1
+Natural variant	in a sporadic cancer; somatic mutation	315	315	1
+Natural variant	in a sporadic cancer; somatic mutation; dbSNP:rs1555524979	316	316	1
+Natural variant	in a sporadic cancer; somatic mutation; dbSNP:rs772773208	316	316	1
+Natural variant	in a kidney cancer with no family history; germline mutation and in a sporadic cancer; somatic mutation; dbSNP:rs1060501199	317	317	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs764735889	317	317	1
+Natural variant	in a sporadic cancer; somatic mutation	317	317	1
+Natural variant	in a sporadic cancer; somatic mutation	317	317	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1159579789	317	317	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1555524975	318	318	1
+Natural variant	in sporadic cancers; somatic mutation	319	319	1
+Natural variant	in a sporadic cancer; somatic mutation	319	319	1
+Natural variant	in a sporadic cancer; somatic mutation	319	319	1
+Natural variant	in sporadic cancers; somatic mutation	320	320	1
+Natural variant	in kidney cancer; germline mutation	321	321	1
+Natural variant	in a sporadic cancer; somatic mutation	321	321	1
+Natural variant	in sporadic cancers; somatic mutation	322	322	1
+Natural variant	in sporadic cancers; somatic mutation	322	322	1
+Natural variant	in a sporadic cancer; somatic mutation; requires 2 nucleotide substitutions	323	323	1
+Natural variant	in a sporadic cancer; somatic mutation	323	323	1
+Natural variant	in a sporadic cancer; somatic mutation	323	323	1
+Natural variant	in a sporadic cancer; somatic mutation	323	323	1
+Natural variant	in a sporadic cancer; somatic mutation; dbSNP:rs1432281680	323	323	1
+Natural variant	in sporadic cancers; somatic mutation	324	324	1
+Natural variant	in a sporadic cancer; somatic mutation; requires 2 nucleotide substitutions	324	324	1
+Natural variant	in a sporadic cancer; somatic mutation	324	324	1
+Natural variant	in a sporadic cancer; somatic mutation	325	325	1
+Natural variant	in sporadic cancers; somatic mutation	325	325	1
+Natural variant	in LFS; germline mutation; dbSNP:rs121912659	325	325	1
+Natural variant	in a sporadic cancer; somatic mutation	326	326	1
+Natural variant	in a sporadic cancer; somatic mutation	327	327	1
+Natural variant	in a sporadic cancer; somatic mutation	327	327	1
+Natural variant	in a sporadic cancer; somatic mutation	328	328	1
+Natural variant	in sporadic cancers; somatic mutation	328	328	1
+Natural variant	in a sporadic cancer; somatic mutation	328	328	1
+Natural variant	in a sporadic cancer; somatic mutation; dbSNP:rs969930693	329	329	1
+Natural variant	in a sporadic cancer; somatic mutation	329	329	1
+Natural variant	in sporadic cancers; somatic mutation	330	330	1
+Natural variant	in a sporadic cancer; somatic mutation	330	330	1
+Natural variant	in sporadic cancers; somatic mutation	330	330	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs11575996	331	331	1
+Natural variant	in sporadic cancers; somatic mutation	331	331	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs1064795056	331	331	1
+Natural variant	in a sporadic cancer; somatic mutation	332	332	1
+Natural variant	in sporadic cancers; somatic mutation	334	334	1
+Natural variant	in a sporadic cancer; somatic mutation; dbSNP:rs730882028	334	334	1
+Natural variant	in a sporadic cancer; somatic mutation	335	335	1
+Natural variant	in a sporadic cancer; somatic mutation; dbSNP:rs771939956	335	335	1
+Natural variant	in a sporadic cancer; somatic mutation	335	335	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; impaired ability to tetramerize and undergo liquid-liquid phase separation; dbSNP:rs587782529	337	337	1
+Natural variant	in LFS; germline mutation and in sporadic cancers; somatic mutation; impaired ability to tetramerize and undergo liquid-liquid phase separation; dbSNP:rs121912664	337	337	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs121912664	337	337	1
+Natural variant	in sporadic cancers; somatic mutation; impaired ability to tetramerize and undergo liquid-liquid phase separation; dbSNP:rs121912664	337	337	1
+Natural variant	in a sporadic cancer; somatic mutation	338	338	1
+Natural variant	in a sporadic cancer; somatic mutation; dbSNP:rs150293825	338	338	1
+Natural variant	in a sporadic cancer; somatic mutation; dbSNP:rs17882252	339	339	1
+Natural variant	in a sporadic cancer; somatic mutation; dbSNP:rs17882252	339	339	1
+Natural variant	in sporadic cancers; somatic mutation	341	341	1
+Natural variant	in a sporadic cancer; somatic mutation	342	342	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs375338359	342	342	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs375338359	342	342	1
+Natural variant	in sporadic cancers; somatic mutation	343	343	1
+Natural variant	in LFS; germline mutation and in a sporadic cancer; somatic mutation; impaired ability to tetramerize and undergo liquid-liquid phase separation; dbSNP:rs121912662	344	344	1
+Natural variant	in a sporadic cancer; somatic mutation	344	344	1
+Natural variant	in a sporadic cancer; somatic mutation	346	346	1
+Natural variant	in a sporadic cancer; somatic mutation	347	347	1
+Natural variant	in sporadic cancers; somatic mutation	347	347	1
+Natural variant	in a sporadic cancer; somatic mutation	348	348	1
+Natural variant	in a sporadic cancer; somatic mutation	348	348	1
+Natural variant	in a sporadic cancer; somatic mutation	349	349	1
+Natural variant	in a sporadic cancer; somatic mutation	352	352	1
+Natural variant	in a sporadic cancer; somatic mutation	353	353	1
+Natural variant	in a sporadic cancer; somatic mutation	354	354	1
+Natural variant	in a sporadic cancer; somatic mutation; dbSNP:rs755394212	354	354	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs752142489	354	354	1
+Natural variant	in a sporadic cancer; somatic mutation	356	356	1
+Natural variant	in a sporadic cancer; somatic mutation	356	356	1
+Natural variant	in a sporadic cancer; somatic mutation	358	358	1
+Natural variant	in a sporadic cancer; somatic mutation; dbSNP:rs587782237	358	358	1
+Natural variant	in dbSNP:rs35993958	360	360	1
+Natural variant	in a sporadic cancer; somatic mutation; dbSNP:rs35993958	360	360	1
+Natural variant	in a sporadic cancer; somatic mutation; dbSNP:rs876660285	363	363	1
+Natural variant	in a sporadic cancer; somatic mutation	364	364	1
+Natural variant	in a sporadic cancer; somatic mutation	364	364	1
+Natural variant	in a sporadic cancer; somatic mutation	364	364	1
+Natural variant	in a sporadic cancer; somatic mutation	365	365	1
+Natural variant	in a familial cancer not matching LFS; germline mutation and in a sporadic cancer; somatic mutation; dbSNP:rs267605075	365	365	1
+Natural variant	in a familial cancer not matching LFS; germline mutation and in sporadic cancers; somatic mutation; dbSNP:rs17881470	366	366	1
+Natural variant	in a sporadic cancer; somatic mutation	370	370	1
+Natural variant	in a sporadic cancer; somatic mutation	376	376	1
+Natural variant	in a sporadic cancer; somatic mutation	376	376	1
+Natural variant	in sporadic cancers; somatic mutation; dbSNP:rs863224682	379	379	1
+Natural variant	in a sporadic cancer; somatic mutation; dbSNP:rs1555524094	385	385	1
+Natural variant	in a sporadic cancer; somatic mutation; dbSNP:rs587783064	389	389	1
+Natural variant	in a sporadic cancer; somatic mutation	392	392	1
+Mutagenesis	Loss of interaction with PPP2R5C, PPP2CAANDPPP2R1A.	15	15	1
+Mutagenesis	No effect on interaction with MDM2 and increase in protein levels after DNA damage.	18	18	1
+Mutagenesis	Abolishes phosphorylation site. Abolishes increase in protein levels after DNA damage.	20	20	1
+Mutagenesis	Constitutively increased TP53 protein levels.	20	20	1
+Mutagenesis	Loss of interaction with MDM2, leading to constitutively increased TP53 protein levels.	22	23	2
+Mutagenesis	Abolishes ubiquitination by MUL1.	24	24	1
+Mutagenesis	Abolishes phosphorylation by MAPKAPK5.	37	37	1
+Mutagenesis	Abolishes phosphorylation by DYRK2 and HIPK2 and acetylation of K-382 by CREBBP.	46	46	1
+Mutagenesis	Alters interaction with WWOX.	46	46	1
+Mutagenesis	Blocks phosphorylation by TAF1.	55	55	1
+Mutagenesis	Abolishes strongly phosphorylation.	183	183	1
+Mutagenesis	Inhibits slightly its transcriptional activity.	183	183	1
+Mutagenesis	Does not induce SNAI1 degradation.	248	248	1
+Mutagenesis	Abolishes phosphorylation.	269	269	1
+Mutagenesis	Inhibits strongly its transcriptional activity.	269	269	1
+Mutagenesis	Inhibits strongly its transcriptional activity.	284	284	1
+Mutagenesis	Abolishes polyubiquitination by MKRN1.	291	292	2
+Mutagenesis	Loss of nuclear localization; when associated with A-320 and A-321.	319	319	1
+Mutagenesis	Loss of nuclear localization; when associated with A-319 and A-321.	320	320	1
+Mutagenesis	Loss of nuclear localization; when associated with A-319 and A-320.	321	321	1
+Mutagenesis	Reduced methylation by PRMT5. Reduced nuclear localization. Decreased binding to promoters of target genes. Reduced transcriptional activity. Decrease in cell cycle arrest.	333	337	5
+Mutagenesis	Abolishes binding to USP7.	359	359	1
+Mutagenesis	Abolishes binding to USP7.	361	361	1
+Mutagenesis	Abolishes binding to USP7.	362	362	1
+Mutagenesis	Induces a decrease in methylation by SMYD2.	370	370	1
+Mutagenesis	Induces a decrease in protein stabilization.	372	372	1
+Mutagenesis	Abolishes dimethylation by EHMT1 and EHMT2.	373	373	1
+Mutagenesis	Mimics acetylation, leading to increased stability.	381	381	1
+Mutagenesis	Decreased acetylation.	381	381	1
+Mutagenesis	Abolishes acetylation by CREBBP.	382	382	1
+Mutagenesis	Abolishes monomethylation by KMT5A.	382	382	1
+Mutagenesis	Abolishes S-315 phosphorylation by CDK2/cyclin A.	383	383	1
+Mutagenesis	Reduced SUMO1 conjugation.	385	385	1
+Mutagenesis	Abolishes SUMO1 conjugation, in vitro and in vivo.	386	386	1
+Mutagenesis	No effect SUMO1 conjugation.	387	387	1
+Mutagenesis	Abolishes SUMO1 conjugation.	388	388	1
+Mutagenesis	Mimics phosphorylation; promotes ability to undergo liquid-liquid phase separation.	392	392	1
+Mutagenesis	Abolished ability to undergo liquid-liquid phase separation.	392	392	1
+Helix	Helix	3	6	4
+Turn	Turn	8	10	3
+Helix	Helix	19	29	11
+Helix	Helix	30	32	3
+Beta strand	Beta strand	33	35	3
+Helix	Helix	36	38	3
+Helix	Helix	41	44	4
+Helix	Helix	47	55	9
+Helix	Helix	92	94	3
+Helix	Helix	97	99	3
+Turn	Turn	105	108	4
+Beta strand	Beta strand	110	112	3
+Beta strand	Beta strand	119	121	3
+Beta strand	Beta strand	124	127	4
+Turn	Turn	128	131	4
+Beta strand	Beta strand	132	135	4
+Beta strand	Beta strand	141	146	6
+Helix	Helix	150	152	3
+Beta strand	Beta strand	156	165	10
+Helix	Helix	166	168	3
+Helix	Helix	174	176	3
+Helix	Helix	177	180	4
+Beta strand	Beta strand	181	183	3
+Beta strand	Beta strand	187	189	3
+Beta strand	Beta strand	194	199	6
+Beta strand	Beta strand	204	207	4
+Turn	Turn	209	211	3
+Beta strand	Beta strand	214	219	6
+Helix	Helix	222	224	3
+Turn	Turn	225	227	3
+Beta strand	Beta strand	228	236	9
+Helix	Helix	240	242	3
+Turn	Turn	243	248	6
+Beta strand	Beta strand	251	258	8
+Beta strand	Beta strand	260	262	3
+Beta strand	Beta strand	264	274	11
+Helix	Helix	278	287	10
+Helix	Helix	288	290	3
+Helix	Helix	322	324	3
+Beta strand	Beta strand	327	334	8
+Helix	Helix	335	349	15
+Turn	Turn	353	355	3
+Helix	Helix	375	380	6
+Helix	Helix	381	383	3
+Helix	Helix	384	386	3

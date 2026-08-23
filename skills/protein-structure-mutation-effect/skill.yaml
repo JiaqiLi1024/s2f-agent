@@ -1,0 +1,82 @@
+schema_version: 1
+id: protein-structure-mutation-effect
+title: Protein Structure Mutation Effect
+path: skills/protein-structure-mutation-effect
+status: active
+family: protein-mutation-effect
+tasks:
+  - protein-mutation-effect
+  - structure-aware-mutation-scoring
+  - protein-stability-change
+  - inverse-folding-likelihood
+  - residue-coordinate-mapping
+  - environment-setup
+  - model-output-import
+  - troubleshooting
+triggers:
+  - SaProt mutation
+  - ThermoMPNN
+  - ProteinMPNN mutation score
+  - ESM-IF1
+  - structure-aware mutation effect
+  - protein ddG
+  - inverse folding log odds
+  - PDB residue mapping
+  - mmCIF mutation
+required_inputs:
+  - protein-sequence-source
+  - protein-mutation-spec-or-table
+optional_inputs:
+  - protein-structure-source
+  - structure-chain
+  - residue-numbering-system
+  - model-set
+  - adapter-mode
+  - adapter-command-or-import
+  - output-dir
+input_mappings:
+  - protein-sequence-source|query_tokens=sequence,fasta,protein|script_flags=--fasta
+  - protein-mutation-spec-or-table|query_tokens=mutation,substitution,variant,mutations-table|script_flags=--mutations,--mutations-file
+  - protein-structure-source|query_tokens=pdb,mmcif,cif,structure,backbone|script_flags=--structure
+  - structure-chain|query_tokens=chain,asym_id,auth_asym_id|script_flags=--chain
+  - residue-numbering-system|query_tokens=canonical,sequence-position,pdb-auth,insertion-code|script_flags=--numbering
+  - model-set|query_tokens=saprot,thermompnn,proteinmpnn,esm-if1|script_flags=--models
+  - adapter-mode|query_tokens=plan,execute,import|script_flags=--mode
+  - adapter-command-or-import|query_tokens=adapter-command,import-file,precomputed-output,external-runner|script_flags=--adapter-command,--import-file
+  - output-dir|query_tokens=output,archive,manifest|script_flags=--output-dir
+constraints:
+  - validate-wildtype-chain-and-coordinate-before-scoring
+  - canonical-sequence-positions-are-one-based
+  - do-not-collapse-pdb-insertion-codes
+  - thermompnn-ddg-positive-is-destabilizing-in-canonical-output
+  - inverse-folding-log-likelihood-is-a-proxy-not-direct-stability
+  - do-not-average-incomparable-raw-effect-axes
+  - missing-backend-or-structure-must-yield-explicit-per-model-status
+  - cleanup-is-explicit-scoped-and-requires-an-archive
+tools:
+  - scripts/validate_structure_mutations.py
+  - scripts/setup_structure_mutation_env.py
+  - scripts/run_structure_mutation_effect.py
+  - scripts/smoke_test_structure_mutation_effect.py
+tool_contracts:
+  - tool: scripts/validate_structure_mutations.py
+    inputs: [fasta, pdb-or-mmcif, chain, mutations]
+    outputs: [residue-mapping-tsv, normalized-mutations-tsv, validation-json]
+    side_effects: [writes-validation-artifacts]
+    failure_codes: [1]
+  - tool: scripts/setup_structure_mutation_env.py
+    inputs: [backend, env-name, setup-mode]
+    outputs: [setup-plan-json, setup-log-when-executed]
+    side_effects: [execute-mode-may-create-conda-environment-clone-repositories-and-download-packages]
+    failure_codes: [1]
+  - tool: scripts/run_structure_mutation_effect.py
+    inputs: [fasta, optional-structure, mutations-file, models, adapter-mode]
+    outputs: [normalized-mutations-tsv, residue-mapping-tsv-when-structure-is-valid, structure-mutation-scores-tsv, run-summary-json, manifest-json, commands-sh]
+    side_effects: [writes-run-directory, execute-mode-runs-explicit-adapter-commands-without-a-shell, optional-archive-and-scoped-cleanup]
+    failure_codes: [1]
+priority_rules:
+  - prefer-for-mutation-effect-requests-that-provide-or-require-protein-structure
+  - prefer-thermompnn-only-for-explicit-stability-change-questions
+  - prefer-saprot-for-aa-plus-3di-structure-language-model-scoring
+  - label-proteinmpnn-and-esm-if1-as-likelihood-proxies
+  - defer-sequence-only-models-to-protein-sequence-mutation-effect

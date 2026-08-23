@@ -1,0 +1,103 @@
+schema_version: 1
+id: protein-idr-disorder-annotation
+title: Protein IDR Disorder Annotation
+path: skills/protein-idr-disorder-annotation
+status: active
+family: protein-sequence-annotation
+tasks:
+  - protein-idr-disorder-annotation
+  - protein-disorder-composition
+  - protein-idr-region-calling
+  - protein-disordered-binding-annotation
+  - protein-linker-annotation
+  - protein-redox-disorder-annotation
+  - protein-llps-annotation
+  - protein-aggregation-prone-region-annotation
+  - protein-disorder-visualization
+  - environment-setup
+  - troubleshooting
+triggers:
+  - protein-idr-disorder-annotation
+  - protein idr annotation
+  - protein disorder annotation
+  - intrinsically disordered region
+  - intrinsically disordered regions
+  - IDR
+  - IDRs
+  - IUPred
+  - IUPred3
+  - AIUPred
+  - metapredict
+  - ANCHOR2
+  - disordered binding region
+  - flexible linker
+  - redox disorder
+  - liquid-liquid phase separation
+  - LLPS
+  - FuzDrop
+  - AggrescanAI
+  - aggregation prone region
+  - APR
+  - disorder visualization
+  - IDR plot
+required_inputs:
+  - protein-disorder-query
+optional_inputs:
+  - amino-acid-sequence
+  - protein-fasta
+  - uniprot-accession
+  - disorder-tool-selection
+  - llps-tool-selection
+  - output-dir
+  - cpu-count
+  - runtime-context
+input_mappings:
+  - protein-disorder-query|query_tokens=amino acid sequence,protein sequence,protein fasta,uniprot,idr,disorder,iupred,aiupred,metapredict,llps,fuzdrop,aggrescanai,aggregation|script_flags=--sequence,--fasta,--uniprot
+  - amino-acid-sequence|query_tokens=sequence,amino acid sequence,protein sequence,unknown sequence,氨基酸序列|script_flags=--sequence,--sequence-name,--allow-ambiguous-aa
+  - protein-fasta|query_tokens=fasta,proteins.fa,protein fasta,proteome,translated proteins,蛋白fasta|script_flags=--fasta
+  - uniprot-accession|query_tokens=uniprot,accession,primary accession,蛋白编号|script_flags=--uniprot
+  - disorder-tool-selection|query_tokens=metapredict,aiupred,iupred,iupred3,anchor2,binding,linker,redox,nextflow,gget,elm,local wrapper|script_flags=--tools,--aiupred-binding,--aiupred-linker,--aiupred-redox,--aiupred-mode,--iupred3-type,--iupred3-local-bin,--iupred3-local-input-format
+  - llps-tool-selection|query_tokens=fuzdrop,aggrescanai,llps,liquid-liquid phase separation,aggregation prone region,apr,pllps|script_flags=--tools,--fuzdrop-json,--fuzdrop-captcha-token,--aggrescanai-csv,--aggrescanai-threshold,--llps-threshold
+  - output-dir|query_tokens=output,outdir,results,tsv,json,plots,visualization,svg,html,保存,输出目录|script_flags=--outdir,--no-plots
+  - runtime-context|query_tokens=python,pip,conda,mamba,venv,torch,cuda,gpu,cpu,nextflow,docker,network,api,no internet|script_flags=--execute,--aiupred-force-cpu,--aiupred-profile,--no-iupred3-rest
+required_env_any: []
+constraints:
+  - standard-output-includes-idr-summary-regions-residue-scores-and-result-json
+  - normalized-residue-coordinates-are-1-based
+  - metapredict-current-default-is-v3-but-version-should-be-recorded-when-known
+  - aiupred-cli-and-nextflow-are-distinct-execution-paths
+  - iupred3-rest-is-accession-oriented-and-network-dependent
+  - gget-elm-is-motif-context-not-a-disorder-predictor
+  - local-regions-are-threshold-derived-and-threshold-must-be-reported
+  - fuzdrop-api-submission-may-require-manual-recaptcha-token-or-imported-json
+  - aggrescanai-colab-output-can-be-imported-as-residue-score-csv
+  - built-in-visualizations-are-html-svg-and-do-not-require-matplotlib
+tools:
+  - scripts/protein_idr_disorder_annotation.py
+tool_contracts:
+  - tool: scripts/protein_idr_disorder_annotation.py
+    inputs:
+      - protein-disorder-query
+      - disorder-tool-selection
+      - output-dir
+      - optional-runtime-context
+    outputs:
+      - protein-idr-summary-tsv
+      - protein-idr-regions-tsv
+      - protein-idr-residue-scores-tsv
+      - protein-idr-result-json
+      - protein-llps-summary-tsv
+      - protein-llps-features-tsv
+      - optional-profile-plots-html-svg
+      - optional-command-logs
+    side_effects:
+      - writes-output-artifacts
+      - may-run-local-metapredict-aiupred-or-nextflow-workflows
+      - may-perform-public-iupred3-rest-requests
+      - may-import-fuzdrop-json-or-aggrescanai-csv
+    failure_codes:
+      - 1
+priority_rules:
+  - prefer-when-user-mentions-idr-disorder-iupred-iupred3-aiupred-metapredict-anchor2-linker-redox-disorder-fuzdrop-aggrescanai-llps-or-aggregation-prone-regions
+  - prefer-when-task-needs-residue-level-disorder-aggregation-score-idr-region-table-or-profile-plot-from-protein-sequence
+  - do-not-use-for-domain-orthology-or-general-functional-annotation-unless-idr-is-primary-objective

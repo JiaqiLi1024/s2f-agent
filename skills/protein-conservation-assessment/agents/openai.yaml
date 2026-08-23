@@ -1,0 +1,4 @@
+interface:
+  display_name: "Protein Conservation Assessment"
+  short_description: "Sequence-first protein conservation reports"
+  default_prompt: "Use $protein-conservation-assessment to assess evolutionary conservation for an unknown protein sequence."

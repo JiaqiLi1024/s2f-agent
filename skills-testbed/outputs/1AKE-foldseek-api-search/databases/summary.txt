@@ -1,0 +1,12 @@
+Protein Structure Foldseek Web/API
+status: ok
+ticket: 
+api_base: https://search.foldseek.com/api
+query: 
+databases: afdb50
+mode: 3diaa
+outputs:
+- databases_html: /Users/qinti/Project/S2F_agent/skills-testbed/outputs/1AKE-foldseek-api-search/databases/foldseek_web_databases.html
+- databases_json: /Users/qinti/Project/S2F_agent/skills-testbed/outputs/1AKE-foldseek-api-search/databases/foldseek_web_databases.json
+- databases_tsv: /Users/qinti/Project/S2F_agent/skills-testbed/outputs/1AKE-foldseek-api-search/databases/foldseek_web_databases.tsv
+- protein_structure_foldseek_web.result.json: /Users/qinti/Project/S2F_agent/skills-testbed/outputs/1AKE-foldseek-api-search/databases/protein_structure_foldseek_web.result.json

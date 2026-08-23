@@ -1,0 +1,102 @@
+{
+  "errors": [],
+  "finished_utc": "2026-06-28T05:03:12Z",
+  "modules": {
+    "alphafold": {
+      "alphafold_available": true,
+      "alphafold_page": "https://alphafold.ebi.ac.uk/entry/P04637",
+      "latest_version": 6,
+      "status": "ok"
+    },
+    "domain_map": {
+      "generated": true,
+      "status": "ok"
+    },
+    "pdb": {
+      "best_resolution_A": 1.5,
+      "n_structures": 20,
+      "pdb_ids": [
+        "1A1U",
+        "1AIE",
+        "1C26",
+        "1DT7",
+        "1GZH",
+        "1H26",
+        "1HS5",
+        "1JSP",
+        "1KZY",
+        "1MA3",
+        "1OLG",
+        "1OLH",
+        "1PES",
+        "1PET",
+        "1SAE",
+        "1SAF",
+        "1SAK",
+        "1SAL",
+        "1TSR",
+        "1TUP"
+      ],
+      "status": "ok"
+    },
+    "uniprot": {
+      "feature_types": [
+        "Alternative sequence",
+        "Beta strand",
+        "Binding site",
+        "Chain",
+        "Compositional bias",
+        "Cross-link",
+        "DNA binding",
+        "Helix",
+        "Modified residue",
+        "Motif",
+        "Mutagenesis",
+        "Natural variant",
+        "Region",
+        "Site",
+        "Turn"
+      ],
+      "n_features": 1523,
+      "status": "ok"
+    }
+  },
+  "outputs": {
+    "alphafold_tsv": "/Users/qinti/Project/S2F_agent/skills-testbed/outputs/TP53-test/TP53.P04637.alphafold.tsv",
+    "domain_map_pdf": "/Users/qinti/Project/S2F_agent/skills-testbed/outputs/TP53-test/TP53.P04637.pdf",
+    "domain_map_png": "/Users/qinti/Project/S2F_agent/skills-testbed/outputs/TP53-test/TP53.P04637.png",
+    "features_tsv": "/Users/qinti/Project/S2F_agent/skills-testbed/outputs/TP53-test/TP53.P04637.features.tsv",
+    "pdb_structures_tsv": "/Users/qinti/Project/S2F_agent/skills-testbed/outputs/TP53-test/TP53.P04637.pdb_structures.tsv",
+    "result_json": "/Users/qinti/Project/S2F_agent/skills-testbed/outputs/TP53-test/protein_structure_get.result.json",
+    "summary_tsv": "/Users/qinti/Project/S2F_agent/skills-testbed/outputs/TP53-test/protein_structure_summary.tsv",
+    "summary_txt": "/Users/qinti/Project/S2F_agent/skills-testbed/outputs/TP53-test/summary.txt"
+  },
+  "query": {
+    "download_format": "cif",
+    "download_structure": false,
+    "gene": "TP53",
+    "max_pdb": 20,
+    "modules": [
+      "uniprot",
+      "pdb",
+      "alphafold",
+      "domain_map"
+    ],
+    "organism": "human",
+    "timeout_sec": 30,
+    "uniprot": null
+  },
+  "resolved": {
+    "accession": "P04637",
+    "entry_name": "P53_HUMAN",
+    "gene_name": "TP53",
+    "organism": "Homo sapiens",
+    "protein_name": "Cellular tumor antigen p53",
+    "reviewed": true,
+    "seq_length": 393,
+    "uniprot_url": "https://www.uniprot.org/uniprotkb/P04637/entry"
+  },
+  "started_utc": "2026-06-28T05:02:51Z",
+  "status": "ok",
+  "warnings": []
+}

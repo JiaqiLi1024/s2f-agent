@@ -1,0 +1,31 @@
+{
+  "uniprot_acc": "fuz_test",
+  "sequence": "ACDEFGHIKLMNPQRSTVWYACDEFGHIKLMNPQRSTVWY",
+  "pLLPS": 0.73,
+  "detected_regions_DPR": [
+    {
+      "start": 5,
+      "end": 16,
+      "score": 0.82,
+      "name": "DPR_1"
+    }
+  ],
+  "detected_regions_hotspots": [
+    {
+      "start": 8,
+      "end": 12,
+      "score": 0.91,
+      "name": "hotspot_1"
+    }
+  ],
+  "detected_regions_DOR": [],
+  "detected_regions_DDR": [],
+  "detected_regions_CDR": [
+    {
+      "start": 22,
+      "end": 28,
+      "score": 0.61,
+      "name": "CDR_1"
+    }
+  ]
+}

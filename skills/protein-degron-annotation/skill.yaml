@@ -1,0 +1,98 @@
+schema_version: 1
+id: protein-degron-annotation
+title: Protein Degron Annotation
+path: skills/protein-degron-annotation
+status: active
+family: protein-sequence-annotation
+tasks:
+  - protein-degron-annotation
+  - protein-degradation-signal-annotation
+  - protein-elm-degron-scan
+  - protein-degronopedia-annotation
+  - protein-qcdpred-degron-prediction
+  - protein-degron-report
+  - environment-setup
+  - troubleshooting
+triggers:
+  - protein-degron-annotation
+  - degron
+  - degron annotation
+  - degradation signal
+  - degradation motif
+  - protein degradation signal
+  - ELM degron
+  - ELM DEG motif
+  - DEGRONOPEDIA
+  - QCDPred
+  - QCDpred
+  - quality-control degron
+  - QCAP degron
+  - N-degron
+  - C-degron
+  - phosphodegron
+  - destruction box
+  - KEN box
+  - D-box
+  - E3 ligase degron
+  - 降解信号
+  - 降解子
+  - 蛋白降解
+required_inputs:
+  - protein-degron-query
+optional_inputs:
+  - amino-acid-sequence
+  - protein-fasta
+  - uniprot-accession
+  - degron-tool-selection
+  - degron-database-files
+  - qcdpred-output
+  - protein-degron-output-files
+  - output-dir
+  - runtime-context
+input_mappings:
+  - protein-degron-query|query_tokens=degron,degradation signal,degradation motif,protein degradation,n-degron,c-degron,phosphodegron,降解信号,降解子|script_flags=--sequence,--fasta,--uniprot
+  - amino-acid-sequence|query_tokens=sequence,amino acid sequence,protein sequence,unknown sequence,氨基酸序列|script_flags=--sequence,--sequence-name,--allow-ambiguous-aa
+  - protein-fasta|query_tokens=fasta,proteins.fa,protein fasta,proteome,translated proteins,蛋白fasta|script_flags=--fasta
+  - uniprot-accession|query_tokens=uniprot,accession,primary accession,蛋白编号|script_flags=--uniprot
+  - degron-tool-selection|query_tokens=elm,degronopedia,qcdpred,custom degron,gget elm,ELM DEG motif,DEG_,D-box,KEN box,quality-control degron,QCAP|script_flags=--tools,--custom-degron,--custom-degron-tsv,--qcdpred-threshold,--qcdpred-padding
+  - degron-database-files|query_tokens=elms_classes.tsv,elm classes,DEGRONOPEDIA_degron_dataset.xlsx,degron dataset,xlsx,data dir,database download|script_flags=--elm-classes-tsv,--degronopedia-xlsx,--degronopedia-tsv,--data-dir
+  - qcdpred-output|query_tokens=qcdpred output,QCDpred.py output,idr_qcdpred.txt,qcdpred profile,qcdpred_profile.tsv|script_flags=--qcdpred-output
+  - protein-degron-output-files|query_tokens=protein_degron_summary.tsv,protein_degron_features.tsv,protein_degron_annotation.result.json,degron output,degron report|script_flags=--degron-result-json,--degron-features-tsv
+  - output-dir|query_tokens=output,outdir,results,tsv,json,保存,输出目录|script_flags=--outdir
+  - runtime-context|query_tokens=conda,mamba,no conda,no mamba,gget,diamond,ELM API,DEGRONOPEDIA web,network,license|script_flags=environment-precheck
+constraints:
+  - degron-matches-are-candidates-not-confirmed-degradation-sites
+  - coordinates-are-1-based-closed-query-residue-positions
+  - database-downloads-must-be-approved-by-user-before-execution
+  - elm-hosted-api-must-be-rate-limited-and-is-not-preferred-for-batch-use
+  - degronopedia-web-service-is-one-protein-at-a-time-and-not-a-local-batch-api
+  - degronopedia-dataset-license-varies-by-degron-and-license-fields-must-be-preserved
+  - qcdpred-is-a-17-aa-composition-model-and-does-not-identify-specific-E3-ligases
+  - qcdpred-requires-sequences-at-least-17-aa-long
+  - phosphodegrons-require-ptm-context-before-biological-interpretation
+tools:
+  - scripts/protein_degron_annotation.py
+tool_contracts:
+  - tool: scripts/protein_degron_annotation.py
+    inputs:
+      - protein-degron-query
+      - optional-elm-classes-tsv
+      - optional-degronopedia-xlsx-or-tsv
+      - optional-qcdpred-output
+      - output-dir
+    outputs:
+      - protein-degron-summary-tsv
+      - protein-degron-features-tsv
+      - protein-degron-result-json
+      - qcdpred-profile-tsv
+      - command-plan-shell-script
+      - database-download-plan-shell-script
+    side_effects:
+      - writes-output-artifacts
+      - may-fetch-uniprot-fasta-when-uniprot-input-is-used
+    failure_codes:
+      - 1
+priority_rules:
+  - prefer-when-user-asks-for-degron-degradation-signal-destruction-box-ken-box-n-degron-c-degron-phosphodegron-degronopedia-or-qcdpred
+  - prefer-when-task-needs-ELM-DEG-DEGRONOPEDIA-or-QCDPred-detection-from-protein-sequence
+  - do-not-use-for-general-domain-motif-orthology-IDR-LLPS-localization-or-structure-visualization-unless-degron-recognition-is-primary

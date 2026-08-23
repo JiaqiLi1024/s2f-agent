@@ -1,0 +1,4 @@
+interface:
+  display_name: "Protein Sequence Mutation Effect"
+  short_description: "Score protein mutations with sequence and evolutionary models"
+  default_prompt: "Use $protein-sequence-mutation-effect to validate protein mutations and score them with ESM, MSA, PoET, or AlphaMissense evidence."

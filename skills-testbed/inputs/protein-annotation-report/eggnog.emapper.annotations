@@ -1,0 +1,3 @@
+## eggNOG-mapper example
+#query	seed_ortholog	evalue	score	eggNOG_OGs	max_annot_lvl	COG_category	Description	Preferred_name	GOs	EC	KEGG_ko	KEGG_Pathway	KEGG_Module	KEGG_Reaction	KEGG_rclass	BRITE	KEGG_TC	CAZy	BiGG_Reaction	PFAMs
+prot1	1234.TEST	1e-40	220	COG0001@1	LUCA	S	Example orthology-transferred function	example_gene	GO:0004930,GO:0007186	1.1.1.1	ko:K00001	map04080	-	-	-	-	-	-	-	PF00001

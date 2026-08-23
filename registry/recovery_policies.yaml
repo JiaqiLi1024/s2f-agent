@@ -1,6 +1,34 @@
 schema_version: 1
-updated_at: "2026-04-17"
+updated_at: "2026-08-23"
 policies:
+  protein-embedding:
+    retry_policy: clarify-protein-input-target-model-layer-and-backend-then-dry-run-once
+    fallback_skills: []
+  protein-sequence-mutation-effect:
+    retry_policy: clarify-sequence-numbering-msa-or-model-assets-then-retry-failed-backend-once
+    fallback_skills:
+      - protein-mutation-effect
+      - protein-mutation-benchmark
+  protein-structure-mutation-effect:
+    retry_policy: clarify-structure-chain-numbering-and-model-assets-then-retry-failed-backend-once
+    fallback_skills:
+      - protein-sequence-mutation-effect
+      - protein-mutation-effect
+  protein-mutation-effect:
+    retry_policy: clarify-sequence-numbering-model-assets-or-structure-mapping-then-retry-failed-backend-once
+    fallback_skills:
+      - protein-sequence-mutation-effect
+      - protein-structure-mutation-effect
+      - protein-mutation-benchmark
+  protein-mutation-benchmark:
+    retry_policy: clarify-assay-score-key-and-directionality-then-realign-once
+    fallback_skills:
+      - protein-mutation-effect
+      - protein-sequence-mutation-effect
+  protein-mutation-scoring:
+    retry_policy: preserve-completed-models-and-retry-only-failed-adapter
+    fallback_skills:
+      - protein-mutation-effect
   variant-effect:
     retry_policy: adaptive-window-fallback-with-timeout-proxy-retry
     fallback_skills:
@@ -24,3 +52,59 @@ policies:
       - nucleotide-transformer-v3
       - borzoi-workflows
       - segment-nt
+  protein-structure-lookup:
+    retry_policy: clarify-organism-or-accession-then-network-retry-once
+    fallback_skills: []
+  protein-structure-visualization:
+    retry_policy: clarify-structure-source-then-network-module-retry-once
+    fallback_skills:
+      - protein-structure-get
+  protein-structure-alignment:
+    retry_policy: clarify-structure-pair-or-foldseek-query-target-then-retry-once
+    fallback_skills:
+      - protein-structure-get
+      - protein-structure-visualize
+  protein-domain-motif-annotation:
+    retry_policy: clarify-fasta-tool-selection-and-database-paths-then-dry-run-once
+    fallback_skills:
+      - protein-structure-get
+  protein-conservation-assessment:
+    retry_policy: clarify-sequence-homologs-msa-or-database-then-dry-run-once
+    fallback_skills:
+      - protein-domain-motif-annotation
+      - protein-structure-visualize
+  protein-degron-annotation:
+    retry_policy: clarify-sequence-database-files-qcdpred-output-or-custom-motifs-then-dry-run-once
+    fallback_skills:
+      - protein-idr-disorder-annotation
+      - protein-conservation-assessment
+      - protein-annotation-report
+  protein-immunopresentation-annotation:
+    retry_policy: clarify-sequence-HLA-alleles-local-IEDB-tools-aggregate-json-or-remote-submission-policy-then-dry-run-once
+    fallback_skills:
+      - protein-localization-signal-annotation
+      - protein-tm-topology-annotation
+      - protein-idr-disorder-annotation
+      - protein-domain-motif-annotation
+      - protein-conservation-assessment
+  protein-annotation-report:
+    retry_policy: clarify-query-or-source-files-then-run-report-once
+    fallback_skills:
+      - protein-domain-motif-annotation
+      - protein-degron-annotation
+      - protein-structure-get
+  protein-idr-disorder-annotation:
+    retry_policy: clarify-sequence-or-accession-and-tool-selection-then-dry-run-once
+    fallback_skills:
+      - protein-annotation-report
+      - protein-domain-motif-annotation
+  protein-localization-signal-annotation:
+    retry_policy: clarify-sequence-tool-selection-organism-or-import-files-then-dry-run-once
+    fallback_skills:
+      - protein-tm-topology-annotation
+      - protein-annotation-report
+  protein-tm-topology-annotation:
+    retry_policy: clarify-sequence-tool-selection-or-import-files-then-dry-run-once
+    fallback_skills:
+      - protein-localization-signal-annotation
+      - protein-annotation-report

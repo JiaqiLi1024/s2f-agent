@@ -1,0 +1,31 @@
+{
+  "skill": "protein-degron-annotation",
+  "status": "success",
+  "run_id": "toy_degron",
+  "created_utc": "2026-07-06T02:51:36Z",
+  "parameters": {
+    "tools": [
+      "elm",
+      "degronopedia"
+    ],
+    "elm_classes_tsv": "/private/tmp/elms_index.tsv",
+    "degronopedia_xlsx": "/private/tmp/DEGRONOPEDIA_degron_dataset.xlsx",
+    "degronopedia_tsv": null,
+    "data_dir": "$HOME/biodata/protein_degron",
+    "allow_ambiguous_aa": false
+  },
+  "counts": {
+    "queries": 1,
+    "patterns_loaded": 46780,
+    "feature_rows": 12
+  },
+  "artifacts": {
+    "commands_sh": "skills-testbed/outputs/protein-degron-annotation-toy/commands.sh",
+    "database_download_plan_sh": "skills-testbed/outputs/protein-degron-annotation-toy/database_download_plan.sh",
+    "normalized_input_fasta": "skills-testbed/outputs/protein-degron-annotation-toy/normalized_input.fasta",
+    "summary_tsv": "skills-testbed/outputs/protein-degron-annotation-toy/protein_degron_summary.tsv",
+    "features_tsv": "skills-testbed/outputs/protein-degron-annotation-toy/protein_degron_features.tsv",
+    "result_json": "skills-testbed/outputs/protein-degron-annotation-toy/protein_degron_annotation.result.json"
+  },
+  "warnings": []
+}

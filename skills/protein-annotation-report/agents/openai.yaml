@@ -1,0 +1,4 @@
+interface:
+  display_name: "Protein Annotation Report"
+  short_description: "Normalize protein annotations into report tables."
+  default_prompt: "Create a standardized protein annotation report from amino-acid sequences, UniProt identifiers, InterProScan6 outputs, and eggNOG-mapper outputs."

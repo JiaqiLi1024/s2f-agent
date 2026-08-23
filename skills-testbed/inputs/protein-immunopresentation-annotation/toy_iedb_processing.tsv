@@ -1,0 +1,2 @@
+query_id	peptide_start	peptide_end	peptide	allele	method	proteasome_score	tap_score	mhc_binding_score	processing_score	total_score
+toy1	25	33	SLYNTVATL	HLA-A*02:01	basic_processing	0.8	0.7	0.9	1.5	2.4

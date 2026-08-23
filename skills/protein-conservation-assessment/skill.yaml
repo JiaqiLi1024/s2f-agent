@@ -1,0 +1,98 @@
+schema_version: 1
+id: protein-conservation-assessment
+title: Protein Conservation Assessment
+path: skills/protein-conservation-assessment
+status: active
+family: protein-sequence-annotation
+tasks:
+  - protein-conservation-assessment
+  - protein-homolog-search
+  - protein-msa-conservation
+  - protein-conserved-region-annotation
+  - protein-conservation-report
+  - environment-setup
+  - troubleshooting
+triggers:
+  - protein-conservation-assessment
+  - protein conservation assessment
+  - protein conservation
+  - evolutionary conservation
+  - sequence conservation
+  - conserved residues
+  - conserved regions
+  - variable residues
+  - homolog search
+  - homologous sequences
+  - jackhmmer
+  - HMMER
+  - MMseqs2
+  - MAFFT
+  - Biotite
+  - MSA conservation
+  - conservation report
+  - 保守性
+  - 蛋白保守性
+  - 进化保守性
+  - 同源序列
+  - 多序列比对
+required_inputs:
+  - protein-conservation-query
+optional_inputs:
+  - amino-acid-sequence
+  - protein-fasta
+  - protein-homolog-fasta
+  - protein-msa-file
+  - conservation-search-backend
+  - conservation-database-choice
+  - output-dir
+  - cpu-count
+  - runtime-context
+input_mappings:
+  - protein-conservation-query|query_tokens=protein conservation,evolutionary conservation,sequence conservation,conserved residues,conserved regions,保守性,蛋白保守性|script_flags=--sequence,--fasta,--homolog-fasta,--alignment
+  - amino-acid-sequence|query_tokens=sequence,amino acid sequence,protein sequence,unknown sequence,氨基酸序列|script_flags=--sequence,--sequence-name,--allow-ambiguous-aa,--sanitize-invalid-to-x
+  - protein-fasta|query_tokens=fasta,proteins.fa,protein fasta,proteome,translated proteins,蛋白fasta|script_flags=--fasta
+  - protein-homolog-fasta|query_tokens=homolog fasta,homologs.fasta,homologous sequences,ortholog fasta,同源序列|script_flags=--homolog-fasta
+  - protein-msa-file|query_tokens=msa,alignment,aligned fasta,stockholm,sto,multiple sequence alignment,多序列比对|script_flags=--alignment,--query-id
+  - conservation-search-backend|query_tokens=jackhmmer,hmmer,mmseqs,mmseqs2,ebi hmmer,local hmmer,homolog search|script_flags=--search-backend,--target-db,--hmmer-database,--hmmer-iterations,--evalue,--execute
+  - conservation-database-choice|query_tokens=uniref90,uniref50,swissprot,reference proteomes,protein database,download database,数据库|script_flags=--db-choice,--db-dir,--target-db
+  - output-dir|query_tokens=output,outdir,results,tsv,json,plots,保存,输出目录|script_flags=--outdir,--no-plots
+  - cpu-count|query_tokens=cpu,threads,cpus,并行|script_flags=--cpu
+  - runtime-context|query_tokens=conda,mamba,no conda,no mamba,biotite,mafft,hmmer,mmseqs,local database,python|script_flags=environment-precheck
+required_env_any: []
+constraints:
+  - sequence-input-must-be-protein-not-nucleotide
+  - conservation-scores-require-at-least-two-aligned-or-homologous-sequences
+  - database-downloads-must-be-approved-by-user-before-execution
+  - dedicated-conda-environment-should-be-created-for-biotite-mafft-hmmer-mmseqs
+  - homolog-scope-must-be-recorded-because-conservation-is-relative-to-the-sequence-set
+  - residue-and-region-coordinates-are-1-based-query-protein-positions
+  - ebi-hmmer-refprot-is-uniprot-reference-proteomes-not-uniref90
+  - output-must-include-summary-sites-regions-result-json-and-command-plan
+tools:
+  - scripts/protein_conservation_assessment.py
+tool_contracts:
+  - tool: scripts/protein_conservation_assessment.py
+    inputs:
+      - protein-conservation-query
+      - optional-homolog-fasta-or-msa
+      - optional-search-backend-and-database
+      - output-dir
+    outputs:
+      - protein-conservation-summary-tsv
+      - protein-conservation-sites-tsv
+      - protein-conserved-regions-tsv
+      - protein-conservation-result-json
+      - command-plan-shell-script
+      - database-download-plan-shell-script
+      - optional-alignment-fasta
+      - optional-conservation-plots
+    side_effects:
+      - writes-output-artifacts
+      - may-run-local-jackhmmer-or-mafft-when-execute-is-provided
+      - does-not-download-large-databases-without-user-approval
+    failure_codes:
+      - 1
+priority_rules:
+  - prefer-when-user-asks-for-sequence-first-protein-conservation-homolog-search-msa-conserved-residues-or-conserved-regions
+  - prefer-when-user-mentions-jackhmmer-hmmer-mmseqs2-mafft-biotite-conservation-report-or-unknown-protein-conservation
+  - use-protein-structure-visualize-instead-when-the-primary-task-is-only-3d-structure-viewing-or-conservation-coloring-on-an-existing-structure

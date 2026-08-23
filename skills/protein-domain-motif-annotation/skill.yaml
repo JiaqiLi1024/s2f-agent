@@ -1,0 +1,90 @@
+schema_version: 1
+id: protein-domain-motif-annotation
+title: Protein Domain Motif Annotation
+path: skills/protein-domain-motif-annotation
+status: active
+family: protein-sequence-annotation
+tasks:
+  - protein-domain-motif-annotation
+  - protein-family-annotation
+  - protein-orthology-annotation
+  - protein-go-pathway-annotation
+  - protein-annotation-summary
+  - environment-setup
+  - troubleshooting
+triggers:
+  - protein-domain-motif-annotation
+  - protein domain annotation
+  - protein motif annotation
+  - interproscan6
+  - interproscan
+  - eggnog-mapper
+  - emapper.py
+  - eggnog
+  - pfam
+  - protein family annotation
+  - orthology annotation
+  - go annotation
+  - kegg annotation
+required_inputs:
+  - protein-fasta
+optional_inputs:
+  - annotation-tool-selection
+  - output-dir
+  - interproscan-version
+  - interproscan-profile
+  - interproscan-datadir
+  - interproscan-workdir
+  - eggnog-data-dir
+  - cpu-count
+  - runtime-context
+input_mappings:
+  - protein-fasta|query_tokens=fasta,proteins.fa,protein fasta,proteome,amino acid sequence,蛋白序列|script_flags=--input
+  - annotation-tool-selection|query_tokens=interproscan6,interproscan,eggnog,eggnog-mapper,emapper.py,pfam,go,kegg,orthology|script_flags=--tools
+  - output-dir|query_tokens=output,outdir,results,保存,输出目录|script_flags=--outdir,--interpro-outdir,--eggnog-output-dir
+  - interproscan-version|query_tokens=interproscan version,ips6 version,-r,6.0.1,interpro release|script_flags=--interpro-revision,--interpro-release
+  - interproscan-profile|query_tokens=nextflow profile,docker,singularity,apptainer,test profile|script_flags=--interpro-profile
+  - interproscan-datadir|query_tokens=interproscan data,datadir,IPS6_HOME,interpro data|script_flags=--interpro-datadir
+  - interproscan-workdir|query_tokens=workdir,nextflow work,-w,work directory|script_flags=--interpro-workdir
+  - eggnog-data-dir|query_tokens=eggnog data,eggnog_data,data_dir,EGGNOG_DATA_DIR|script_flags=--eggnog-data-dir
+  - cpu-count|query_tokens=cpu,threads,cpus,maxWorkers,并行|script_flags=--eggnog-cpu,--interpro-cpus,--interpro-max-workers
+  - runtime-context|query_tokens=mamba,conda,no conda,no mamba,venv,pip,python,nextflow,java,diamond,container,hpc,slurm,linux|script_flags=runtime-precheck
+required_env_any: []
+constraints:
+  - protein-fasta-required-for-standard-runs
+  - interproscan6-requires-nextflow-25-04-or-later-and-container-runtime
+  - interproscan6-test-profile-should-run-before-production-to-cache-data-and-container-images
+  - bootstrap-miniforge-or-miniconda-when-conda-or-mamba-is-missing-and-user-approves
+  - interproscan6-version-and-interpro-data-release-should-be-pinned-for-reproducibility
+  - eggnog-mapper-requires-local-eggnog-data-dir-and-search-backend
+  - eggnog-database-must-be-downloaded-before-production-emapper-runs
+  - default-eggnog-search-backend-is-diamond-for-protein-fasta
+  - output-must-include-result-json-command-plan-and-discovered-files
+  - coordinates-are-tool-native-protein-positions-and-should-not-be-converted-without-explicit-need
+tools:
+  - scripts/run_real_protein_domain_motif_annotation_workflow.py
+tool_contracts:
+  - tool: scripts/run_real_protein_domain_motif_annotation_workflow.py
+    inputs:
+      - protein-fasta
+      - annotation-tool-selection
+      - database-directories
+      - output-dir
+      - cpu-count
+    outputs:
+      - protein-domain-motif-annotation-result-json
+      - command-plan-shell-script
+      - optional-interproscan-tsv-json-gff3
+      - optional-eggnog-annotations-and-seed-orthologs
+      - optional-command-logs
+    side_effects:
+      - writes-output-artifacts
+      - may-run-nextflow-container-workflow
+      - may-run-local-eggnog-mapper-workflow
+    failure_codes:
+      - 1
+      - 2
+priority_rules:
+  - prefer-when-user-explicitly-mentions-interproscan6-interproscan-eggnog-mapper-emapper-pfam-or-protein-domain-annotation
+  - prefer-when-task-needs-protein-domain-motif-family-functional-site-orthology-go-kegg-or-ec-annotation-from-fasta
+  - do-not-use-for-protein-structure-retrieval-structure-visualization-folding-docking-or-localization-topology-only-tasks

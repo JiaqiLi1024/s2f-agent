@@ -1,0 +1,2 @@
+label1	label2	pairing_used	n_ca_pairs	global_rmsd_A	close_threshold_A	divergence_threshold_A	n_close	n_medium	n_divergent	pct_divergent	max_ca_dist_A	median_ca_dist_A	contact_threshold_A	n_contacts_structure1	n_contacts_structure2	n_contacts_gained	n_contacts_lost	n_pae_plots
+AF_P04637	AF_Q00987	resseq	393	42.041137	1.0	3.0	0	0	393	100.0	83.395953	38.28266	5.0	446	418	26	54	2

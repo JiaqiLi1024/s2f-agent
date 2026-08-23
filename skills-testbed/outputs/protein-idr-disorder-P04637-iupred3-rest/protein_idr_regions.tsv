@@ -1,0 +1,6 @@
+query_id	source	region_type	start	end	length	mean_score	max_score	threshold	evidence
+P04637	IUPred3	idr	1	23	23	0.8077	0.9860	0.5000	disorder
+P04637	IUPred3	idr	32	97	66	0.7437	0.9236	0.5000	disorder
+P04637	IUPred3	idr	156	162	7	0.5621	0.6011	0.5000	disorder
+P04637	IUPred3	idr	282	329	48	0.7982	0.9115	0.5000	disorder
+P04637	IUPred3	idr	342	393	52	0.7900	0.9113	0.5000	disorder

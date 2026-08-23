@@ -1,0 +1,37 @@
+{
+  "commands_file": "skills-testbed/outputs/test-protein-idr/commands.sh",
+  "counts": {
+    "llps_features": 0,
+    "llps_summary_rows": 1,
+    "plots": 2,
+    "records": 1,
+    "regions": 2,
+    "residue_score_rows": 60
+  },
+  "created_utc": "2026-07-01T09:30:39Z",
+  "errors": [],
+  "execute": true,
+  "execution": {},
+  "input_fasta": "skills-testbed/outputs/test-protein-idr/normalized_input.fasta",
+  "iupred3_table_input": "",
+  "outputs": {
+    "llps_features_tsv": "skills-testbed/outputs/test-protein-idr/protein_llps_features.tsv",
+    "llps_summary_tsv": "skills-testbed/outputs/test-protein-idr/protein_llps_summary.tsv",
+    "plots": [
+      "skills-testbed/outputs/test-protein-idr/plots/test_protein.IUPred3.disorder.svg",
+      "skills-testbed/outputs/test-protein-idr/plots/test_protein.IUPred3.disorder.html"
+    ],
+    "regions_tsv": "skills-testbed/outputs/test-protein-idr/protein_idr_regions.tsv",
+    "residue_scores_tsv": "skills-testbed/outputs/test-protein-idr/protein_idr_residue_scores.tsv",
+    "result_json": "skills-testbed/outputs/test-protein-idr/protein_idr_disorder_annotation.result.json",
+    "summary_tsv": "skills-testbed/outputs/test-protein-idr/protein_idr_summary.tsv"
+  },
+  "plans": {},
+  "run_id": "test_protein",
+  "skill": "protein-idr-disorder-annotation",
+  "status": "success",
+  "tools": [
+    "iupred3"
+  ],
+  "warnings": []
+}

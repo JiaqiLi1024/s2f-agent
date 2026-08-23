@@ -1,0 +1,2 @@
+query_id	length	sources	mean_disorder_score	fraction_disordered	n_disordered_residues	n_idr_regions	longest_idr	n_binding_regions	n_linker_regions	warnings
+test_idr	40				0	0	0	0	0	

@@ -1,0 +1,15 @@
+accession: P04637
+alphafold_available: True
+best_resolution_A: 1.5
+entry_name: P53_HUMAN
+gene_name: TP53
+n_features: 1523
+n_pdb_structures: 20
+organism: Homo sapiens
+organism_query: human
+protein_name: Cellular tumor antigen p53
+query_gene: TP53
+query_uniprot: 
+reviewed: True
+seq_length: 393
+status: ok

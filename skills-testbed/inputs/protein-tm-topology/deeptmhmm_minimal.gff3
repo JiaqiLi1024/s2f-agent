@@ -1,0 +1,4 @@
+##gff-version 3
+tm_test	DeepTMHMM	inside	1	7	.	.	.	ID=tm_test.inside1;Name=inside
+tm_test	DeepTMHMM	TMhelix	8	29	.	.	.	ID=tm_test.tm1;Name=TMhelix
+tm_test	DeepTMHMM	outside	30	48	.	.	.	ID=tm_test.outside1;Name=outside

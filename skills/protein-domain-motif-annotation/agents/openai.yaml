@@ -1,0 +1,4 @@
+interface:
+  display_name: "Protein Domain Motif Annotation"
+  short_description: "Run InterProScan6 and eggNOG-mapper protein annotation"
+  default_prompt: "Use $protein-domain-motif-annotation to plan, run, resume, or summarize InterProScan6 and eggNOG-mapper annotation for a protein FASTA."

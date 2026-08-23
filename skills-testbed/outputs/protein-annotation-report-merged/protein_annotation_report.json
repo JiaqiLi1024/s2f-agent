@@ -1,0 +1,22 @@
+{
+  "counts": {
+    "feature_rows": 2,
+    "summary_rows": 1
+  },
+  "created_utc": "2026-07-01T07:22:20Z",
+  "errors": [],
+  "outputs": {
+    "features_tsv": "skills-testbed/outputs/protein-annotation-report-merged/protein_annotation_features.tsv",
+    "raw_uniprot_json": [],
+    "report_json": "skills-testbed/outputs/protein-annotation-report-merged/protein_annotation_report.json",
+    "summary_tsv": "skills-testbed/outputs/protein-annotation-report-merged/protein_annotation_summary.tsv"
+  },
+  "run_id": "prot1",
+  "skill": "protein-annotation-report",
+  "source_files": [
+    "skills-testbed/inputs/protein-annotation-report/eggnog.emapper.annotations",
+    "skills-testbed/inputs/protein-annotation-report/interpro.tsv"
+  ],
+  "status": "success",
+  "warnings": []
+}

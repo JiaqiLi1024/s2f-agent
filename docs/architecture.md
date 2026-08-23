@@ -11,7 +11,7 @@ This repository now follows a layered design:
    - includes `task_contracts.yaml` (task-level required input contracts)
    - includes `output_contracts.yaml` (task-level output-plan contract schema)
    - includes `recovery_policies.yaml` (retry and fallback defaults)
-3. skill packages (`skills/<skill>/` for stable, `skills-dev/<skill>/` for dev): grounded operational behavior and references.
+3. skill packages (`skills/<skill>/` for stable, `skills-dev/<skill>/` for dev): grounded genomic and protein operational behavior and references.
 4. `playbooks/`: cross-skill task patterns.
 5. `evals/`: routing and quality checks.
 6. `scripts/`: installation, linking, provisioning, validation.
@@ -26,6 +26,10 @@ Benefits:
 - safer route selection
 - easier evaluation and regression tracking
 - simpler future migration to `skills/` namespace if needed
+
+## Protein Layer
+
+The protein layer uses the same registry → route → input contract → output contract → recovery → evaluation lifecycle as the DNA/genome layer. It adds 16 enabled skills without changing the existing DNA model-specific workflows. Protein embedding has its own canonical task, and sequence/structure mutation child tasks have narrow contracts so plans do not mix unrelated backends.
 
 ## Migration Notes
 
@@ -59,7 +63,7 @@ Benefits:
 - [Routing Reference](./routing.md) — scoring weights, confidence thresholds, task aliases, task-to-skill defaults
 - [Input Schema Reference](./input-schema.md) — all 22 canonical input keys, coordinate conventions, assembly aliases
 - [Contracts Reference](./contracts.md) — task contracts, output contracts, and recovery policies
-- [Skill Catalog](./skills-reference.md) — all 11 skills with families, tasks, triggers, and status
+- [Skill Catalog](./skills-reference.md) — all 27 packaged skills (24 enabled) with families, tasks, triggers, and status
 - [Scripts Reference](./scripts-reference.md) — all 19 scripts with purpose, flags, and dependency map
 - [Safety Rules](./safety.md) — credential handling, execution risk controls, scientific guardrails
 - [Evals and Validation](./evals.md) — eval suites, validation scripts, and how to add cases

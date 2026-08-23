@@ -1,0 +1,25 @@
+{
+  "counts": {
+    "feature_rows": 4,
+    "summary_rows": 2
+  },
+  "created_utc": "2026-07-01T09:22:13Z",
+  "errors": [],
+  "outputs": {
+    "features_tsv": "skills-testbed/outputs/protein-annotation-report-llps-import/protein_annotation_features.tsv",
+    "raw_uniprot_json": [],
+    "report_json": "skills-testbed/outputs/protein-annotation-report-llps-import/protein_annotation_report.json",
+    "summary_tsv": "skills-testbed/outputs/protein-annotation-report-llps-import/protein_annotation_summary.tsv"
+  },
+  "run_id": "agg_test",
+  "skill": "protein-annotation-report",
+  "source_files": [
+    "skills-testbed/outputs/protein-idr-disorder-llps-import/protein_idr_disorder_annotation.result.json",
+    "skills-testbed/outputs/protein-idr-disorder-llps-import/protein_idr_regions.tsv",
+    "skills-testbed/outputs/protein-idr-disorder-llps-import/protein_idr_summary.tsv",
+    "skills-testbed/outputs/protein-idr-disorder-llps-import/protein_llps_features.tsv",
+    "skills-testbed/outputs/protein-idr-disorder-llps-import/protein_llps_summary.tsv"
+  ],
+  "status": "success",
+  "warnings": []
+}

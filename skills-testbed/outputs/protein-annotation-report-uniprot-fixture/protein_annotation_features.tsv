@@ -1,0 +1,2 @@
+query_id	source	feature_type	start	end	length	accession	name	description	database	interpro_accession	interpro_description	go_terms	pathways	score	evalue	evidence	note
+PTEST1	UniProtKB	Domain	3	18	16		Example kinase domain	Example kinase domain	UniProtKB								UniProt feature coordinates are 1-based closed.

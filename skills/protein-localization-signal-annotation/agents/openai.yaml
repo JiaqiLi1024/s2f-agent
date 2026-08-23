@@ -1,0 +1,4 @@
+interface:
+  display_name: "Protein Localization Signal Annotation"
+  short_description: "Predict localization and signal peptides"
+  default_prompt: "Use $protein-localization-signal-annotation to predict subcellular localization and signal peptides from protein sequences."

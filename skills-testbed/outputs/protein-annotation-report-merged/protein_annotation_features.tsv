@@ -1,0 +1,3 @@
+query_id	source	feature_type	start	end	length	accession	name	description	database	interpro_accession	interpro_description	go_terms	pathways	score	evalue	evidence	note
+prot1	InterProScan6:Pfam	domain_or_signature_match	5	32	28	PF00001	7 transmembrane receptor	Example receptor domain	Pfam	IPR000001	Example receptor domain	GO:0004930|GO:0007186	Reactome:R-HSA-12345	1.0E-20			InterProScan TSV coordinates are protein positions from the source output.
+prot1	eggNOG-mapper	orthology_function				1234.TEST	example_gene	Example orthology-transferred function	eggNOG			GO:0004930,GO:0007186	map04080	220	1e-40	COG0001@1	Orthology-based functional transfer; no residue coordinates.

@@ -98,6 +98,15 @@ append_csv() {
   fi
 }
 
+duplicate_schema_keys="$(input_schema_list_keys "$input_schema_file" | sort | uniq -d | grep '^protein-' || true)"
+if [[ -n "$duplicate_schema_keys" ]]; then
+  while IFS= read -r duplicate_key; do
+    [[ -z "$duplicate_key" ]] && continue
+    echo "fail: duplicate canonical input key '$duplicate_key' in $input_schema_file" >&2
+    failures=$((failures + 1))
+  done <<<"$duplicate_schema_keys"
+fi
+
 schema_keys_csv=""
 while IFS= read -r k; do
   [[ -z "$k" ]] && continue

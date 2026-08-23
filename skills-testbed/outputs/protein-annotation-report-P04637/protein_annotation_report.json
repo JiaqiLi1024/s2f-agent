@@ -1,0 +1,21 @@
+{
+  "counts": {
+    "feature_rows": 112,
+    "summary_rows": 1
+  },
+  "created_utc": "2026-07-01T07:22:28Z",
+  "errors": [],
+  "outputs": {
+    "features_tsv": "skills-testbed/outputs/protein-annotation-report-P04637/protein_annotation_features.tsv",
+    "raw_uniprot_json": [],
+    "report_json": "skills-testbed/outputs/protein-annotation-report-P04637/protein_annotation_report.json",
+    "summary_tsv": "skills-testbed/outputs/protein-annotation-report-P04637/protein_annotation_summary.tsv"
+  },
+  "run_id": "P04637",
+  "skill": "protein-annotation-report",
+  "source_files": [],
+  "status": "warning",
+  "warnings": [
+    "uniprot_feature_types_filtered:Alternative sequence,Beta strand,Mutagenesis,Natural variant;pass --all-uniprot-features to export every UniProt feature"
+  ]
+}

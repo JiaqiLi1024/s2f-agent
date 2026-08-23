@@ -1,0 +1,51 @@
+{
+  "skill": "protein-immunopresentation-annotation",
+  "status": "success",
+  "run_id": "toy1",
+  "created_utc": "2026-07-06T08:12:08Z",
+  "parameters": {
+    "alleles": [
+      "HLA-A*02:01"
+    ],
+    "peptide_lengths": [
+      9
+    ],
+    "binding_predictors": [
+      "netmhcpan_el",
+      "netmhcpan_ba"
+    ],
+    "processing_predictor": "netmhcpan_ba",
+    "proteasome": "immuno",
+    "execute_api": false,
+    "api_mode": "legacy",
+    "api_url": "https://tools-cluster-interface.iedb.org/tools_api/mhci/",
+    "strong_rank_cutoff": 0.5,
+    "weak_rank_cutoff": 2.0,
+    "strong_ic50_cutoff": 50.0,
+    "weak_ic50_cutoff": 500.0
+  },
+  "counts": {
+    "queries": 2,
+    "peptides_generated": 55,
+    "binding_prediction_rows": 0,
+    "processing_prediction_rows": 0,
+    "immunogenicity_rows": 0,
+    "context_features": 0,
+    "candidate_rows": 55
+  },
+  "artifacts": {
+    "api_requests_dir": "skills-testbed/outputs/protein-immunopresentation-plan/api_requests",
+    "iedb_legacy_requests_jsonl": "skills-testbed/outputs/protein-immunopresentation-plan/api_requests/iedb_legacy_requests.jsonl",
+    "iedb_nextgen_request_json": "skills-testbed/outputs/protein-immunopresentation-plan/api_requests/iedb_nextgen_request.json",
+    "commands_sh": "skills-testbed/outputs/protein-immunopresentation-plan/commands.sh",
+    "normalized_input_fasta": "skills-testbed/outputs/protein-immunopresentation-plan/normalized_input.fasta",
+    "mhci_peptides_tsv": "skills-testbed/outputs/protein-immunopresentation-plan/mhci_peptides.tsv",
+    "mhci_binding_predictions_tsv": "skills-testbed/outputs/protein-immunopresentation-plan/mhci_binding_predictions.tsv",
+    "mhci_processing_predictions_tsv": "skills-testbed/outputs/protein-immunopresentation-plan/mhci_processing_predictions.tsv",
+    "mhci_immunogenicity_predictions_tsv": "skills-testbed/outputs/protein-immunopresentation-plan/mhci_immunogenicity_predictions.tsv",
+    "immunopresentation_candidates_tsv": "skills-testbed/outputs/protein-immunopresentation-plan/immunopresentation_candidates.tsv",
+    "summary_tsv": "skills-testbed/outputs/protein-immunopresentation-plan/protein_immunopresentation_summary.tsv",
+    "result_json": "skills-testbed/outputs/protein-immunopresentation-plan/protein_immunopresentation_annotation.result.json"
+  },
+  "warnings": []
+}

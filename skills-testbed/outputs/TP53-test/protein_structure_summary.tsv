@@ -1,0 +1,2 @@
+query_gene	query_uniprot	organism_query	accession	entry_name	protein_name	gene_name	organism	seq_length	reviewed	n_features	n_pdb_structures	best_resolution_A	alphafold_available	status
+TP53		human	P04637	P53_HUMAN	Cellular tumor antigen p53	TP53	Homo sapiens	393	True	1523	20	1.5	True	ok

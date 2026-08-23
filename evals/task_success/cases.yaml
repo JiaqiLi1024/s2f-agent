@@ -1,5 +1,5 @@
 schema_version: 1
-updated_at: "2026-04-17"
+updated_at: "2026-08-23"
 cases:
   - id: task_success_001
     query: "Need variant-effect guidance for hg38 chr12 REF ALT with output summary."
@@ -123,3 +123,198 @@ cases:
     required_selected_skill: "alphagenome-api"
     required_step_contains: "run_alphagenome_track_prediction_bed_batch.py --interval"
     required_expected_output_contains: "alphagenome_track_chr19_6700000_6732768_trackplot.png"
+  - id: task_success_020
+    query: "Compare protein structures 1AKE and 4AKE by RMSD and superimpose chain A."
+    task: protein-structure-alignment
+    min_runnable_steps: 1
+    min_expected_outputs: 4
+    required_selected_skill: "protein-structure-align"
+    required_step_contains: "protein_structure_align.py"
+    required_expected_output_contains: "protein_structure_align.result.json"
+  - id: task_success_021
+    query: "Align two local protein structures as a hypothetical complex and generate an interface contact map with protein 1 as chain A and protein 2 as chain B."
+    task: protein-structure-alignment
+    min_runnable_steps: 1
+    min_expected_outputs: 4
+    required_selected_skill: "protein-structure-align"
+    required_step_contains: "--interface-chain1"
+    required_expected_output_contains: "aligned_complex_interface_contacts.tsv"
+  - id: task_success_022
+    query: "Use Foldseek to search similar protein structures for query.pdb against structures/ and save the top hits."
+    task: protein-structure-alignment
+    min_runnable_steps: 1
+    min_expected_outputs: 4
+    required_selected_skill: "protein-structure-align"
+    required_step_contains: "protein_structure_foldseek.py --mode search"
+    required_expected_output_contains: "protein_structure_foldseek.result.json"
+    required_assumption_contains: "ask-before-installing-foldseek-or-downloading-large-foldseek-databases"
+  - id: task_success_023
+    query: "Cluster protein structures in structures/ by structural similarity with Foldseek."
+    task: protein-structure-alignment
+    min_runnable_steps: 1
+    min_expected_outputs: 4
+    required_selected_skill: "protein-structure-align"
+    required_step_contains: "protein_structure_foldseek.py --mode cluster"
+    required_expected_output_contains: "foldseek_cluster_clu.tsv"
+  - id: task_success_024
+    query: "Assess evolutionary conservation for an unknown protein sequence using local HMMER homolog search, MAFFT/Biotite MSA, and standardized conservation TSV reports."
+    task: protein-conservation-assessment
+    min_runnable_steps: 1
+    min_expected_outputs: 4
+    required_selected_skill: "protein-conservation-assessment"
+    required_step_contains: "protein_conservation_assessment.py"
+    required_expected_output_contains: "protein_conservation_summary.tsv"
+    required_assumption_contains: "local-database-downloads-must-be-user-approved-before-execution"
+  - id: task_success_025
+    query: "Identify degron degradation-signal candidates in an unknown protein sequence using ELM DEG classes and the DEGRONOPEDIA motif dataset, then write standardized TSV reports."
+    task: protein-degron-annotation
+    min_runnable_steps: 1
+    min_expected_outputs: 4
+    required_selected_skill: "protein-degron-annotation"
+    required_step_contains: "protein_degron_annotation.py"
+    required_expected_output_contains: "protein_degron_features.tsv"
+    required_assumption_contains: "database-downloads-must-be-approved-by-user-before-execution"
+  - id: task_success_026
+    query: "Use the Foldseek web API to search public query.pdb against afdb50, remote upload is approved, and return local HTML results."
+    task: protein-structure-alignment
+    min_runnable_steps: 1
+    min_expected_outputs: 4
+    required_selected_skill: "protein-structure-align"
+    required_step_contains: "protein_structure_foldseek_web.py --query"
+    required_expected_output_contains: "foldseek_web_results.html"
+    required_assumption_contains: "foldseek-web-api-uploads-query-structure-to-remote-server"
+  - id: task_success_027
+    query: "Use QCDPred to score quality-control degron candidates from an unknown protein sequence and write the raw profile plus standardized TSV reports."
+    task: protein-degron-annotation
+    min_runnable_steps: 1
+    min_expected_outputs: 4
+    required_selected_skill: "protein-degron-annotation"
+    required_step_contains: "protein_degron_annotation.py"
+    required_expected_output_contains: "qcdpred_profile.tsv"
+    required_assumption_contains: "QCDPred-scoring-uses-the-published-17-aa-quality-control-degron-logistic-model"
+  - id: task_success_028
+    query: "From a multi-protein FASTA, generate MHC-I peptides, use IEDB Class I / NetMHCpan EL and BA outputs, add processing and immunogenicity scores, overlap signal peptide/TM/IDR/domain/conservation features, and write candidate TSV reports."
+    task: protein-immunopresentation-annotation
+    min_runnable_steps: 1
+    min_expected_outputs: 4
+    required_selected_skill: "protein-immunopresentation-annotation"
+    required_step_contains: "protein_immunopresentation_annotation.py"
+    required_expected_output_contains: "immunopresentation_candidates.tsv"
+    required_assumption_contains: "immunopresentation-results-are-candidate-annotations-not-confirmed-immunogenicity"
+  - id: task_success_029
+    query: "Use $protein-mutation-effect to validate A1V and C2A:D3E against a WT FASTA, plan ESM-1v, MSA profile, SaProt, and ThermoMPNN, and save provenance-rich outputs."
+    task: protein-mutation-effect
+    min_runnable_steps: 2
+    min_expected_outputs: 5
+    required_selected_skill: "protein-mutation-effect"
+    required_step_contains: "run_protein_mutation_effect.py"
+    required_expected_output_contains: "protein_mutation_scores.tsv"
+    required_assumption_contains: "raw-scores-from-different-models-are-never-averaged-without-explicit-calibration"
+    require_no_missing_inputs: true
+  - id: task_success_030
+    query: "Use $protein-mutation-benchmark to evaluate model scores against a ProteinGym DMS assay and report metrics, alignment coverage, and exclusions."
+    task: protein-mutation-benchmark
+    min_runnable_steps: 1
+    min_expected_outputs: 5
+    required_selected_skill: "protein-mutation-benchmark"
+    required_step_contains: "run_proteingym_benchmark.py"
+    required_expected_output_contains: "metrics.tsv"
+    required_assumption_contains: "proteingym-is-a-benchmark-data-and-evaluation-substrate-not-a-prediction-model"
+  - id: task_success_031
+    query: "Use $protein-sequence-mutation-effect with protein FASTA proteins.fa and mutation table mutations.tsv to run an MSA profile and AlphaMissense lookup."
+    task: protein-sequence-mutation-effect
+    min_runnable_steps: 2
+    min_expected_outputs: 5
+    required_selected_skill: "protein-sequence-mutation-effect"
+    required_step_contains: "--models esm-1v,esmc-300m,msa-profile,poet,alphamissense"
+    forbidden_step_contains: "run_structure_mutation_effect.py"
+    require_no_missing_inputs: true
+  - id: task_success_032
+    query: "Use $protein-structure-mutation-effect with protein FASTA proteins.fa, mutation A42V, model.pdb, and chain A to plan SaProt, ThermoMPNN, ProteinMPNN, and ESM-IF1."
+    task: protein-structure-mutation-effect
+    min_runnable_steps: 2
+    min_expected_outputs: 5
+    required_selected_skill: "protein-structure-mutation-effect"
+    required_step_contains: "--models saprot,thermompnn,proteinmpnn,esm-if1"
+    forbidden_step_contains: "run_sequence_mutation_effect.py"
+    required_assumption_contains: "proteinmpnn-and-esm-if1-likelihoods-are-proxies-not-direct-stability-measurements"
+    require_no_missing_inputs: true
+  - id: task_success_033
+    query: "Look up AlphaFold DB and PDB structures for UniProt P04637."
+    task: protein-structure-lookup
+    min_runnable_steps: 1
+    min_expected_outputs: 5
+    required_selected_skill: "protein-structure-get"
+    required_step_contains: "protein_structure_get.py --uniprot P04637"
+    required_expected_output_contains: "protein_structure_get.result.json"
+    require_no_missing_inputs: true
+  - id: task_success_034
+    query: "Visualize protein structure model.pdb, calculate a contact map, and color by pLDDT."
+    task: protein-structure-visualization
+    min_runnable_steps: 1
+    min_expected_outputs: 4
+    required_selected_skill: "protein-structure-visualize"
+    required_step_contains: "protein_structure_visualize.py"
+    required_expected_output_contains: "protein_structure_visualize.result.json"
+    require_no_missing_inputs: true
+  - id: task_success_035
+    query: "Annotate protein domains and motifs in protein FASTA proteins.fa using InterProScan and Pfam."
+    task: protein-domain-motif-annotation
+    min_runnable_steps: 2
+    min_expected_outputs: 4
+    required_selected_skill: "protein-domain-motif-annotation"
+    required_step_contains: "run_real_protein_domain_motif_annotation_workflow.py"
+    required_expected_output_contains: "protein_domain_motif_annotation.result.json"
+    require_no_missing_inputs: true
+  - id: task_success_036
+    query: "Create a protein annotation report for protein FASTA proteins.fa and summarize UniProt and functional annotation."
+    task: protein-annotation-report
+    min_runnable_steps: 2
+    min_expected_outputs: 4
+    required_selected_skill: "protein-annotation-report"
+    required_step_contains: "protein_annotation_report.py"
+    required_expected_output_contains: "protein_annotation_report.json"
+    require_no_missing_inputs: true
+  - id: task_success_037
+    query: "Predict intrinsically disordered regions and IDR features for protein FASTA proteins.fa."
+    task: protein-idr-disorder-annotation
+    min_runnable_steps: 2
+    min_expected_outputs: 5
+    required_selected_skill: "protein-idr-disorder-annotation"
+    required_step_contains: "protein_idr_disorder_annotation.py"
+    required_expected_output_contains: "protein_idr_regions.tsv"
+    require_no_missing_inputs: true
+  - id: task_success_038
+    query: "Predict signal peptides in protein FASTA proteins.fa using SignalP."
+    min_runnable_steps: 2
+    min_expected_outputs: 5
+    required_selected_skill: "protein-localization-signal-annotation"
+    required_step_contains: "protein_localization_signal_annotation.py"
+    required_expected_output_contains: "protein_localization_summary.tsv"
+    require_no_missing_inputs: true
+  - id: task_success_039
+    query: "Predict transmembrane regions in protein FASTA proteins.fa using DeepTMHMM."
+    min_runnable_steps: 2
+    min_expected_outputs: 5
+    required_selected_skill: "protein-tm-topology-annotation"
+    required_step_contains: "protein_tm_topology_annotation.py"
+    required_expected_output_contains: "protein_tm_topology_regions.tsv"
+    require_no_missing_inputs: true
+  - id: task_success_040
+    query: "Use $protein-embedding to generate per-residue ESM-2 embeddings from protein FASTA proteins.fa."
+    task: protein-embedding
+    min_runnable_steps: 3
+    min_expected_outputs: 4
+    required_selected_skill: "protein-embedding"
+    required_step_contains: "run_real_protein_embedding_workflow.py"
+    required_expected_output_contains: "embeddings.npz"
+    forbidden_step_contains: "case-study-playbooks/embedding"
+    require_no_missing_inputs: true
+  - id: task_success_041
+    query: "Find homologs for protein FASTA proteins.fa with HMMER, build an MSA, and report conserved residues."
+    min_runnable_steps: 2
+    min_expected_outputs: 5
+    required_selected_skill: "protein-conservation-assessment"
+    required_step_contains: "protein_conservation_assessment.py"
+    required_expected_output_contains: "protein_conservation_summary.tsv"
+    require_no_missing_inputs: true

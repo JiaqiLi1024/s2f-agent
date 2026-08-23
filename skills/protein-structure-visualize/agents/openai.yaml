@@ -1,0 +1,4 @@
+interface:
+  display_name: "Protein Structure Visualize"
+  short_description: "Protein 3D viewers, residue highlights, maps, pockets, conservation, and PPI"
+  default_prompt: "Use $protein-structure-visualize to render and analyze a PDB, AlphaFold, or local protein structure."

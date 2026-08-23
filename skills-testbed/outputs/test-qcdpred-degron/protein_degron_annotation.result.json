@@ -1,0 +1,35 @@
+{
+  "skill": "protein-degron-annotation",
+  "status": "success",
+  "run_id": "test_qcdpred_degron",
+  "created_utc": "2026-07-06T07:35:17Z",
+  "parameters": {
+    "tools": [
+      "qcdpred"
+    ],
+    "elm_classes_tsv": null,
+    "degronopedia_xlsx": null,
+    "degronopedia_tsv": null,
+    "qcdpred_output": [],
+    "qcdpred_threshold": 0.85,
+    "qcdpred_padding": 8,
+    "data_dir": "$HOME/biodata/protein_degron",
+    "allow_ambiguous_aa": false
+  },
+  "counts": {
+    "queries": 1,
+    "patterns_loaded": 0,
+    "qcdpred_profile_rows": 308,
+    "feature_rows": 5
+  },
+  "artifacts": {
+    "commands_sh": "skills-testbed/outputs/test-qcdpred-degron/commands.sh",
+    "database_download_plan_sh": "skills-testbed/outputs/test-qcdpred-degron/database_download_plan.sh",
+    "normalized_input_fasta": "skills-testbed/outputs/test-qcdpred-degron/normalized_input.fasta",
+    "summary_tsv": "skills-testbed/outputs/test-qcdpred-degron/protein_degron_summary.tsv",
+    "features_tsv": "skills-testbed/outputs/test-qcdpred-degron/protein_degron_features.tsv",
+    "qcdpred_profile_tsv": "skills-testbed/outputs/test-qcdpred-degron/qcdpred_profile.tsv",
+    "result_json": "skills-testbed/outputs/test-qcdpred-degron/protein_degron_annotation.result.json"
+  },
+  "warnings": []
+}

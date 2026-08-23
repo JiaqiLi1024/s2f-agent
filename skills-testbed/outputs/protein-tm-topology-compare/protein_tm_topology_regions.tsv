@@ -1,0 +1,7 @@
+query_id	source	feature_type	start	end	length	score	strand	phase	evidence	attributes	note
+tm_test	DeepTMHMM	inside	1	7	7				inside	ID=tm_test.inside1;Name=inside	skills-testbed/inputs/protein-tm-topology/deeptmhmm_minimal.gff3
+tm_test	DeepTMHMM	TMhelix	8	29	22				TMhelix	ID=tm_test.tm1;Name=TMhelix	skills-testbed/inputs/protein-tm-topology/deeptmhmm_minimal.gff3
+tm_test	DeepTMHMM	outside	30	48	19				outside	ID=tm_test.outside1;Name=outside	skills-testbed/inputs/protein-tm-topology/deeptmhmm_minimal.gff3
+tm_test	TMHMM	inside	1	7	7				inside		skills-testbed/inputs/protein-tm-topology/tmhmm_minimal.long.txt
+tm_test	TMHMM	TMhelix	8	29	22				TMhelix		skills-testbed/inputs/protein-tm-topology/tmhmm_minimal.long.txt
+tm_test	TMHMM	outside	30	48	19				outside		skills-testbed/inputs/protein-tm-topology/tmhmm_minimal.long.txt

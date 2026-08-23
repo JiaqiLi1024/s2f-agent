@@ -1,0 +1,11 @@
+structure_id: 1TUP
+pdb_path: skills-testbed/outputs/1TUP-highlight/1TUP.pdb
+is_alphafold: False
+chain_used: A
+n_residues: 585
+modules: highlight
+highlight_html: skills-testbed/outputs/1TUP-highlight/1TUP.highlight.html
+n_highlighted_residues: 2
+n_missing_highlight_residues: 0
+highlight_secondary: 
+n_highlighted_secondary_residues: 0

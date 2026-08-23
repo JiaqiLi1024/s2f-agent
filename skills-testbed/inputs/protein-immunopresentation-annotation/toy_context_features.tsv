@@ -1,0 +1,6 @@
+query_id	start	end	source	feature_type	name
+toy1	1	20	SignalP	signal_peptide	N-terminal signal peptide
+toy1	8	18	DeepTMHMM	transmembrane_helix	TM1
+toy1	25	42	IUPred	IDR	disordered region
+toy2	1	15	InterPro	domain	PF00000 toy domain
+toy2	5	12	Conservation	conserved_region	conserved block

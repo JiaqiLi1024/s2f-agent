@@ -1,0 +1,2 @@
+query_id	length	sources	pLLPS	mean_aggregation_score	fraction_aggregation_prone	n_aggregation_prone_residues	n_aggregation_regions	n_dpr_regions	n_hotspot_regions	n_dor_regions	n_ddr_regions	n_cdr_regions	warnings
+test_protein	60					0	0	0	0	0	0	0	

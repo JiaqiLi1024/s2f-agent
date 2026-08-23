@@ -1,0 +1,44 @@
+{
+  "api_base": "https://search.foldseek.com/api",
+  "backend": "foldseek-web-api",
+  "errors": [],
+  "inputs": {
+    "databases": [
+      "pdb100",
+      "afdb50"
+    ],
+    "outdir": "/Users/qinti/Project/S2F_agent/skills-testbed/outputs/1AKE-foldseek-api-search",
+    "query": "/Users/qinti/Project/S2F_agent/skills-testbed/outputs/1AKE-foldseek-api-search/query/1AKE_A.pdb"
+  },
+  "outputs": {
+    "api_result_json": "/Users/qinti/Project/S2F_agent/skills-testbed/outputs/1AKE-foldseek-api-search/1AKE_A_foldseek_api.foldseek_web_result.json",
+    "hits_tsv": "/Users/qinti/Project/S2F_agent/skills-testbed/outputs/1AKE-foldseek-api-search/1AKE_A_foldseek_api.foldseek_web_hits.tsv",
+    "protein_structure_foldseek_web.result.json": "/Users/qinti/Project/S2F_agent/skills-testbed/outputs/1AKE-foldseek-api-search/protein_structure_foldseek_web.result.json",
+    "results_html": "/Users/qinti/Project/S2F_agent/skills-testbed/outputs/1AKE-foldseek-api-search/1AKE_A_foldseek_api.foldseek_web_results.html",
+    "top_hits_tsv": "/Users/qinti/Project/S2F_agent/skills-testbed/outputs/1AKE-foldseek-api-search/1AKE_A_foldseek_api.foldseek_web_top_hits.tsv"
+  },
+  "parameters": {
+    "confirm_remote_upload": false,
+    "download_archive": false,
+    "email": "",
+    "endpoint_suffix": "",
+    "entry": 0,
+    "foldseek_mode": "3diaa",
+    "taxfilter": "",
+    "top_n": 100000
+  },
+  "poll_history": [],
+  "script": "protein_structure_foldseek_web.py",
+  "search_summary": {
+    "database_count": 2,
+    "hit_count": 1613,
+    "top_hit": "AF-A0A0P9V876-F1-model_v6 Adenylate kinase"
+  },
+  "skill": "protein-structure-align",
+  "started_at": "2026-07-05T08:00:37Z",
+  "status": "ok",
+  "ticket": "_uJvpCCEvjnjQzKNa20-qhiXQ3VFQyRhPBYvwA",
+  "ticket_status": "COMPLETE",
+  "warnings": [],
+  "web_base": "https://search.foldseek.com"
+}

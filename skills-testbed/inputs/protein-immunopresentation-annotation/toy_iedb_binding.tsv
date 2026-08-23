@@ -1,0 +1,5 @@
+query_id	peptide_start	peptide_end	peptide	allele	method	percentile_rank	ic50_nm	score
+toy1	25	33	SLYNTVATL	HLA-A*02:01	netmhcpan_el	0.20		0.88
+toy1	25	33	SLYNTVATL	HLA-B*07:02	netmhcpan_ba	1.50	120	0.62
+toy1	10	18	IFCLVFADY	HLA-A*02:01	netmhcpan_el	3.50		0.20
+toy2	2	10	CDEFGHIKL	HLA-A*02:01	netmhcpan_el	1.20		0.55

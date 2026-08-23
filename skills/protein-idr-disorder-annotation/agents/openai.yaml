@@ -1,0 +1,4 @@
+interface:
+  display_name: "Protein IDR Disorder Annotation"
+  short_description: "Predict and normalize intrinsically disordered regions."
+  default_prompt: "Annotate protein intrinsic disorder and IDRs from amino-acid sequences or FASTA files using metapredict, AIUPred, IUPred3, and standardized TSV reports."

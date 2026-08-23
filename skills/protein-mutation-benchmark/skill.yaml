@@ -1,0 +1,96 @@
+schema_version: 1
+id: protein-mutation-benchmark
+title: Protein Mutation Benchmark
+path: skills/protein-mutation-benchmark
+status: active
+family: protein-mutation-benchmarking
+tasks:
+  - protein-mutation-benchmark
+  - proteingym-data-acquisition
+  - assay-schema-validation
+  - mutation-score-alignment
+  - benchmark-evaluation
+  - benchmark-troubleshooting
+triggers:
+  - ProteinGym
+  - protein mutation benchmark
+  - DMS benchmark
+  - mutation score evaluation
+  - Spearman mutation effect
+  - zero-shot protein benchmark
+  - clinical variant benchmark
+required_inputs:
+  - protein-mutation-benchmark-input
+  - protein-mutation-score-input
+optional_inputs:
+  - assay-id
+  - benchmark-regime
+  - mutation-type
+  - score-direction
+  - classification-threshold
+  - ndcg-cutoff
+  - output-dir
+  - cleanup-policy
+  - existing-output-policy
+input_mappings:
+  - protein-mutation-benchmark-input|query_tokens=ProteinGym,DMS_score,DMS_score_bin,mutant,assay-data|script_flags=--assay-data
+  - protein-mutation-score-input|query_tokens=mutation,variant_id,model_id,raw_score,model scores|script_flags=--scores
+  - assay-id|query_tokens=assay,DMS_id,dataset|script_flags=--assay-id
+  - benchmark-regime|query_tokens=zero-shot,supervised,DMS,clinical,regression,classification|script_flags=--task
+  - mutation-type|query_tokens=substitution,indel,missense,insertion,deletion|script_flags=internal:mutation_type
+  - score-direction|query_tokens=higher_is,lower-is-better,direction|script_flags=--score-higher-is-column
+  - classification-threshold|query_tokens=threshold,MCC,cutoff|script_flags=--classification-threshold
+  - ndcg-cutoff|query_tokens=NDCG,top-k,ranking|script_flags=--ndcg-k
+  - output-dir|query_tokens=output,outdir,results,目录|script_flags=--output-dir
+  - cleanup-policy|query_tokens=archive,cleanup,intermediate,归档,清理|script_flags=--archive-intermediates,--cleanup-intermediates
+  - existing-output-policy|query_tokens=existing output,reuse,overwrite|script_flags=--allow-existing-output
+constraints:
+  - proteingym-is-benchmark-data-and-evaluation-substrate-not-a-model
+  - pin-release-and-asset-before-download
+  - never-download-full-benchmark-by-default
+  - preserve-raw-scores-and-explicitly-orient-score-direction
+  - compute-metrics-within-assay-model-score-groups
+  - require-explicit-threshold-for-mcc
+  - record-alignment-exclusions-and-input-digests
+  - prevent-test-label-and-homology-leakage
+  - do-not-interpret-benchmark-metrics-as-clinical-evidence
+tools:
+  - scripts/fetch_proteingym_data.py
+  - scripts/validate_proteingym_table.py
+  - scripts/run_proteingym_benchmark.py
+tool_contracts:
+  - tool: scripts/fetch_proteingym_data.py
+    inputs: [release-version, whitelisted-asset, output-dir, optional-sha256]
+    outputs: [commands-sh, download-manifest-json, optional-release-archive]
+    side_effects:
+      - creates-output-directory
+      - downloads-only-with-explicit-execute
+      - optionally-extracts-validated-zip
+    failure_codes: [1, 2]
+  - tool: scripts/validate_proteingym_table.py
+    inputs: [csv-or-tsv, table-kind, optional-column-mappings]
+    outputs: [normalized-tsv, validation-report-json]
+    side_effects: [writes-output-artifacts]
+    failure_codes: [2]
+  - tool: scripts/run_proteingym_benchmark.py
+    inputs: [assay-data, model-scores, output-dir]
+    outputs:
+      - metrics-tsv
+      - summary-json
+      - aligned-scores-tsv
+      - exclusions-tsv
+      - alignment-report-json
+      - manifest-json
+      - commands-sh
+      - logs
+      - raw-input-copies
+      - normalized-intermediates
+    side_effects:
+      - copies-input-tables-into-run-raw
+      - writes-run-artifacts
+      - optionally-archives-or-removes-only-run-intermediate-directory
+    failure_codes: [2, 3]
+priority_rules:
+  - prefer-when-user-explicitly-mentions-proteingym-or-protein-mutation-benchmarking
+  - use-after-model-specific-mutation-effect-scoring
+  - do-not-route-primary-mutation-prediction-to-this-skill

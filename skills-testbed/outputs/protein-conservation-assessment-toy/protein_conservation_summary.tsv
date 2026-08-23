@@ -1,0 +1,2 @@
+query_id	query_length	alignment_sequence_count	homolog_sequence_count	alignment_length	search_backend	target_database	msa_backend	mean_conservation_score	mean_gap_fraction	fraction_conserved	fraction_variable	fraction_gap_rich	n_conserved_residues	n_variable_residues	n_conserved_regions	longest_conserved_region	conserved_threshold	variable_threshold	warnings
+query1	29	5	4	29	none		auto	0.96544	0.0	1.0	0.0	0.0	29	0	1	29	0.75	0.35	No raw query sequence/FASTA was provided; query will be inferred from alignment.

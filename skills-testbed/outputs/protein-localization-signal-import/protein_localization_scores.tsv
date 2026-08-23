@@ -1,0 +1,25 @@
+query_id	source	score_type	label	score	threshold	above_threshold
+secreted_test	DeepLoc-2.1	localization_probability	Cytoplasm	0.1200	0.5000	false
+secreted_test	DeepLoc-2.1	localization_probability	Extracellular	0.8200	0.5000	true
+secreted_test	DeepLoc-2.1	localization_probability	Mitochondrion	0.0200	0.5000	false
+secreted_test	DeepLoc-2.1	membrane_probability	Transmembrane	0.0500	0.5000	false
+secreted_test	DeepLoc-2.1	membrane_probability	Soluble	0.9100	0.5000	true
+mito_test	DeepLoc-2.1	localization_probability	Cytoplasm	0.1800	0.5000	false
+mito_test	DeepLoc-2.1	localization_probability	Extracellular	0.0400	0.5000	false
+mito_test	DeepLoc-2.1	localization_probability	Mitochondrion	0.7600	0.5000	true
+mito_test	DeepLoc-2.1	membrane_probability	Transmembrane	0.0300	0.5000	false
+mito_test	DeepLoc-2.1	membrane_probability	Soluble	0.8800	0.5000	true
+secreted_test	SignalP-6.0	signalp_probability	SP(Sec/SPI)	0.9300		
+secreted_test	SignalP-6.0	signalp_probability	OTHER	0.0700		
+mito_test	SignalP-6.0	signalp_probability	SP(Sec/SPI)	0.0800		
+mito_test	SignalP-6.0	signalp_probability	OTHER	0.9200		
+secreted_test	TargetP-2.0	targetp_probability	SP	0.8800		
+secreted_test	TargetP-2.0	targetp_probability	mTP	0.0200		
+secreted_test	TargetP-2.0	targetp_probability	cTP	0.0100		
+secreted_test	TargetP-2.0	targetp_probability	lTP	0.0100		
+secreted_test	TargetP-2.0	targetp_probability	Other	0.0800		
+mito_test	TargetP-2.0	targetp_probability	SP	0.0400		
+mito_test	TargetP-2.0	targetp_probability	mTP	0.8100		
+mito_test	TargetP-2.0	targetp_probability	cTP	0.0300		
+mito_test	TargetP-2.0	targetp_probability	lTP	0.0100		
+mito_test	TargetP-2.0	targetp_probability	Other	0.1100		

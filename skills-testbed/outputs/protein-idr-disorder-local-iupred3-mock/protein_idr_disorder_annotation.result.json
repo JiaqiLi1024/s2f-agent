@@ -1,0 +1,52 @@
+{
+  "commands_file": "skills-testbed/outputs/protein-idr-disorder-local-iupred3-mock/commands.sh",
+  "counts": {
+    "records": 1,
+    "regions": 2,
+    "residue_score_rows": 80
+  },
+  "created_utc": "2026-07-01T08:08:51Z",
+  "errors": [],
+  "execute": true,
+  "execution": {
+    "iupred3_local": [
+      {
+        "log": "skills-testbed/outputs/protein-idr-disorder-local-iupred3-mock/logs/local_iupred3_test.iupred3_local.1.log",
+        "ok": true,
+        "returncode": 0
+      }
+    ]
+  },
+  "input_fasta": "skills-testbed/outputs/protein-idr-disorder-local-iupred3-mock/normalized_input.fasta",
+  "iupred3_table_input": "skills-testbed/outputs/protein-idr-disorder-local-iupred3-mock/iupred3/iupred3_local_input.tsv",
+  "outputs": {
+    "regions_tsv": "skills-testbed/outputs/protein-idr-disorder-local-iupred3-mock/protein_idr_regions.tsv",
+    "residue_scores_tsv": "skills-testbed/outputs/protein-idr-disorder-local-iupred3-mock/protein_idr_residue_scores.tsv",
+    "result_json": "skills-testbed/outputs/protein-idr-disorder-local-iupred3-mock/protein_idr_disorder_annotation.result.json",
+    "summary_tsv": "skills-testbed/outputs/protein-idr-disorder-local-iupred3-mock/protein_idr_summary.tsv"
+  },
+  "plans": {
+    "iupred3_local": {
+      "commands": [
+        [
+          "skills-testbed/inputs/protein-idr-disorder/mock_iupred3_table_wrapper.py",
+          "skills-testbed/outputs/protein-idr-disorder-local-iupred3-mock/iupred3/iupred3_local_input.tsv",
+          "long"
+        ]
+      ],
+      "expected_files": [
+        "skills-testbed/outputs/protein-idr-disorder-local-iupred3-mock/iupred3/iupred3_local.txt"
+      ],
+      "input_format": "table",
+      "outdir": "skills-testbed/outputs/protein-idr-disorder-local-iupred3-mock/iupred3",
+      "stdout_file": "skills-testbed/outputs/protein-idr-disorder-local-iupred3-mock/iupred3/iupred3_local.txt"
+    }
+  },
+  "run_id": "local_iupred3_test",
+  "skill": "protein-idr-disorder-annotation",
+  "status": "success",
+  "tools": [
+    "iupred3"
+  ],
+  "warnings": []
+}

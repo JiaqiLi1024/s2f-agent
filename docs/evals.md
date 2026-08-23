@@ -15,6 +15,10 @@ The project has two distinct quality-check layers:
 | Groundedness | `evals/groundedness/cases.yaml` | No fabricated symbols or forbidden substrings in agent output | `scripts/validate_groundedness.sh` |
 | Task success | `evals/task_success/cases.yaml` | Plan has minimum `runnable_steps` and `expected_outputs` counts | `scripts/validate_task_success.sh` |
 
+## Current Protein Coverage
+
+The curated suites now include protein structure, annotation, conservation, localization, TM topology, embedding, sequence/structure mutation, and benchmark flows. The current local regression set is 47 routing cases, 27 groundedness cases, and 41 task-success cases; DNA cases remain in the same suites as regression guards.
+
 ## Comparative Benchmark
 
 The benchmark layer adds quantitative, paper-ready aggregation on top of the same curated eval cases.
@@ -248,6 +252,9 @@ Fields:
 | `required_step_contains` | Substring that must appear in at least one runnable step |
 | `required_expected_output_contains` | Substring that must appear in at least one expected output |
 | `required_selected_skill` | If set, `plan.selected_skill` must exactly match this skill id |
+| `required_assumption_contains` | Scientific/domain boundary fragment required in `plan.assumptions` |
+| `forbidden_step_contains` | Fragment that must not appear in any runnable step; used to keep child workflows narrow |
+| `require_no_missing_inputs` | When `true`, the supplied query must satisfy the complete canonical input contract |
 
 Run:
 

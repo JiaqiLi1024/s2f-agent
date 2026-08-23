@@ -14,6 +14,13 @@ Classify the user request into one primary task:
 - `fine-tuning`
 - `track-prediction`
 - `troubleshooting`
+- `protein-embedding`
+- `protein-structure-lookup`, `protein-structure-visualization`, `protein-structure-alignment`
+- `protein-domain-motif-annotation`, `protein-conservation-assessment`, `protein-degron-annotation`
+- `protein-immunopresentation-annotation`, `protein-annotation-report`, `protein-idr-disorder-annotation`
+- `protein-localization-signal-annotation`, `protein-tm-topology-annotation`
+- `protein-mutation-effect`, `protein-sequence-mutation-effect`, `protein-structure-mutation-effect`
+- `protein-mutation-benchmark`
 
 Notes:
 
@@ -45,6 +52,12 @@ Required inputs by task:
 - `fine-tuning`: dataset schema + target label task + compute constraints
 - `track-prediction`: species + assembly + interval + model/head choice
 - `troubleshooting`: failing step or error + runtime context
+- `protein-embedding`: protein sequence/FASTA + embedding target
+- protein annotation tasks: protein sequence/FASTA, accession, or task-specific normalized result files
+- `protein-structure-lookup`: gene, UniProt accession, PDB id, or amino-acid sequence
+- `protein-structure-visualization`/`protein-structure-alignment`: structure source(s), plus chain/range when relevant
+- protein mutation tasks: wild-type protein sequence/FASTA + substitution specification/table; structure child also needs structure and chain
+- `protein-mutation-benchmark`: assay truth table + prediction score table and score direction
 
 If a required input is missing and risky to infer, ask a focused question. Otherwise continue with explicit assumptions.
 
@@ -88,6 +101,19 @@ Answer format:
 - `fine-tuning` -> `dnabert2`, `nucleotide-transformer-v3`, `bpnet`, `basset-workflows`
 - `track-prediction` -> `alphagenome-api`, `nucleotide-transformer-v3`, `segment-nt`, `borzoi-workflows`
 - `troubleshooting` -> pick the skill that owns the failing stack or model family
+- `protein-embedding` -> `protein-embedding` only; never fall back to genomic embedding skills
+- protein structure tasks -> `protein-structure-get`, `protein-structure-visualize`, or `protein-structure-align` by requested operation
+- protein sequence annotation -> the matching annotation skill; use `protein-annotation-report` to integrate existing evidence
+- `protein-mutation-effect` -> parent orchestrator; explicit sequence or structure child requests remain on that child
+- `protein-mutation-benchmark` -> `protein-mutation-benchmark`
+
+Protein routing rules:
+
+- Amino-acid/protein terms and protein FASTA paths select protein tasks; assembly/interval/REF-ALT terms select genomic tasks.
+- Explicit `--task` alignment receives an additional priority bonus so unrelated trigger density cannot override the user-provided task.
+- Canonicalize protein subtask aliases to their parent execution contract before plan generation.
+- Keep `protein-embedding` separate from genomic `embedding`.
+- Keep mutation child plans narrow: sequence requests do not emit structure steps, and structure requests do not emit sequence-model steps.
 
 Fine-tuning disambiguation rule:
 

@@ -1,5 +1,5 @@
 schema_version: 1
-updated_at: "2026-03-27"
+updated_at: "2026-07-19"
 skills:
   - id: alphagenome-api
     path: skills/alphagenome-api
@@ -141,6 +141,393 @@ skills:
       - segmentnt
       - segmentenformer
       - segmentborzoi
+  - id: protein-structure-get
+    path: skills/protein-structure-get
+    enabled: true
+    family: protein-structure-retrieval
+    tasks:
+      - protein-structure-lookup
+      - protein-feature-annotation
+      - pdb-structure-lookup
+      - alphafold-db-lookup
+      - domain-map
+      - esmfold-structure-prediction
+      - protein-pymol-visualization-setup
+      - troubleshooting
+    triggers:
+      - protein-structure-get
+      - protein structure
+      - alphafold db
+      - alphafold structure database
+      - esmfold
+      - fold amino acid sequence
+      - sequence to structure
+      - pymol
+      - pymol visualization
+      - uniprot structure
+      - rcsb pdb
+      - pdb structures
+      - domain map
+  - id: protein-structure-visualize
+    path: skills/protein-structure-visualize
+    enabled: true
+    family: protein-structure-visualization
+    tasks:
+      - protein-structure-visualization
+      - protein-contact-map
+      - protein-pocket-detection
+      - protein-structure-confidence
+      - protein-secondary-structure
+      - protein-structure-highlight
+      - protein-conservation
+      - protein-ppi-network
+      - troubleshooting
+    triggers:
+      - protein-structure-visualize
+      - protein visualizer
+      - protein structure viewer
+      - protein 3d viewer
+      - 3d structure
+      - contact map
+      - bfactor
+      - plddt
+      - secondary structure
+      - highlight residues
+      - residue highlight
+      - secondary structure highlight
+      - binding pocket
+      - pocket detection
+      - conservation
+      - string ppi
+  - id: protein-structure-align
+    path: skills/protein-structure-align
+    enabled: true
+    family: protein-structure-alignment
+    tasks:
+      - protein-structure-alignment
+      - protein-rmsd-comparison
+      - protein-tm-score
+      - protein-pae-analysis
+      - protein-contact-map-comparison
+      - protein-interface-contact-map
+      - protein-structure-similarity-search
+      - protein-structure-clustering
+      - protein-conformation-comparison
+      - troubleshooting
+    triggers:
+      - protein-structure-align
+      - protein structure alignment
+      - structure alignment
+      - protein alignment
+      - align protein structures
+      - superimpose protein structures
+      - superimpose structures
+      - tm score
+      - tm-score
+      - tmalign
+      - foldseek
+      - foldseek api
+      - foldseek web
+      - foldseek web api
+      - foldseek webserver
+      - online foldseek
+      - remote foldseek
+      - structure search
+      - structure similarity search
+      - protein structure search
+      - protein structure similarity
+      - search similar protein structures
+      - search similar structures
+      - web structure similarity search
+      - html foldseek results
+      - cluster protein structures
+      - protein structure clustering
+      - structural clustering
+      - all-vs-all structure comparison
+      - predicted aligned error
+      - pae
+      - pae plot
+      - contact map comparison
+      - contact map delta
+      - interface contact map
+      - ppi contact map
+      - protein-protein interface
+      - rmsd
+      - ca rmsd
+      - c-alpha rmsd
+      - apo holo comparison
+      - wt mutant structure comparison
+  - id: protein-domain-motif-annotation
+    path: skills/protein-domain-motif-annotation
+    enabled: true
+    family: protein-sequence-annotation
+    tasks:
+      - protein-domain-motif-annotation
+      - protein-family-annotation
+      - protein-orthology-annotation
+      - protein-go-pathway-annotation
+      - protein-annotation-summary
+      - environment-setup
+      - troubleshooting
+    triggers:
+      - protein-domain-motif-annotation
+      - protein domain annotation
+      - protein motif annotation
+      - interproscan6
+      - interproscan
+      - eggnog-mapper
+      - emapper.py
+      - eggnog
+      - pfam
+      - protein family annotation
+      - orthology annotation
+      - go annotation
+      - kegg annotation
+      - no conda
+      - no mamba
+  - id: protein-conservation-assessment
+    path: skills/protein-conservation-assessment
+    enabled: true
+    family: protein-sequence-annotation
+    tasks:
+      - protein-conservation-assessment
+      - protein-homolog-search
+      - protein-msa-conservation
+      - protein-conserved-region-annotation
+      - protein-conservation-report
+      - environment-setup
+      - troubleshooting
+    triggers:
+      - protein-conservation-assessment
+      - protein conservation assessment
+      - protein conservation
+      - evolutionary conservation
+      - sequence conservation
+      - conserved residues
+      - conserved regions
+      - variable residues
+      - homolog search
+      - homologous sequences
+      - jackhmmer
+      - HMMER
+      - MMseqs2
+      - MAFFT
+      - Biotite
+      - MSA conservation
+      - conservation report
+      - 保守性
+      - 蛋白保守性
+      - 进化保守性
+      - 同源序列
+      - 多序列比对
+  - id: protein-degron-annotation
+    path: skills/protein-degron-annotation
+    enabled: true
+    family: protein-sequence-annotation
+    tasks:
+      - protein-degron-annotation
+      - protein-degradation-signal-annotation
+      - protein-elm-degron-scan
+      - protein-degronopedia-annotation
+      - protein-qcdpred-degron-prediction
+      - protein-degron-report
+      - environment-setup
+      - troubleshooting
+    triggers:
+      - protein-degron-annotation
+      - degron
+      - degron annotation
+      - degradation signal
+      - degradation motif
+      - protein degradation signal
+      - ELM degron
+      - ELM DEG motif
+      - DEGRONOPEDIA
+      - QCDPred
+      - QCDpred
+      - quality-control degron
+      - QCAP degron
+      - N-degron
+      - C-degron
+      - phosphodegron
+      - destruction box
+      - KEN box
+      - D-box
+      - E3 ligase degron
+      - 降解信号
+      - 降解子
+      - 蛋白降解
+  - id: protein-immunopresentation-annotation
+    path: skills/protein-immunopresentation-annotation
+    enabled: true
+    family: protein-sequence-annotation
+    tasks:
+      - protein-immunopresentation-annotation
+      - protein-mhci-peptide-prediction
+      - protein-iedb-mhci-annotation
+      - protein-hla-binder-annotation
+      - protein-immunogenicity-candidate-annotation
+      - protein-epitope-candidate-report
+      - environment-setup
+      - troubleshooting
+    triggers:
+      - protein-immunopresentation-annotation
+      - immunopresentation
+      - immune presentation
+      - MHC-I peptide
+      - MHC class I
+      - HLA binder
+      - IEDB
+      - IEDB Class I
+      - IEDB Next-Generation Tools
+      - qinti2023/IEDB
+      - local IEDB
+      - NetMHCpan
+      - eluted ligand
+      - binding affinity
+      - immunogenicity score
+      - antigen processing
+      - TAP transport
+      - proteasomal cleavage
+      - epitope candidate
+      - 表位候选
+      - 免疫呈递
+      - MHC-I
+      - HLA结合
+  - id: protein-annotation-report
+    path: skills/protein-annotation-report
+    enabled: true
+    family: protein-sequence-annotation
+    tasks:
+      - protein-annotation-report
+      - protein-uniprot-annotation
+      - protein-functional-annotation
+      - protein-annotation-summary
+      - protein-llps-report
+      - protein-aggregation-report
+    triggers:
+      - protein-annotation-report
+      - protein annotation report
+      - protein annotation tsv
+      - functional annotation table
+      - annotation summary table
+      - uniprot annotation
+      - gene to protein annotation
+      - protein name annotation
+      - unknown protein annotation
+      - unknown amino acid sequence annotation
+      - summarize interproscan
+      - summarize eggnog
+      - summarize idr
+      - summarize disorder
+      - summarize llps
+      - summarize fuzdrop
+      - summarize aggrescanai
+      - llps report
+      - aggregation report
+  - id: protein-idr-disorder-annotation
+    path: skills/protein-idr-disorder-annotation
+    enabled: true
+    family: protein-sequence-annotation
+    tasks:
+      - protein-idr-disorder-annotation
+      - protein-disorder-composition
+      - protein-idr-region-calling
+      - protein-disordered-binding-annotation
+      - protein-linker-annotation
+      - protein-redox-disorder-annotation
+      - protein-llps-annotation
+      - protein-aggregation-prone-region-annotation
+      - protein-disorder-visualization
+      - environment-setup
+      - troubleshooting
+    triggers:
+      - protein-idr-disorder-annotation
+      - protein idr annotation
+      - protein disorder annotation
+      - intrinsically disordered region
+      - intrinsically disordered regions
+      - IDR
+      - IDRs
+      - IUPred
+      - IUPred3
+      - AIUPred
+      - metapredict
+      - ANCHOR2
+      - disordered binding region
+      - flexible linker
+      - redox disorder
+      - liquid-liquid phase separation
+      - LLPS
+      - FuzDrop
+      - AggrescanAI
+      - aggregation prone region
+      - APR
+      - disorder visualization
+      - IDR plot
+  - id: protein-localization-signal-annotation
+    path: skills/protein-localization-signal-annotation
+    enabled: true
+    family: protein-sequence-annotation
+    tasks:
+      - protein-localization-signal-annotation
+      - protein-subcellular-localization
+      - protein-signal-peptide-annotation
+      - protein-targeting-peptide-annotation
+      - protein-secretory-pathway-annotation
+      - environment-setup
+      - troubleshooting
+    triggers:
+      - protein-localization-signal-annotation
+      - protein localization annotation
+      - protein subcellular localization
+      - subcellular localization
+      - DeepLoc
+      - DeepLoc 2.1
+      - SignalP
+      - SignalP 6.0
+      - TargetP
+      - TargetP 2.0
+      - signal peptide
+      - 是否有信号肽
+      - 蛋白信号肽
+      - cleavage site
+      - targeting peptide
+      - 定位信号
+      - mitochondrial transit peptide
+      - chloroplast transit peptide
+      - thylakoid transit peptide
+      - secretory pathway
+      - 亚细胞定位
+      - 预测亚细胞定位
+  - id: protein-tm-topology-annotation
+    path: skills/protein-tm-topology-annotation
+    enabled: true
+    family: protein-sequence-annotation
+    tasks:
+      - protein-tm-topology-annotation
+      - protein-transmembrane-region-annotation
+      - protein-topology-annotation
+      - protein-localization-topology
+      - protein-tm-residue-state-annotation
+      - protein-tm-plot
+      - environment-setup
+      - troubleshooting
+    triggers:
+      - protein-tm-topology-annotation
+      - protein TM annotation
+      - transmembrane topology
+      - transmembrane region
+      - transmembrane helix
+      - TM helix
+      - TMHMM
+      - DeepTMHMM
+      - DeppTMHMM
+      - membrane protein topology
+      - inside outside topology
+      - per residue topology state
+      - topology plot
+      - beta barrel topology
   - id: skill-factory
     path: skills/skill-factory
     enabled: true
@@ -155,3 +542,132 @@ skills:
       - scaffold-skill
       - create-skill
       - generate-skill
+
+  - id: protein-embedding
+    path: skills/protein-embedding
+    enabled: true
+    family: protein-language-model-embedding
+    tasks:
+      - embedding
+      - protein-sequence-embedding
+      - protein-residue-embedding
+      - protein-layer-embedding
+      - esmc-forge-embedding
+      - esmc-sae-feature-extraction
+      - embedding-layer-sweep
+      - protein-embedding-cache
+      - model-selection
+      - environment-setup
+      - troubleshooting
+    triggers:
+      - protein embedding
+      - protein language model embedding
+      - esm2
+      - esm-2
+      - esmc
+      - prott5
+      - prot_t5
+      - ankh
+      - saprot
+      - per-residue embedding
+      - per-protein embedding
+      - layer embedding
+      - all-layer embedding
+      - layer sweep
+      - Biohub Forge
+      - ESMC SAE
+      - SAE feature
+      - protein representation
+  - id: protein-mutation-effect
+    path: skills/protein-mutation-effect
+    enabled: true
+    family: protein-mutation-effect-orchestration
+    tasks:
+      - protein-mutation-effect
+      - protein-mutation-scoring
+      - protein-missense-scoring
+      - protein-multi-mutant-scoring
+      - model-selection
+      - environment-setup
+      - troubleshooting
+    triggers:
+      - protein mutation effect
+      - protein variant effect
+      - amino acid substitution
+      - missense scoring
+      - mutation fitness
+      - ESM-1v
+      - ESMC 300M
+      - SaProt mutation
+      - ThermoMPNN
+      - MSA profile score
+      - AlphaMissense
+      - PoET
+      - ProteinMPNN
+      - ESM-IF1
+
+  - id: protein-sequence-mutation-effect
+    path: skills/protein-sequence-mutation-effect
+    enabled: true
+    family: protein-mutation-effect
+    tasks:
+      - protein-mutation-effect
+      - protein-sequence-variant-scoring
+      - zero-shot-mutation-scoring
+      - mutation-input-validation
+      - model-score-import
+      - environment-setup
+    triggers:
+      - protein mutation effect
+      - amino acid substitution
+      - missense protein variant
+      - ESM-1v
+      - ESMC 300M
+      - MSA profile
+      - PoET
+      - AlphaMissense
+      - ProteinGym mutation table
+
+  - id: protein-structure-mutation-effect
+    path: skills/protein-structure-mutation-effect
+    enabled: true
+    family: protein-mutation-effect
+    tasks:
+      - protein-mutation-effect
+      - structure-aware-mutation-scoring
+      - protein-stability-change
+      - inverse-folding-likelihood
+      - residue-coordinate-mapping
+      - environment-setup
+      - model-output-import
+      - troubleshooting
+    triggers:
+      - SaProt mutation
+      - ThermoMPNN
+      - ProteinMPNN mutation score
+      - ESM-IF1
+      - structure-aware mutation effect
+      - protein ddG
+      - inverse folding log odds
+      - PDB residue mapping
+      - mmCIF mutation
+
+  - id: protein-mutation-benchmark
+    path: skills/protein-mutation-benchmark
+    enabled: true
+    family: protein-mutation-benchmarking
+    tasks:
+      - protein-mutation-benchmark
+      - proteingym-data-acquisition
+      - assay-schema-validation
+      - mutation-score-alignment
+      - benchmark-evaluation
+      - benchmark-troubleshooting
+    triggers:
+      - ProteinGym
+      - protein mutation benchmark
+      - DMS benchmark
+      - mutation score evaluation
+      - Spearman mutation effect
+      - zero-shot protein benchmark
+      - clinical variant benchmark

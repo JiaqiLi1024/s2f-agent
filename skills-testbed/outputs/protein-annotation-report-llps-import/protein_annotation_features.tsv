@@ -1,0 +1,5 @@
+query_id	source	feature_type	start	end	length	accession	name	description	database	interpro_accession	interpro_description	go_terms	pathways	score	evalue	evidence	note
+fuz_test	protein-idr-disorder-annotation:FuzDrop	droplet_promoting_region	5	16	12		droplet_promoting_region	droplet_promoting_region predicted by FuzDrop	FuzDrop					0.8200		detected_regions_DPR	LLPS/aggregation feature; threshold=; DPR_1
+fuz_test	protein-idr-disorder-annotation:FuzDrop	fuzdrop_hotspot	8	12	5		fuzdrop_hotspot	fuzdrop_hotspot predicted by FuzDrop	FuzDrop					0.9100		detected_regions_hotspots	LLPS/aggregation feature; threshold=; hotspot_1
+fuz_test	protein-idr-disorder-annotation:FuzDrop	context_dependent_region	22	28	7		context_dependent_region	context_dependent_region predicted by FuzDrop	FuzDrop					0.6100		detected_regions_CDR	LLPS/aggregation feature; threshold=; CDR_1
+agg_test	protein-idr-disorder-annotation:AggrescanAI	aggregation_prone_region	4	11	8		aggregation_prone_region	aggregation_prone_region predicted by AggrescanAI	AggrescanAI					0.5437		aggregation	LLPS/aggregation feature; threshold=0.3000; Threshold-derived aggregation_prone_region; max_score=0.7000.

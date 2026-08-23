@@ -74,6 +74,7 @@ parse_cases() {
       required_selected_skill = ""
       required_assumption_contains = ""
       forbidden_step_contains = ""
+      require_no_missing_inputs = "false"
     }
     function trim(s) {
       gsub(/^[[:space:]]+|[[:space:]]+$/, "", s)
@@ -89,7 +90,7 @@ parse_cases() {
     }
     function emit_case() {
       if (case_id != "") {
-        print case_id, query, task, min_steps, min_outputs, required_step_contains, required_expected_output_contains, required_selected_skill, required_assumption_contains, forbidden_step_contains
+        print case_id, query, task, min_steps, min_outputs, required_step_contains, required_expected_output_contains, required_selected_skill, required_assumption_contains, forbidden_step_contains, require_no_missing_inputs
       }
     }
     /^[[:space:]]*-[[:space:]]id:[[:space:]]*/ {
@@ -106,6 +107,7 @@ parse_cases() {
       required_selected_skill = ""
       required_assumption_contains = ""
       forbidden_step_contains = ""
+      require_no_missing_inputs = "false"
       next
     }
     /^[[:space:]]*query:[[:space:]]*/ {
@@ -162,6 +164,12 @@ parse_cases() {
       forbidden_step_contains = unquote(forbidden_step_contains)
       next
     }
+    /^[[:space:]]*require_no_missing_inputs:[[:space:]]*/ {
+      require_no_missing_inputs = $0
+      sub(/^[[:space:]]*require_no_missing_inputs:[[:space:]]*/, "", require_no_missing_inputs)
+      require_no_missing_inputs = unquote(require_no_missing_inputs)
+      next
+    }
     END {
       emit_case()
     }
@@ -179,16 +187,13 @@ extract_plan_scalar() {
   printf '%s\n' "$json" | sed -n "s/.*\"plan\":{.*\"$field\":\"\([^\"]*\)\".*/\1/p"
 }
 
-extract_plan_array_csv() {
+extract_plan_array_lines() {
   local json="$1"
   local field="$2"
-  local raw
-  raw="$(printf '%s\n' "$json" | sed -n "s/.*\"plan\":{.*\"$field\":\[\([^]]*\)\].*/\1/p")"
-  if [[ -z "$raw" ]]; then
-    printf '\n'
-    return 0
-  fi
-  printf '%s\n' "$raw" | sed 's/^"//; s/"$//' | sed 's/","/,/g' | sed 's/\\"/"/g'
+  python3 -c 'import json, sys
+payload = json.load(sys.stdin)
+for value in (payload.get("plan") or {}).get(sys.argv[1], []):
+    print(value)' "$field" <<<"$json"
 }
 
 plan_has_array_field() {
@@ -197,13 +202,13 @@ plan_has_array_field() {
   printf '%s\n' "$json" | grep -q "\"plan\":{.*\"$field\":\["
 }
 
-csv_count() {
-  local csv="${1:-}"
-  if [[ -z "$csv" ]]; then
+line_count() {
+  local lines="${1:-}"
+  if [[ -z "$lines" ]]; then
     printf '0\n'
     return 0
   fi
-  printf '%s\n' "$csv" | tr ',' '\n' | awk 'NF{c++} END{print c+0}'
+  printf '%s\n' "$lines" | awk 'NF{c++} END{print c+0}'
 }
 
 to_lower() {
@@ -237,7 +242,7 @@ total=0
 passed=0
 failed=0
 
-while IFS=$'\x1f' read -r case_id query task min_steps min_outputs required_step_contains required_expected_output_contains required_selected_skill required_assumption_contains forbidden_step_contains; do
+while IFS=$'\x1f' read -r case_id query task min_steps min_outputs required_step_contains required_expected_output_contains required_selected_skill required_assumption_contains forbidden_step_contains require_no_missing_inputs; do
   [[ -z "$case_id" ]] && continue
   total=$((total + 1))
 
@@ -301,6 +306,17 @@ while IFS=$'\x1f' read -r case_id query task min_steps min_outputs required_step
     continue
   fi
 
+  if [[ "$require_no_missing_inputs" == "true" ]]; then
+    missing_inputs_lines="$(extract_plan_array_lines "$output" "missing_inputs")"
+    if [[ -n "$missing_inputs_lines" ]]; then
+      failed=$((failed + 1))
+      echo "fail: $case_id" >&2
+      echo "  expected no missing inputs" >&2
+      echo "  got missing inputs: $missing_inputs_lines" >&2
+      continue
+    fi
+  fi
+
   missing_array_field=0
   for field in "${required_plan_arrays[@]}"; do
     if ! plan_has_array_field "$output" "$field"; then
@@ -315,10 +331,10 @@ while IFS=$'\x1f' read -r case_id query task min_steps min_outputs required_step
     continue
   fi
 
-  runnable_steps_csv="$(extract_plan_array_csv "$output" "runnable_steps")"
-  expected_outputs_csv="$(extract_plan_array_csv "$output" "expected_outputs")"
-  runnable_count="$(csv_count "$runnable_steps_csv")"
-  expected_count="$(csv_count "$expected_outputs_csv")"
+  runnable_steps_csv="$(extract_plan_array_lines "$output" "runnable_steps")"
+  expected_outputs_csv="$(extract_plan_array_lines "$output" "expected_outputs")"
+  runnable_count="$(line_count "$runnable_steps_csv")"
+  expected_count="$(line_count "$expected_outputs_csv")"
 
   if [[ "$runnable_count" -lt "$min_steps" ]]; then
     failed=$((failed + 1))
@@ -365,7 +381,7 @@ while IFS=$'\x1f' read -r case_id query task min_steps min_outputs required_step
   fi
 
   if [[ -n "$required_assumption_contains" ]]; then
-    assumptions_csv="$(extract_plan_array_csv "$output" "assumptions")"
+    assumptions_csv="$(extract_plan_array_lines "$output" "assumptions")"
     if ! contains_fragment_ci "$assumptions_csv" "$required_assumption_contains"; then
       failed=$((failed + 1))
       echo "fail: $case_id" >&2

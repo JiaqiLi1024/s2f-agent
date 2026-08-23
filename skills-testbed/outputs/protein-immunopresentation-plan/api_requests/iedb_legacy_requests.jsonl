@@ -1,0 +1,2 @@
+{"endpoint": "https://tools-cluster-interface.iedb.org/tools_api/mhci/", "method": "netmhcpan_el", "sequence_text": ">toy1\nMKTIIALSYIFCLVFADYKDDDDKSLYNTVATLYCVHQRIDV\n>toy2\nACDEFGHIKLMNPQRSTVWYACDEFGHIK\n", "allele": "HLA-A*02:01", "length": "9"}
+{"endpoint": "https://tools-cluster-interface.iedb.org/tools_api/mhci/", "method": "netmhcpan_ba", "sequence_text": ">toy1\nMKTIIALSYIFCLVFADYKDDDDKSLYNTVATLYCVHQRIDV\n>toy2\nACDEFGHIKLMNPQRSTVWYACDEFGHIK\n", "allele": "HLA-A*02:01", "length": "9"}

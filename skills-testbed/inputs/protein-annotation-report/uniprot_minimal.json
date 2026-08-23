@@ -1,0 +1,88 @@
+{
+  "primaryAccession": "PTEST1",
+  "uniProtkbId": "TEST_HUMAN",
+  "entryType": "UniProtKB reviewed (Swiss-Prot)",
+  "proteinDescription": {
+    "recommendedName": {
+      "fullName": {
+        "value": "Example protein"
+      },
+      "ecNumbers": [
+        {
+          "value": "2.7.11.1"
+        }
+      ]
+    }
+  },
+  "genes": [
+    {
+      "geneName": {
+        "value": "TEST1"
+      },
+      "synonyms": [
+        {
+          "value": "TST1"
+        }
+      ]
+    }
+  ],
+  "organism": {
+    "scientificName": "Homo sapiens"
+  },
+  "sequence": {
+    "length": 20,
+    "value": "ACDEFGHIKLMNPQRSTVWY"
+  },
+  "comments": [
+    {
+      "commentType": "FUNCTION",
+      "texts": [
+        {
+          "value": "Example catalytic protein."
+        }
+      ]
+    },
+    {
+      "commentType": "SUBCELLULAR LOCATION",
+      "subcellularLocations": [
+        {
+          "location": {
+            "value": "Cytoplasm"
+          }
+        }
+      ]
+    }
+  ],
+  "features": [
+    {
+      "type": "Domain",
+      "description": "Example kinase domain",
+      "location": {
+        "start": {
+          "value": 3
+        },
+        "end": {
+          "value": 18
+        }
+      }
+    }
+  ],
+  "uniProtKBCrossReferences": [
+    {
+      "database": "GO",
+      "id": "GO:0004672"
+    },
+    {
+      "database": "InterPro",
+      "id": "IPR000719"
+    },
+    {
+      "database": "Pfam",
+      "id": "PF00069"
+    },
+    {
+      "database": "Reactome",
+      "id": "R-HSA-56789"
+    }
+  ]
+}
