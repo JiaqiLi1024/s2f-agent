@@ -1,4 +1,4 @@
 interface:
-  display_name: "s2f Genomics Agent"
-  short_description: "Routes genomics tasks across specialized skills with grounded constraints."
-  default_prompt: "Use the s2f genomics agent to route my request to the right skill and provide a runnable, constraint-aware workflow."
+  display_name: "s2f Sequence-to-Function Agent"
+  short_description: "Routes genomic and protein tasks across specialized skills with grounded constraints."
+  default_prompt: "Use the s2f sequence-to-function agent to route my genomic or protein request and provide a runnable, constraint-aware workflow."

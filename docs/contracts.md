@@ -21,6 +21,22 @@ Required canonical inputs per task. All keys must be present (or inferable) for 
 | `variant-effect` | assembly, coordinate-or-interval, ref-alt-or-variant-spec | — |
 | `fine-tuning` | task-objective, dataset-schema, compute-constraints | — |
 | `track-prediction` | species, assembly, sequence-or-interval | — |
+| `protein-embedding` | sequence-or-fasta, embedding-target | protein embedding aliases |
+| `protein-structure-lookup` | protein-structure-query | PDB/AlphaFold/ESMFold lookup aliases |
+| `protein-structure-visualization` | protein-structure-source | contact/pocket/confidence/highlight aliases |
+| `protein-structure-alignment` | protein-structure-pair | alignment/Foldseek aliases |
+| `protein-domain-motif-annotation` | protein-fasta | domain/family/orthology/GO aliases |
+| `protein-conservation-assessment` | protein-fasta | homolog/MSA/conservation aliases |
+| `protein-degron-annotation` | protein-fasta | degron aliases |
+| `protein-immunopresentation-annotation` | protein-fasta | MHC-I aliases |
+| `protein-annotation-report` | protein-annotation-query | UniProt/function/report aliases |
+| `protein-idr-disorder-annotation` | protein-disorder-query | IDR/LLPS/aggregation aliases |
+| `protein-localization-signal-annotation` | protein-localization-query | localization/signal/targeting aliases |
+| `protein-tm-topology-annotation` | protein-tm-query | TM/topology aliases |
+| `protein-mutation-effect` | protein-sequence-source, protein-mutation-spec-or-table | parent multi-model task |
+| `protein-sequence-mutation-effect` | protein-sequence-source, protein-mutation-spec-or-table | sequence child aliases |
+| `protein-structure-mutation-effect` | protein-sequence-source, protein-mutation-spec-or-table, protein-structure-source, chain-id | structure child aliases |
+| `protein-mutation-benchmark` | protein-mutation-benchmark-input, protein-mutation-score-input | ProteinGym/DMS aliases |
 | `troubleshooting` | failing-step-or-error, runtime-context | `general-troubleshooting` |
 | `loading` | model-family-objective, runtime-context | — |
 | `framework-selection` | model-family-objective, objective | — |
@@ -72,6 +88,16 @@ For the four core executable tasks, the output contract defines the expected sha
 | `retry_policy` | clarify-interval-or-bed-then-per-interval-network-retry-once |
 
 Source: `registry/output_contracts.yaml`
+
+## Protein Output Contracts
+
+Protein output contracts use the same normalized `plan` fields as DNA tasks. Important boundaries are:
+
+- `protein-embedding` owns protein FASTA validation, protein model selection, `run_summary.json`, and `embeddings.npz`; it never falls back to genomic embedding skills.
+- `protein-sequence-mutation-effect` produces `normalized_mutations.tsv`, `scores.tsv`, `run_summary.json`, `manifest.json`, and `commands.sh`.
+- `protein-structure-mutation-effect` produces sequence-to-chain mapping plus `structure_mutation_scores.tsv`, `run_summary.json`, `manifest.json`, and `commands.sh`.
+- Missing models, structures, databases, licenses, or checkpoints produce explicit planned/unavailable status rather than fabricated values.
+- Protein annotation contracts preserve evidence source, coordinate convention, thresholds, and prediction-vs-validation boundaries.
 
 ## Recovery Policies
 

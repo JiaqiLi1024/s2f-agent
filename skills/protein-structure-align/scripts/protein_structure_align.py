@@ -7,6 +7,8 @@ using paired C-alpha atoms, and write RMSD tables, plots, an aligned PDB, an
 optional HTML viewer, and a machine-readable result JSON.
 """
 
+from __future__ import annotations
+
 import argparse
 import json
 import os
@@ -42,35 +44,31 @@ def write_result_json(outdir: str, result: Dict[str, Any]) -> str:
     return result_path
 
 
-try:
-    import matplotlib
-
-    matplotlib.use("Agg")
-    import matplotlib.pyplot as plt
-    import numpy as np
-    import pandas as pd
-    import requests
-    from Bio import PDB
-    from Bio.PDB import MMCIFParser, PDBParser, Select, Superimposer
-except ImportError as exc:
-    outdir = extract_outdir_from_argv(sys.argv[1:])
-    if outdir:
-        write_result_json(
-            outdir,
-            {
-                "status": "failed",
-                "skill": "protein-structure-align",
-                "started_at": utc_now(),
-                "finished_at": utc_now(),
+def load_runtime_dependencies() -> None:
+    global matplotlib, plt, np, pd, requests, PDB, MMCIFParser, PDBParser, Select, Superimposer
+    try:
+        import matplotlib
+        matplotlib.use("Agg")
+        import matplotlib.pyplot as plt
+        import numpy as np
+        import pandas as pd
+        import requests
+        from Bio import PDB
+        from Bio.PDB import MMCIFParser, PDBParser, Select, Superimposer
+    except ImportError as exc:
+        outdir = extract_outdir_from_argv(sys.argv[1:])
+        if outdir:
+            write_result_json(outdir, {
+                "status": "failed", "skill": "protein-structure-align",
+                "started_at": utc_now(), "finished_at": utc_now(),
                 "error": f"Missing Python dependency: {exc}",
                 "recovery": "Install dependencies with: python -m pip install -r skills/protein-structure-align/requirements.txt",
-            },
+            })
+        raise SystemExit(
+            "Missing Python dependency. Install with: "
+            "python -m pip install -r skills/protein-structure-align/requirements.txt\n"
+            f"Import error: {exc}"
         )
-    raise SystemExit(
-        "Missing Python dependency. Install with: "
-        "python -m pip install -r skills/protein-structure-align/requirements.txt\n"
-        f"Import error: {exc}"
-    )
 
 
 RCSB_FILE = "https://files.rcsb.org/download"
@@ -960,7 +958,15 @@ def generate_pae_outputs(
     return outputs
 
 
-class ChainRangeSelect(Select):
+class ChainRangeSelect:
+    """Biopython PDBIO-compatible selector without import-time inheritance."""
+
+    def accept_model(self, model: Any) -> bool:
+        return True
+
+    def accept_atom(self, atom: Any) -> bool:
+        return True
+
     def __init__(self, chain_id: Optional[str], res_start: Optional[int], res_end: Optional[int]) -> None:
         self.chain_id = chain_id
         self.res_start = res_start
@@ -1502,6 +1508,7 @@ def run(args: argparse.Namespace) -> Dict[str, Any]:
 
 def main(argv: Optional[List[str]] = None) -> None:
     args = parse_args(argv)
+    load_runtime_dependencies()
     try:
         run(args)
     except Exception as exc:

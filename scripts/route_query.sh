@@ -209,6 +209,7 @@ skill_has_task_direct() {
 skill_in_task_tag() {
   local skill_id="$1"
   local task_name="$2"
+  local sid
   if [[ -z "$task_name" ]]; then
     return 1
   fi
@@ -557,6 +558,7 @@ WEIGHT_EXPLICIT_SKILL_MENTION=120
 WEIGHT_SKILL_ID_MENTION=80
 WEIGHT_TRIGGER_MATCH=25
 WEIGHT_TASK_ALIGNMENT=20
+WEIGHT_PROVIDED_TASK_ALIGNMENT=80
 INFER_PHRASE_EXACT_BASE=60
 INFER_PHRASE_EXACT_TERM_BONUS=12
 INFER_TASK_KEY_BONUS=35
@@ -646,6 +648,7 @@ WEIGHT_EXPLICIT_SKILL_MENTION="$(config_get_int "$routing_file" "weight_explicit
 WEIGHT_SKILL_ID_MENTION="$(config_get_int "$routing_file" "weight_skill_id_mention" "$WEIGHT_SKILL_ID_MENTION")"
 WEIGHT_TRIGGER_MATCH="$(config_get_int "$routing_file" "weight_trigger_match" "$WEIGHT_TRIGGER_MATCH")"
 WEIGHT_TASK_ALIGNMENT="$(config_get_int "$routing_file" "weight_task_alignment" "$WEIGHT_TASK_ALIGNMENT")"
+WEIGHT_PROVIDED_TASK_ALIGNMENT="$(config_get_int "$routing_file" "weight_provided_task_alignment" "$WEIGHT_PROVIDED_TASK_ALIGNMENT")"
 INFER_PHRASE_EXACT_BASE="$(config_get_int "$routing_file" "infer_phrase_exact_base" "$INFER_PHRASE_EXACT_BASE")"
 INFER_PHRASE_EXACT_TERM_BONUS="$(config_get_int "$routing_file" "infer_phrase_exact_term_bonus" "$INFER_PHRASE_EXACT_TERM_BONUS")"
 INFER_TASK_KEY_BONUS="$(config_get_int "$routing_file" "infer_task_key_bonus" "$INFER_TASK_KEY_BONUS")"
@@ -694,6 +697,9 @@ fi
 score_table=""
 for sid in "${skill_ids[@]}"; do
   score="$(score_skill_for_query "$sid" "$query_lc" "$effective_task")"
+  if [[ "$task_source" == "provided" ]] && skill_aligned_with_task "$sid" "$effective_task"; then
+    score=$((score + WEIGHT_PROVIDED_TASK_ALIGNMENT))
+  fi
   score_table+="$score"$'\t'"$sid"$'\n'
 done
 
@@ -734,9 +740,9 @@ clarify_question="$CLARIFY_QUESTION"
 if [[ -n "$effective_task" ]]; then
   top_skills_csv="$(printf '%s\n' "$sorted_scores" | awk 'NF{print $2}' | head -n 3 | paste -sd ',' -)"
   if [[ -n "$top_skills_csv" ]]; then
-    clarify_question="I inferred task '$effective_task' but confidence is low. Which skill should lead ($top_skills_csv)?"
+    clarify_question="I inferred task '$effective_task' but confidence is low. Which task do you want, and which skill should lead ($top_skills_csv)?"
   else
-    clarify_question="I inferred task '$effective_task' but confidence is low. Which skill should lead?"
+    clarify_question="I inferred task '$effective_task' but confidence is low. Which task do you want, and which skill should lead?"
   fi
 fi
 

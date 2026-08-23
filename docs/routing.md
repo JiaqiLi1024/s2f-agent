@@ -2,7 +2,7 @@
 
 ## Overview
 
-The `s2f` router maps a free-text genomics query to a primary skill and optional secondary candidates. It is implemented as a pure-bash scoring function inside `scripts/route_query.sh` and is called by both `scripts/run_agent.sh` (full orchestration) and directly by users for inspection.
+The `s2f` router maps a free-text genomic or protein query to a primary skill and optional secondary candidates. It is implemented as a pure-bash scoring function inside `scripts/route_query.sh` and is called by both `scripts/run_agent.sh` (full orchestration) and directly by users for inspection.
 
 Two entry points:
 
@@ -23,6 +23,7 @@ Scores are accumulated per-skill and determine ranking.
 | `weight_skill_id_mention` | 80 | bare skill id mentioned in query |
 | `weight_trigger_match` | 25 | skill trigger keyword matched in query |
 | `weight_task_alignment` | 20 | skill supports the classified task |
+| `weight_provided_task_alignment` | 80 | extra priority when the user explicitly supplies `--task` |
 | `infer_phrase_exact_base` | 60 | exact task phrase match (e.g. "variant effect") |
 | `infer_phrase_exact_term_bonus` | 12 | per additional term in exact match |
 | `infer_task_key_bonus` | 35 | task key present in query after alias expansion |
@@ -74,9 +75,22 @@ When no explicit skill is mentioned, the router selects from these defaults (ord
 | `variant-effect` | alphagenome-api, borzoi-workflows, gpn-models, evo2-inference |
 | `fine-tuning` | dnabert2, nucleotide-transformer-v3, bpnet, basset-workflows |
 | `track-prediction` | alphagenome-api, nucleotide-transformer-v3, segment-nt, borzoi-workflows |
+| `protein-embedding` | protein-embedding |
+| protein structure lookup / visualization / alignment | protein-structure-get / protein-structure-visualize / protein-structure-align |
+| protein sequence annotation | task-matching protein annotation skill; protein-annotation-report integrates evidence |
+| protein mutation effect | protein-mutation-effect parent, or explicit sequence/structure child |
+| protein mutation benchmark | protein-mutation-benchmark |
 | `troubleshooting` | skill that owns the failing stack or model family |
 
 Source: `agent/ROUTING.md`
+
+Protein planner behavior:
+
+- Protein FASTA/amino-acid inputs and genomic assembly/interval inputs remain in separate task families.
+- Protein subtask aliases are canonicalized before output-contract lookup.
+- Protein embedding never reuses the genomic embedding playbook or recovery skills.
+- Sequence and structure mutation child tasks emit only their own runner steps.
+- A user-provided `--task` receives an extra alignment bonus, preventing unrelated keyword-heavy skills from overriding explicit intent.
 
 Track-prediction planner behavior (run_agent fastpath):
 

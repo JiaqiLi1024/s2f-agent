@@ -1,0 +1,75 @@
+schema_version: 1
+id: protein-mutation-effect
+title: Protein Mutation Effect
+path: skills/protein-mutation-effect
+status: active
+family: protein-mutation-effect-orchestration
+tasks:
+  - protein-mutation-effect
+  - protein-mutation-scoring
+  - protein-missense-scoring
+  - protein-multi-mutant-scoring
+  - model-selection
+  - environment-setup
+  - troubleshooting
+triggers:
+  - protein mutation effect
+  - protein variant effect
+  - amino acid substitution
+  - missense scoring
+  - mutation fitness
+  - ESM-1v
+  - ESMC 300M
+  - SaProt mutation
+  - ThermoMPNN
+  - MSA profile score
+  - AlphaMissense
+  - PoET
+  - ProteinMPNN
+  - ESM-IF1
+required_inputs:
+  - protein-sequence-source
+  - protein-mutation-spec-or-table
+optional_inputs:
+  - protein-structure-source
+  - structure-chain
+  - protein-msa-source
+  - protein-mutation-model-set
+  - precomputed-score-source
+  - execution-mode
+  - output-dir
+input_mappings:
+  - protein-sequence-source|query_tokens=protein sequence,amino acid sequence,fasta,wild type,WT|script_flags=--sequence,--fasta
+  - protein-mutation-spec-or-table|query_tokens=A42V,p.Ala42Val,missense,substitution,mutation table|script_flags=--mutation,--mutations-file
+  - protein-structure-source|query_tokens=pdb,mmcif,structure,chain|script_flags=--structure
+  - structure-chain|query_tokens=chain,auth_asym_id,asym_id|script_flags=--chain
+  - protein-msa-source|query_tokens=msa,a3m,alignment,homologs|script_flags=--msa
+  - protein-mutation-model-set|query_tokens=esm1v,esmc,saprot,thermompnn,poet,proteinmpnn,esm-if1,alphamissense|script_flags=--models
+  - precomputed-score-source|query_tokens=precomputed,import,score table,alphamissense table|script_flags=--import-scores,--alphamissense-table
+  - execution-mode|query_tokens=plan,execute,import,dry run|script_flags=--mode
+constraints:
+  - protein-residue-numbering-is-1-based
+  - validate-wild-type-residue-before-scoring
+  - never-mix-genomic-ref-alt-with-protein-substitution-notation
+  - never-average-raw-scores-across-effect-axes
+  - alphamissense-is-precomputed-lookup-not-arbitrary-inference
+  - missing-model-assets-must-produce-unavailable-status-not-fabricated-scores
+  - preserve-model-revision-score-direction-and-provenance
+tools:
+  - scripts/normalize_protein_mutations.py
+  - scripts/run_protein_mutation_effect.py
+tool_contracts:
+  - tool: scripts/normalize_protein_mutations.py
+    inputs: [protein-sequence-source, protein-mutation-spec-or-table]
+    outputs: [normalized-sequences-fasta, normalized-mutations-tsv, validation-json]
+    side_effects: [writes-normalized-input-artifacts]
+    failure_codes: [1, 2]
+  - tool: scripts/run_protein_mutation_effect.py
+    inputs: [normalized-protein-mutation-query, model-set, execution-mode]
+    outputs: [protein-mutation-scores-tsv, summary-json, run-manifest-json, commands-sh]
+    side_effects: [writes-run-directory, may-invoke-model-specific-runners-in-execute-mode, may-archive-or-clean-known-intermediate-directory]
+    failure_codes: [1, 2]
+priority_rules:
+  - prefer-for-protein-level-missense-or-amino-acid-substitution-effect-requests
+  - defer-chromosome-assembly-ref-alt-requests-to-genomic-variant-effect
+  - delegate-proteingym-metrics-to-protein-mutation-benchmark

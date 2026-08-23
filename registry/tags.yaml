@@ -1,5 +1,46 @@
 schema_version: 1
 tags:
+  protein-mutation-effect:
+    - protein-mutation-effect
+    - protein-sequence-mutation-effect
+    - protein-structure-mutation-effect
+  protein-mutation-scoring:
+    - protein-mutation-effect
+  protein-missense-scoring:
+    - protein-mutation-effect
+  protein-multi-mutant-scoring:
+    - protein-mutation-effect
+  protein-sequence-variant-scoring:
+    - protein-sequence-mutation-effect
+  zero-shot-mutation-scoring:
+    - protein-sequence-mutation-effect
+  mutation-input-validation:
+    - protein-sequence-mutation-effect
+    - protein-structure-mutation-effect
+  model-score-import:
+    - protein-sequence-mutation-effect
+  structure-aware-mutation-scoring:
+    - protein-structure-mutation-effect
+  protein-stability-change:
+    - protein-structure-mutation-effect
+  inverse-folding-likelihood:
+    - protein-structure-mutation-effect
+  residue-coordinate-mapping:
+    - protein-structure-mutation-effect
+  model-output-import:
+    - protein-structure-mutation-effect
+  protein-mutation-benchmark:
+    - protein-mutation-benchmark
+  proteingym-data-acquisition:
+    - protein-mutation-benchmark
+  assay-schema-validation:
+    - protein-mutation-benchmark
+  mutation-score-alignment:
+    - protein-mutation-benchmark
+  benchmark-evaluation:
+    - protein-mutation-benchmark
+  benchmark-troubleshooting:
+    - protein-mutation-benchmark
   variant-effect:
     - alphagenome-api
     - borzoi-workflows

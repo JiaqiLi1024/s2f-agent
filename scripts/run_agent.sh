@@ -94,6 +94,50 @@ append_csv() {
   fi
 }
 
+# Runnable commands may legitimately contain commas (for example, model lists).
+# Keep plan steps as newline-delimited records instead of reusing the CSV helpers
+# that are appropriate for identifiers and other atomic metadata values.
+append_line() {
+  local lines="${1:-}"
+  local value="${2:-}"
+  if [[ -z "$value" ]]; then
+    printf '%s\n' "$lines"
+    return 0
+  fi
+  if [[ -z "$lines" ]]; then
+    printf '%s\n' "$value"
+  else
+    printf '%s\n%s\n' "$lines" "$value"
+  fi
+}
+
+lines_to_lines_prefixed() {
+  local lines="${1:-}"
+  local prefix="${2:-- }"
+  local item=""
+  [[ -z "$lines" ]] && return 0
+  while IFS= read -r item; do
+    [[ -z "$item" ]] && continue
+    printf '%s%s\n' "$prefix" "$item"
+  done <<<"$lines"
+}
+
+emit_json_array_from_lines() {
+  local lines="${1:-}"
+  local first=1
+  local item=""
+  printf '['
+  while IFS= read -r item; do
+    [[ -z "$item" ]] && continue
+    if [[ "$first" -eq 0 ]]; then
+      printf ','
+    fi
+    printf '"%s"' "$(json_escape "$item")"
+    first=0
+  done <<<"$lines"
+  printf ']'
+}
+
 remove_csv_item() {
   local csv="${1:-}"
   local target="${2:-}"
@@ -196,7 +240,7 @@ emit_text_plan_block() {
   fi
   echo "  runnable_steps:"
   if [[ -n "$steps_csv" ]]; then
-    csv_to_lines_prefixed "$steps_csv" "    - "
+    lines_to_lines_prefixed "$steps_csv" "    - "
   else
     echo "    - none"
   fi
@@ -243,7 +287,7 @@ emit_json_plan_object() {
   emit_json_array_from_csv "$constraints_csv"
   printf ','
   printf '"runnable_steps":'
-  emit_json_array_from_csv "$steps_csv"
+  emit_json_array_from_lines "$steps_csv"
   printf ','
   printf '"expected_outputs":'
   emit_json_array_from_csv "$outputs_csv"
@@ -1776,6 +1820,33 @@ input_satisfied() {
     canonical_key="$input_name"
   fi
 
+  # Protein inputs need format-aware recognition. Arbitrary one-letter
+  # substitutions must not depend on a single example token such as A42V, and
+  # ordinary FASTA wording should satisfy protein sequence inputs.
+  case "$canonical_key" in
+    protein-sequence-source|sequence-or-fasta)
+      if contains_token "$query_lc" "protein fasta" \
+        || contains_token "$query_lc" "wt fasta" \
+        || contains_token "$query_lc" "wild-type fasta" \
+        || contains_token "$query_lc" "wild type fasta" \
+        || contains_token "$query_lc" "protein sequence" \
+        || contains_token "$query_lc" "amino acid sequence" \
+        || [[ "$query_lc" =~ (^|[^[:alnum:]_])[^[:space:]]+\.(fa|faa|fasta)([^[:alnum:]_]|$) ]]; then
+        return 0
+      fi
+      ;;
+    protein-mutation-spec-or-table)
+      if contains_token "$query_lc" "mutation table" \
+        || contains_token "$query_lc" "mutations.tsv" \
+        || contains_token "$query_lc" "missense" \
+        || contains_token "$query_lc" "amino acid substitution" \
+        || [[ "$query_lc" =~ (^|[^[:alnum:]_])[acdefghiklmnpqrstvwy][0-9]{1,7}[acdefghiklmnpqrstvwy]([^[:alnum:]_]|$) ]] \
+        || [[ "$query_lc" =~ p\.[a-z]{3}[0-9]{1,7}[a-z]{3} ]]; then
+        return 0
+      fi
+      ;;
+  esac
+
   for phrase in "$input_name" "$canonical_key"; do
     [[ -z "$phrase" ]] && continue
     phrase="$(to_lower "$phrase")"
@@ -2022,6 +2093,21 @@ if [[ -z "$primary_skill" ]]; then
   exit 1
 fi
 
+# Resolve advertised task aliases before reading task/output/recovery contracts.
+# Protein embedding and mutation subskills need domain-specific contracts even
+# when the router classifies the broad task as embedding or mutation effect.
+task_alias="$(task_contract_get_task_alias "$contracts_file" "$effective_task" || true)"
+if [[ -n "$task_alias" ]]; then
+  effective_task="$task_alias"
+fi
+if [[ "$primary_skill" == "protein-embedding" ]]; then
+  effective_task="protein-embedding"
+elif [[ "$primary_skill" == "protein-sequence-mutation-effect" ]]; then
+  effective_task="protein-sequence-mutation-effect"
+elif [[ "$primary_skill" == "protein-structure-mutation-effect" ]]; then
+  effective_task="protein-structure-mutation-effect"
+fi
+
 skill_path="$(registry_get_path "$registry_file" "$primary_skill" || true)"
 if [[ -z "$skill_path" ]]; then
   skill_path="$primary_skill"
@@ -2093,7 +2179,7 @@ if [[ -n "$effective_task" ]]; then
   while IFS= read -r v; do
     [[ -z "$v" ]] && continue
     rendered="$(render_plan_value "$v" "$effective_task" "$primary_skill")"
-    plan_steps_csv="$(append_csv "$plan_steps_csv" "$rendered")"
+    plan_steps_csv="$(append_line "$plan_steps_csv" "$rendered")"
   done < <(output_contract_list_field "$output_contracts_file" "$effective_task" "runnable_steps")
 
   while IFS= read -r v; do
@@ -3104,7 +3190,7 @@ if [[ "$effective_task" == "track-prediction" && "$track_explicit_skill_count" -
         multi_step="${multi_prepare_cmd}${multi_step}"
         multi_prepare_cmd=""
       fi
-      plan_steps_csv="$(append_csv "$plan_steps_csv" "$multi_step")"
+      plan_steps_csv="$(append_line "$plan_steps_csv" "$multi_step")"
     done
 
     plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "track-multi-skill-composite-plan-enabled")"

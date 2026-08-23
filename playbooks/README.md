@@ -12,6 +12,16 @@ This directory is the single entry point for both learning and execution guidanc
 6. [Environment-Setup](./environment-setup/README.md)
 7. [Troubleshooting](./troubleshooting/README.md)
 
+## Protein Learning Path
+
+1. [Protein Embedding](./protein-embedding/README.md)
+2. [Structure Lookup](./protein-structure-lookup/README.md), [Visualization](./protein-structure-visualization/README.md), and [Alignment](./protein-structure-alignment/README.md)
+3. [Domain/Motif](./protein-domain-motif-annotation/README.md) and [Conservation](./protein-conservation-assessment/README.md)
+4. [IDR](./protein-idr-disorder-annotation/README.md), [Localization](./protein-localization-signal-annotation/README.md), and [TM Topology](./protein-tm-topology-annotation/README.md)
+5. [Degrons](./protein-degron-annotation/README.md) and [Immunopresentation](./protein-immunopresentation-annotation/README.md)
+6. [Mutation Effect](./protein-mutation-effect/README.md) and [Mutation Benchmark](./protein-mutation-benchmark/README.md)
+7. [Integrated Protein Annotation Report](./protein-annotation-report/README.md)
+
 ## Prerequisites
 
 - Repository cloned locally.
@@ -53,3 +63,9 @@ bash scripts/run_agent.sh --query 'Use $alphagenome-api for variant-effect'
 - [Track-Prediction Playbook](./track-prediction/README.md)
 - [Fine-Tuning Playbook](./fine-tuning/README.md)
 - [Environment-Setup Playbook](./environment-setup/README.md)
+- [Protein Embedding Playbook](./protein-embedding/README.md)
+- [Protein Structure Lookup Playbook](./protein-structure-lookup/README.md)
+- [Protein Structure Visualization Playbook](./protein-structure-visualization/README.md)
+- [Protein Structure Alignment Playbook](./protein-structure-alignment/README.md)
+- [Protein Mutation Effect Playbook](./protein-mutation-effect/README.md)
+- [Protein Annotation Report Playbook](./protein-annotation-report/README.md)

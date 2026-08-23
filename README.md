@@ -1,6 +1,6 @@
 # s2f-agent
 
-`s2f-agent` is a skill-routing agent for computational genomics. It turns open-ended research questions into deterministic, runnable analysis plans across 11 model families — covering variant-effect prediction, sequence embedding, track prediction, fine-tuning, and environment setup.
+`s2f-agent` is a sequence-to-function skill-routing agent for computational genomics and protein analysis. It turns open-ended research questions into deterministic, runnable plans across 24 enabled skills, while keeping DNA/genome and protein input, model, output, and fallback contracts explicitly separated.
 
 [![CI](https://github.com/JiaqiLiZju/s2f-agent/actions/workflows/agent-ci.yml/badge.svg)](https://github.com/JiaqiLiZju/s2f-agent/actions/workflows/agent-ci.yml)
 ![Python](https://img.shields.io/badge/python-3.10%2B-blue)
@@ -58,7 +58,7 @@ First run after bootstrap:
 
 | Capability | What it enables | Entry points |
 | --- | --- | --- |
-| Skill-grounded execution | Domain-specific guidance for genomics model families and workflows | `skills/*/SKILL.md`, `skills-dev/*/SKILL.md`, [`docs/skills-reference.md`](./docs/skills-reference.md) |
+| Skill-grounded execution | Domain-specific guidance for genomics and protein model families and workflows | `skills/*/SKILL.md`, `skills-dev/*/SKILL.md`, [`docs/skills-reference.md`](./docs/skills-reference.md) |
 | Deterministic routing | Ranked skill selection with `route` / `clarify` decision and confidence | `scripts/route_query.sh`, `registry/routing.yaml`, [`docs/routing.md`](./docs/routing.md) |
 | Canonical input schema | Shared canonical input keys, aliases, and coordinate conventions | `registry/input_schema.yaml`, `scripts/validate_input_contracts.sh`, [`docs/input-schema.md`](./docs/input-schema.md) |
 | Task-contract checks | Detects missing required inputs before execution guidance | `scripts/run_agent.sh`, `registry/task_contracts.yaml`, [`docs/contracts.md`](./docs/contracts.md) |
@@ -76,11 +76,15 @@ First run after bootstrap:
 | Embedding and representation | Produce sequence embeddings for downstream analyses | `dnabert2`, `nucleotide-transformer-v3`, `nucleotide-transformer`, `evo2-inference` | [`embedding`](./playbooks/embedding/README.md) | [`contracts`](./docs/contracts.md), [`input-schema`](./docs/input-schema.md) |
 | Track prediction workflows | Run sequence-to-signal prediction with model-appropriate constraints | `alphagenome-api`, `nucleotide-transformer-v3`, `borzoi-workflows`, `segment-nt` | [`track-prediction`](./playbooks/track-prediction/README.md) | [`contracts`](./docs/contracts.md), [`input-schema`](./docs/input-schema.md) |
 | Fine-tuning and training setup | Prepare schemas, training configs, and model-specific run paths | `dnabert2`, `nucleotide-transformer-v3`, `bpnet`, `basset-workflows` | [`fine-tuning`](./playbooks/fine-tuning/README.md) | [`contracts`](./docs/contracts.md), [`input-schema`](./docs/input-schema.md) |
+| Protein representation | Generate per-protein or per-residue embeddings without entering the genomic embedding workflow | `protein-embedding` | [`protein-embedding`](./playbooks/protein-embedding/README.md) | [`contracts`](./docs/contracts.md) |
+| Protein structure analysis | Retrieve, visualize, align, and compare public or user-supplied structures | `protein-structure-get`, `protein-structure-visualize`, `protein-structure-align` | [`protein-structure-lookup`](./playbooks/protein-structure-lookup/README.md) | [`skills`](./docs/skills-reference.md) |
+| Protein sequence annotation | Combine domains, conservation, degrons, immunopresentation, IDR, localization, TM topology, and reports | protein annotation skills | [`protein-annotation-report`](./playbooks/protein-annotation-report/README.md) | [`contracts`](./docs/contracts.md) |
+| Protein mutation analysis | Keep sequence, evolutionary, structure, stability, human-prior, and benchmark axes distinct | `protein-mutation-effect` and child/benchmark skills | [`protein-mutation-effect`](./playbooks/protein-mutation-effect/README.md) | [`contracts`](./docs/contracts.md) |
 | Environment bring-up and migration | Build reproducible stacks and verify operational readiness | `skill-factory` plus stack-specific skills | [`environment-setup`](./playbooks/environment-setup/README.md) | [`scripts-reference`](./docs/scripts-reference.md), [`architecture`](./docs/architecture.md) |
 
 ## Skill Catalog
 
-The repository currently includes **11** packaged skills.
+The repository currently includes **27** packaged skills: **24 enabled** by default and **3 disabled development skills**.
 
 Status definition:
 
@@ -101,6 +105,27 @@ Status definition:
 | `nucleotide-transformer-v3` | Stable | `skills/nucleotide-transformer-v3` | NTv3 inference, species conditioning, mode-aware fine-tuning (`prep`/`train`) | `$nucleotide-transformer-v3` | [`SKILL.md`](./skills/nucleotide-transformer-v3/SKILL.md) · [`references/`](./skills/nucleotide-transformer-v3/references/) |
 | `segment-nt` | Stable | `skills/segment-nt` | SegmentNT-family segmentation inference and scaling logic | `$segment-nt` | [`SKILL.md`](./skills/segment-nt/SKILL.md) · [`references/`](./skills/segment-nt/references/) |
 | `skill-factory` | Stable | `skills/skill-factory` | Scaffold and validate consistent skill packages from specs | `$skill-factory` | [`SKILL.md`](./skills/skill-factory/SKILL.md) · [`references/`](./skills/skill-factory/references/) |
+
+### Protein skills (enabled by default)
+
+| Skill ID | Best for | Explicit invocation |
+| --- | --- | --- |
+| `protein-structure-get` | UniProt/PDB/AlphaFold DB retrieval and bounded ESMFold requests | `$protein-structure-get` |
+| `protein-structure-visualize` | structure views, confidence, contacts, pockets, highlights | `$protein-structure-visualize` |
+| `protein-structure-align` | RMSD/superposition, interfaces, Foldseek search and clustering | `$protein-structure-align` |
+| `protein-domain-motif-annotation` | InterProScan6 and eggNOG domain/orthology annotation | `$protein-domain-motif-annotation` |
+| `protein-conservation-assessment` | homolog search, MSA, conservation scoring and reports | `$protein-conservation-assessment` |
+| `protein-degron-annotation` | ELM/DEGRONOPEDIA/QCDPred degron candidates | `$protein-degron-annotation` |
+| `protein-immunopresentation-annotation` | MHC-I processing/binding candidate annotation | `$protein-immunopresentation-annotation` |
+| `protein-annotation-report` | normalized evidence integration and reporting | `$protein-annotation-report` |
+| `protein-idr-disorder-annotation` | IDR/disorder, linker, LLPS and aggregation predictions | `$protein-idr-disorder-annotation` |
+| `protein-localization-signal-annotation` | DeepLoc, SignalP and TargetP normalization | `$protein-localization-signal-annotation` |
+| `protein-tm-topology-annotation` | DeepTMHMM/TMHMM topology normalization | `$protein-tm-topology-annotation` |
+| `protein-embedding` | ESM2/ESMC/ProtT5/Ankh/SaProt protein embeddings | `$protein-embedding` |
+| `protein-mutation-effect` | canonical multi-model protein mutation orchestration | `$protein-mutation-effect` |
+| `protein-sequence-mutation-effect` | sequence/evolutionary missense scoring | `$protein-sequence-mutation-effect` |
+| `protein-structure-mutation-effect` | structure-aware mutation scoring and residue mapping | `$protein-structure-mutation-effect` |
+| `protein-mutation-benchmark` | ProteinGym-compatible benchmarking and calibration | `$protein-mutation-benchmark` |
 
 Reference notes used during skill development are in [`Readme/`](./Readme/).
 
@@ -124,7 +149,7 @@ Architecture details: [`docs/architecture.md`](./docs/architecture.md).
 
 ## Routing and Agent Runtime
 
-The `s2f` agent turns open-ended genomics requests into deterministic, inspectable execution plans.
+The `s2f` agent turns open-ended genomic and protein requests into deterministic, inspectable execution plans.
 
 What it does on each query:
 
@@ -148,6 +173,13 @@ What it does on each query:
 ./scripts/route_query.sh --query "Need variant-effect guidance for hg38 chr12 REF ALT" --format json
 ./scripts/run_agent.sh --task variant-effect --query 'Use $alphagenome-api variant-effect on hg38 chr12 REF A ALT G' --format json
 ./scripts/execute_plan.sh --task variant-effect --query 'Use $alphagenome-api variant-effect on hg38 chr12 REF A ALT G'
+```
+
+Protein example:
+
+```bash
+./scripts/run_agent.sh --task protein-embedding --query 'Use $protein-embedding on proteins.fa for per-residue ESM2 embeddings' --format json
+./scripts/run_agent.sh --task protein-sequence-mutation-effect --query 'Use $protein-sequence-mutation-effect with WT FASTA proteins.fa and mutations.tsv' --format json
 ```
 
 Note: use single quotes around queries containing `$skill` to avoid shell expansion.

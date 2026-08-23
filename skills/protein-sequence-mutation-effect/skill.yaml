@@ -1,0 +1,74 @@
+schema_version: 1
+id: protein-sequence-mutation-effect
+title: Protein Sequence Mutation Effect
+path: skills/protein-sequence-mutation-effect
+status: active
+family: protein-mutation-effect
+tasks:
+  - protein-mutation-effect
+  - protein-sequence-variant-scoring
+  - zero-shot-mutation-scoring
+  - mutation-input-validation
+  - model-score-import
+  - environment-setup
+triggers:
+  - protein mutation effect
+  - amino acid substitution
+  - missense protein variant
+  - ESM-1v
+  - ESMC 300M
+  - MSA profile
+  - PoET
+  - AlphaMissense
+  - ProteinGym mutation table
+required_inputs:
+  - protein-sequence-source
+  - protein-mutation-spec-or-table
+optional_inputs:
+  - msa
+  - alphamissense-table
+  - model-score-table
+  - model-set
+  - execution-mode
+  - output-dir
+  - archive-policy
+input_mappings:
+  - protein-sequence-source|query_tokens=sequence,fasta,protein|script_flags=--fasta
+  - protein-mutation-spec-or-table|query_tokens=mutation,mutant,variant,A42V,p.Ala42Val|script_flags=--mutations-file,--mutation,--mutations
+  - msa|query_tokens=msa,a3m,alignment,homologs|script_flags=--msa
+  - alphamissense-table|query_tokens=AlphaMissense,predictions,lookup|script_flags=--alphamissense-table
+  - model-score-table|query_tokens=precomputed,import,scores,npy|script_flags=--import-scores,--poet-scores
+  - model-set|query_tokens=esm-1v,esmc,msa-profile,poet,alphamissense|script_flags=--models
+  - execution-mode|query_tokens=plan,execute,import,dry-run|script_flags=--mode
+  - output-dir|query_tokens=output,outdir,results|script_flags=--output-dir
+constraints:
+  - validate-protein-alphabet-and-wildtype-residues-before-model-download
+  - use-one-based-protein-coordinates
+  - preserve-variant-ids-and-multi-substitution-groups
+  - never-fabricate-scores-for-unavailable-backends
+  - alphamissense-is-precomputed-human-variant-lookup-not-arbitrary-inference
+  - keep-model-native-effect-axes-and-directions-explicit
+  - cleanup-only-known-run-intermediate-directories-after-archive
+tools:
+  - scripts/setup_sequence_mutation_env.py
+  - scripts/validate_protein_mutations.py
+  - scripts/run_sequence_mutation_effect.py
+tool_contracts:
+  - tool: scripts/validate_protein_mutations.py
+    inputs: [fasta, mutation-table-or-list]
+    outputs: [normalized-mutations-tsv, validation-summary-json]
+    side_effects: [writes-validation-artifacts]
+    failure_codes: [1, 2]
+  - tool: scripts/run_sequence_mutation_effect.py
+    inputs: [fasta, mutations-file, models, mode]
+    outputs: [scores-tsv, run-summary-json, manifest-json, commands-sh, logs]
+    side_effects: [writes-run-directory, may-download-models-in-execute-mode, may-run-external-poet]
+    failure_codes: [1, 2]
+priority_rules:
+  - prefer-for-protein-sequence-or-evolutionary-mutation-scoring
+  - defer-structure-conditioned-scoring-to-protein-structure-mutation-effect
+  - defer-genomic-coordinate-variants-to-variant-effect
+interface:
+  display_name: "Protein Sequence Mutation Effect"
+  short_description: "Score protein mutations with sequence and evolutionary models"
+  default_prompt: "Use $protein-sequence-mutation-effect to validate protein mutations and score them with ESM, MSA, PoET, or AlphaMissense evidence."

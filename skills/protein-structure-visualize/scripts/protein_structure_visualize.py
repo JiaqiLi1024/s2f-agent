@@ -27,6 +27,8 @@ Dependencies:
   requests>=2.28, networkx>=3.0, py3Dmol>=2.0
 """
 
+from __future__ import annotations
+
 import argparse
 import gzip
 import io
@@ -34,6 +36,7 @@ import json
 import os
 import shutil
 import sys
+import tempfile
 import textwrap
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional, Tuple
@@ -63,35 +66,34 @@ def write_result_json(outdir: str, result: Dict[str, Any]) -> str:
     return result_path
 
 
-try:
-    import matplotlib
-    matplotlib.use("Agg")
-    import matplotlib.patches as mpatches
-    import matplotlib.pyplot as plt
-    import numpy as np
-    import pandas as pd
-    import requests
+def load_runtime_dependencies() -> None:
+    global matplotlib, mpatches, plt, np, pd, requests, PDB, DSSP, MMCIFParser, PDBParser, Select, ShrakeRupley
+    try:
+        import matplotlib
+        matplotlib.use("Agg")
+        import matplotlib.patches as mpatches
+        import matplotlib.pyplot as plt
+        import numpy as np
+        import pandas as pd
+        import requests
+        from Bio import PDB
+        from Bio.PDB import DSSP, MMCIFParser, PDBParser, Select
+        from Bio.PDB.SASA import ShrakeRupley
+    except ImportError as exc:
+        outdir = extract_outdir_from_argv(sys.argv[1:])
+        if outdir:
+            write_result_json(outdir, {
+                "status": "failed", "skill": "protein-structure-visualize",
+                "started_at": utc_now(), "finished_at": utc_now(),
+                "error": f"Missing Python dependency: {exc}",
+                "recovery": "Install dependencies with: python -m pip install -r skills/protein-structure-visualize/requirements.txt",
+            })
+        raise SystemExit(
+            "Missing Python dependency. Install with: "
+            "python -m pip install -r skills/protein-structure-visualize/requirements.txt\n"
+            f"Import error: {exc}"
+        )
 
-    # Biopython — PDB parsing
-    from Bio import PDB
-    from Bio.PDB import DSSP, MMCIFParser, PDBParser, Select
-    from Bio.PDB.SASA import ShrakeRupley
-except ImportError as exc:
-    outdir = extract_outdir_from_argv(sys.argv[1:])
-    if outdir:
-        write_result_json(outdir, {
-            "status": "failed",
-            "skill": "protein-structure-visualize",
-            "started_at": utc_now(),
-            "finished_at": utc_now(),
-            "error": f"Missing Python dependency: {exc}",
-            "recovery": "Install dependencies with: python -m pip install -r skills/protein-structure-visualize/requirements.txt",
-        })
-    raise SystemExit(
-        "Missing Python dependency. Install with: "
-        "python -m pip install -r skills/protein-structure-visualize/requirements.txt\n"
-        f"Import error: {exc}"
-    )
 
 # =========================================================
 # Constants
@@ -426,14 +428,30 @@ def compute_secondary_structure_df(
     structure: PDB.Structure.Structure,
     pdb_path: str,
     chain_id: Optional[str] = None,
+    warning_sink: Optional[List[str]] = None,
 ) -> pd.DataFrame:
     """Return residue-level secondary structure with DSSP, falling back to HELIX/SHEET records."""
     model = structure[0]
     ss_data: List[Dict[str, Any]] = []
 
     dssp_success = False
+    dssp_input_path = pdb_path
+    dssp_tempdir: Optional[str] = None
     try:
-        dssp = DSSP(model, pdb_path, dssp="mkdssp")
+        # mkdssp 4.5+ accepts mmCIF input only. Most workflows in this skill
+        # resolve structures to PDB, so convert the already-parsed structure to
+        # a temporary mmCIF file before invoking DSSP. Older releases can also
+        # consume this representation.
+        if not pdb_path.lower().endswith((".cif", ".mmcif")):
+            from Bio.PDB import MMCIFIO
+
+            dssp_tempdir = tempfile.mkdtemp(prefix="s2f-dssp-")
+            dssp_input_path = os.path.join(dssp_tempdir, "structure.cif")
+            mmcif_writer = MMCIFIO()
+            mmcif_writer.set_structure(structure)
+            mmcif_writer.save(dssp_input_path)
+
+        dssp = DSSP(model, dssp_input_path, dssp="mkdssp", file_type="MMCIF")
         for key in dssp.property_dict:
             chain, (hetflag, resseq, icode) = key
             if chain_id and chain != chain_id:
@@ -441,8 +459,18 @@ def compute_secondary_structure_df(
             ss = dssp[key][2]
             ss_data.append({"chain": chain, "resseq": resseq, "ss": ss if ss in "HBEGITS-" else "-"})
         dssp_success = True
-    except Exception:
-        pass
+    except Exception as exc:
+        if shutil.which("mkdssp"):
+            message = (
+                f"DSSP assignment failed ({type(exc).__name__}: {exc}); "
+                "falling back to PDB HELIX/SHEET records."
+            )
+            if warning_sink is not None and message not in warning_sink:
+                warning_sink.append(message)
+            print(f"[WARN] {message}")
+    finally:
+        if dssp_tempdir:
+            shutil.rmtree(dssp_tempdir, ignore_errors=True)
 
     if not dssp_success:
         helix_ranges: List[Tuple[str, int, int]] = []
@@ -860,13 +888,16 @@ def plot_secondary_structure(
     outdir: str,
     prefix: str,
     chain_id: Optional[str] = None,
+    warning_sink: Optional[List[str]] = None,
 ) -> None:
     """
     Secondary structure assignment (DSSP) and composition bar chart.
     Falls back to a simplified helix/sheet detection from PDB HELIX/SHEET records
     if DSSP binary is unavailable.
     """
-    ss_df = compute_secondary_structure_df(structure, pdb_path, chain_id=chain_id)
+    ss_df = compute_secondary_structure_df(
+        structure, pdb_path, chain_id=chain_id, warning_sink=warning_sink
+    )
     if ss_df.empty:
         print("[WARN] No secondary structure data retrieved.")
         return
@@ -1845,6 +1876,7 @@ def main():
     parser.add_argument("--outdir", required=True, help="Output directory.")
 
     args = parser.parse_args()
+    load_runtime_dependencies()
     ensure_dir(args.outdir)
     warnings: List[str] = []
 
@@ -1960,6 +1992,7 @@ def main():
         plot_secondary_structure(
             structure, pdb_path, args.outdir, prefix,
             chain_id=chain_id if args.chain else None,
+            warning_sink=warnings,
         )
 
     if "highlight" in modules:
@@ -1974,7 +2007,9 @@ def main():
                 print(f"[WARN] {message}")
             else:
                 ss_df = (
-                    compute_secondary_structure_df(structure, pdb_path, chain_id=None)
+                    compute_secondary_structure_df(
+                        structure, pdb_path, chain_id=None, warning_sink=warnings
+                    )
                     if selected_secondary else pd.DataFrame()
                 )
                 if selected_secondary and ss_df.empty:

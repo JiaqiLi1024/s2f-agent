@@ -1,6 +1,6 @@
 # Skill Catalog
 
-All 11 packaged skills. Individual `SKILL.md` files are the operational source of truth for each skill. This page is the orientation catalog for choosing a skill.
+All packaged skills are discovered from `registry/skills.yaml`. Individual `SKILL.md` files are the operational source of truth for each skill; this page is the orientation catalog.
 
 ## Stable Skills (enabled by default)
 
@@ -13,6 +13,29 @@ All 11 packaged skills. Individual `SKILL.md` files are the operational source o
 | `gpn-models` | phylogenetic-language-models | framework-selection, loading, training, variant-scoring | gpn, phylogpn, gpn-star | `skills/gpn-models` | [SKILL.md](../skills/gpn-models/SKILL.md) |
 | `nucleotide-transformer-v3` | transformers-ntv3 | environment-setup, embedding, fine-tuning, track-prediction, troubleshooting | ntv3, species-conditioning, post-trained, bigwig, annotation | `skills/nucleotide-transformer-v3` | [SKILL.md](../skills/nucleotide-transformer-v3/SKILL.md) |
 | `segment-nt` | segmentation-heads | segmentation-inference, rescaling-factor, constraints, troubleshooting | segmentnt, segmentenformer, segmentborzoi | `skills/segment-nt` | [SKILL.md](../skills/segment-nt/SKILL.md) |
+
+## Protein Skills (enabled by default)
+
+| Skill ID | Family | Main contract |
+|---|---|---|
+| `protein-structure-get` | protein-structure-retrieval | public structure lookup and bounded hosted folding |
+| `protein-structure-visualize` | protein-structure-visualization | contacts, confidence, pockets, highlights and plots |
+| `protein-structure-align` | protein-structure-comparison | RMSD/superposition, interfaces, Foldseek |
+| `protein-domain-motif-annotation` | protein-sequence-annotation | InterProScan6/eggNOG evidence |
+| `protein-conservation-assessment` | protein-evolution | homolog/MSA/conservation evidence |
+| `protein-degron-annotation` | protein-sequence-annotation | candidate degron evidence |
+| `protein-immunopresentation-annotation` | protein-sequence-annotation | candidate MHC-I evidence |
+| `protein-annotation-report` | protein-evidence-integration | normalized summary/features/report |
+| `protein-idr-disorder-annotation` | protein-sequence-annotation | residue scores and threshold-derived regions |
+| `protein-localization-signal-annotation` | protein-sequence-annotation | localization and targeting-signal evidence |
+| `protein-tm-topology-annotation` | protein-sequence-annotation | TM regions and residue topology states |
+| `protein-embedding` | protein-language-model-embedding | protein/residue embeddings with model/layer provenance |
+| `protein-mutation-effect` | protein-mutation-effect | parent canonical orchestration |
+| `protein-sequence-mutation-effect` | protein-mutation-effect | sequence/evolutionary score axes |
+| `protein-structure-mutation-effect` | protein-mutation-effect | structure mapping and structure-aware axes |
+| `protein-mutation-benchmark` | protein-mutation-benchmarking | aligned truth, metrics, exclusions and manifest |
+
+Protein and genomic embedding contracts are intentionally separate. Mutation backends retain their native score name, direction, effect axis, model revision, and availability status.
 
 ## Dev Skills (disabled by default)
 
@@ -47,6 +70,17 @@ Dev skills require `--include-disabled` to participate in routing, linking, and 
 - Explicit skill/model mentions take priority (`$dnabert2`, `$nucleotide-transformer-v3`, NTv3 model ids).
 - Generic CSV fine-tuning queries with close evidence now return `decision=clarify` to ask which path should lead.
 - Explicit NTv3 requests produce mode-aware plans (`prep` vs `train`) with mode-specific artifact expectations.
+
+## Protein Mutation Skills
+
+| Skill ID | Role | Models/data | Primary outputs |
+|---|---|---|---|
+| protein-mutation-effect | Cross-model orchestration and canonical I/O | all supported mutation backends | normalized inputs, long score table, summary, manifest |
+| protein-sequence-mutation-effect | Sequence/evolution scoring | ESM-1v, ESMC 300M, MSA profile, PoET, AlphaMissense lookup | scores.tsv plus backend provenance |
+| protein-structure-mutation-effect | Structure-aware scoring and residue mapping | SaProt, ThermoMPNN, ProteinMPNN, ESM-IF1 | residue mapping and structure mutation scores |
+| protein-mutation-benchmark | Benchmark/data/evaluation layer | ProteinGym and compatible assays | metrics, aligned rows, exclusions, manifest |
+
+ProteinGym is intentionally listed as benchmark infrastructure rather than a prediction model. Keep sequence plausibility, evolutionary preference, structure-conditioned likelihood, stability, human missense prior, and benchmark calibration as separate effect axes.
 
 ## Including Disabled Skills
 

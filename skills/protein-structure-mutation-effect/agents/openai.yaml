@@ -1,0 +1,4 @@
+interface:
+  display_name: "Protein Structure Mutation Effect"
+  short_description: "Score protein mutations with structural models"
+  default_prompt: "Use $protein-structure-mutation-effect to score protein substitutions with structure-aware models and produce auditable outputs."

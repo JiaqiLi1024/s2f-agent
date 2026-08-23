@@ -574,6 +574,39 @@ def parse_aiupred_table(path: Path, args: argparse.Namespace) -> List[Dict[str, 
 
 def parse_generic_score_table(path: Path, source: str, args: argparse.Namespace) -> List[Dict[str, Any]]:
     rows: List[Dict[str, Any]] = []
+
+    # metapredict 3.x writes one comma-separated row per sequence:
+    # query_id, sequence, score_1, ..., score_N. Preserve support for the
+    # older residue-per-row TSV format below.
+    with path.open(encoding="utf-8", errors="replace", newline="") as handle:
+        for parts in csv.reader(handle, skipinitialspace=True):
+            if len(parts) < 3:
+                continue
+            query_id = safe_name(parts[0].strip())
+            sequence = re.sub(r"\s+", "", parts[1]).upper()
+            if not sequence or any(aa not in (CANONICAL_AA | AMBIGUOUS_AA) for aa in sequence):
+                continue
+            raw_scores = [item.strip() for item in parts[2:]]
+            if len(raw_scores) != len(sequence):
+                continue
+            scores = [as_float(item) for item in raw_scores]
+            if any(score is None for score in scores):
+                continue
+            for position, (residue, score) in enumerate(zip(sequence, scores), start=1):
+                rows.append(
+                    score_row(
+                        query_id,
+                        source,
+                        "disorder",
+                        position,
+                        residue,
+                        float(score),
+                        args.disorder_threshold,
+                    )
+                )
+    if rows:
+        return rows
+
     with path.open(encoding="utf-8", errors="replace") as handle:
         reader = csv.reader(handle, delimiter="\t")
         header: Optional[List[str]] = None
@@ -1336,10 +1369,16 @@ def main() -> int:
                 if path.exists():
                     score_rows.extend(parse_aiupred_table(path, args))
         if "metapredict" in plans:
-            for expected in plans["metapredict"].get("expected_files", []):
-                path = Path(expected)
-                if path.exists():
-                    score_rows.extend(parse_generic_score_table(path, "metapredict", args))
+            expected_files = plans["metapredict"].get("expected_files", [])
+            disorder_path = Path(expected_files[0]) if expected_files else None
+            if disorder_path is None or not disorder_path.exists():
+                errors.append("metapredict disorder output was not created")
+            else:
+                parsed_metapredict = parse_generic_score_table(disorder_path, "metapredict", args)
+                if parsed_metapredict:
+                    score_rows.extend(parsed_metapredict)
+                else:
+                    errors.append(f"metapredict disorder output could not be parsed: {disorder_path}")
         if "iupred3_local" in plans:
             for expected in plans["iupred3_local"].get("expected_files", []):
                 path = Path(expected)

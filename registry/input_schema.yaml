@@ -1,5 +1,5 @@
 schema_version: 1
-updated_at: "2026-07-06"
+updated_at: "2026-08-23"
 
 coordinate_conventions:
   interval:
@@ -24,6 +24,19 @@ legacy_key_map:
   interval-or-variant: coordinate-or-interval
   vcf: vcf-input
   vcf-path: vcf-input
+  msa: protein-msa-source
+  alphamissense-table: precomputed-score-source
+  model-score-table: precomputed-score-source
+  model-set: protein-mutation-model-set
+  adapter-mode: execution-mode
+  assay-data: protein-mutation-benchmark-input
+  model-scores: protein-mutation-score-input
+  archive-policy: cleanup-policy
+  structure: protein-structure-source
+  fasta: protein-sequence-source
+  mutations: protein-mutation-spec-or-table
+  mutations-file: protein-mutation-spec-or-table
+  scores: protein-mutation-score-input
 
 inputs:
   - key: target-stack-or-model-family
@@ -981,6 +994,9 @@ inputs:
       - local pdb
       - structure file
       - protein structure
+      - mmcif
+      - cif file
+      - alphafold structure
       - 结构文件
     examples:
       - "1TUP"
@@ -1470,6 +1486,241 @@ inputs:
     examples:
       - "predict"
       - "skip"
+
+  - key: protein-sequence-source
+    type: union
+    subtypes:
+      - name: raw-amino-acid-sequence
+        query_tokens: [protein sequence, amino acid sequence, wild type sequence]
+      - name: protein-fasta-source
+        query_tokens: [protein fasta, fasta, proteins.fa]
+    query_tokens:
+      - protein sequence
+      - amino acid sequence
+      - protein fasta
+      - wild type
+      - WT sequence
+      - 蛋白序列
+    examples:
+      - "ACDEFGHIKLMNPQRSTVWY"
+      - "proteins.fasta"
+
+  - key: protein-mutation-spec-or-table
+    type: union
+    subtypes:
+      - name: protein-substitution
+        query_tokens: [A42V, p.Ala42Val, missense, amino acid substitution]
+      - name: protein-mutation-table
+        query_tokens: [mutation table, mutation_group, variant_id]
+    query_tokens:
+      - protein mutation
+      - amino acid mutation
+      - missense
+      - substitution
+      - mutation table
+      - 突变
+      - 氨基酸替换
+    examples:
+      - "A42V"
+      - "A42V:G55D"
+      - "mutations.tsv"
+
+  - key: protein-mutation-model-set
+    type: list
+    query_tokens:
+      - ESM-1v
+      - ESMC 300M
+      - SaProt
+      - ThermoMPNN
+      - MSA profile
+      - AlphaMissense
+      - PoET
+      - ProteinMPNN
+      - ESM-IF1
+    examples:
+      - "esm1v,msa-profile,thermompnn"
+
+  - key: protein-msa-source
+    type: path
+    query_tokens:
+      - MSA
+      - multiple sequence alignment
+      - A3M
+      - aligned homologs
+      - profile
+    examples:
+      - "homologs.a3m"
+
+  - key: precomputed-score-source
+    type: path
+    query_tokens:
+      - precomputed scores
+      - score table
+      - AlphaMissense table
+      - import scores
+    examples:
+      - "AlphaMissense_hg38.tsv.gz"
+      - "external_scores.tsv"
+
+  - key: execution-mode
+    type: enum
+    values: [plan, execute, import]
+    query_tokens:
+      - plan
+      - execute
+      - import
+      - dry run
+      - real run
+    examples:
+      - "plan"
+      - "execute"
+
+  - key: protein-mutation-benchmark-input
+    type: union
+    subtypes:
+      - name: proteingym-assay
+        query_tokens: [ProteinGym assay, DMS_score, assay data]
+      - name: clinical-benchmark
+        query_tokens: [clinical benchmark, pathogenic label]
+    query_tokens:
+      - ProteinGym
+      - DMS
+      - assay
+      - benchmark
+      - DMS_score
+    examples:
+      - "ProteinGym substitution assay CSV"
+
+  - key: protein-mutation-score-input
+    type: path
+    query_tokens:
+      - protein mutation scores
+      - zero shot scores
+      - model score table
+      - protein_mutation_scores.tsv
+    examples:
+      - "protein_mutation_scores.tsv"
+
+  - key: sequence-or-fasta
+    type: union
+    subtypes:
+      - name: raw-protein-sequence
+        query_tokens: [sequence, amino acid sequence]
+      - name: fasta-path
+        query_tokens: [fasta, protein fasta]
+    query_tokens: [sequence, fasta, protein sequence]
+    examples: ["ACDEFGHIK", "proteins.fasta"]
+
+  - key: env-dir
+    type: path
+    query_tokens: [environment directory, env-dir, venv, conda env]
+    examples: [".venv-protein-model"]
+
+  - key: backend
+    type: enum
+    query_tokens: [backend, local, hosted, huggingface, api]
+    examples: ["hf-transformers"]
+
+  - key: model-family
+    type: string
+    query_tokens: [model family, checkpoint, ESM, SaProt]
+    examples: ["esmc"]
+
+  - key: representation-type
+    type: enum
+    query_tokens: [representation, hidden state, SAE feature]
+    examples: ["hidden-state"]
+
+  - key: layer-selection
+    type: string
+    query_tokens: [layer, last layer, all layers]
+    examples: ["last"]
+
+  - key: pooling-strategy
+    type: enum
+    query_tokens: [pooling, mean, BOS, CLS]
+    examples: ["mean"]
+
+  - key: sequence-validation-policy
+    type: string
+    query_tokens: [ambiguous residue, rare amino acid, validation policy]
+    examples: ["canonical-only"]
+
+  - key: biohub-token-env
+    type: string
+    query_tokens: [BIOHUB_API_TOKEN, ESM_API_KEY, token environment]
+    examples: ["BIOHUB_API_TOKEN"]
+
+  - key: sae-model
+    type: string
+    query_tokens: [SAE model, sparse autoencoder, SAE checkpoint]
+    examples: ["esmc-6b-sae-layer60"]
+
+  - key: structure-chain
+    type: string
+    query_tokens: [chain, asym_id, auth_asym_id]
+    examples: ["A"]
+
+  - key: residue-numbering-system
+    type: enum
+    values: [canonical-sequence, pdb-auth, mmcif-auth]
+    query_tokens: [residue numbering, sequence position, PDB auth, insertion code]
+    examples: ["canonical-sequence"]
+
+  - key: adapter-command-or-import
+    type: union
+    subtypes:
+      - name: adapter-command
+        query_tokens: [adapter command, external command]
+      - name: imported-model-output
+        query_tokens: [import file, model output]
+    query_tokens: [adapter, command, import, model output]
+    examples: ["thermompnn=/path/to/adapter", "scores.tsv"]
+
+  - key: assay-id
+    type: string
+    query_tokens: [assay, assay id, DMS_id, dataset]
+    examples: ["BLAT_ECOLX_Stiffler_2015"]
+
+  - key: benchmark-regime
+    type: enum
+    values: [zero-shot-dms, supervised-dms, clinical]
+    query_tokens: [zero shot, supervised, DMS, clinical, benchmark regime]
+    examples: ["zero-shot-dms"]
+
+  - key: mutation-type
+    type: enum
+    values: [substitution, indel, mixed]
+    query_tokens: [substitution, indel, missense, insertion, deletion]
+    examples: ["substitution"]
+
+  - key: score-direction
+    type: enum
+    values: [higher-is-better, lower-is-better, backend-defined]
+    query_tokens: [higher_is, lower is better, score direction]
+    examples: ["higher-is-better"]
+
+  - key: classification-threshold
+    type: number
+    query_tokens: [classification threshold, MCC threshold, cutoff]
+    examples: ["0.0"]
+
+  - key: ndcg-cutoff
+    type: integer
+    query_tokens: [NDCG, top k, ranking cutoff]
+    examples: ["10"]
+
+  - key: cleanup-policy
+    type: enum
+    values: [keep, archive, cleanup-after-archive]
+    query_tokens: [archive, cleanup, intermediate retention]
+    examples: ["archive"]
+
+  - key: existing-output-policy
+    type: enum
+    values: [fail, reuse, allow-existing-output]
+    query_tokens: [existing output, reuse, overwrite]
+    examples: ["fail"]
 
   - key: sequence
     deprecated: true

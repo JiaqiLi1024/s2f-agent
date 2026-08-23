@@ -1,6 +1,151 @@
 schema_version: 1
-updated_at: "2026-07-06"
+updated_at: "2026-08-23"
 contracts:
+  protein-embedding:
+    assumptions:
+      - protein-and-genomic-embedding-contracts-are-domain-separated
+      - validate-amino-acid-alphabet-before-model-download
+      - preserve-fasta-identifiers-as-embedding-identifiers
+      - embedding-target-and-layer-selection-must-be-explicit-in-run-summary
+      - bos-and-eos-tokens-are-excluded-from-per-residue-outputs
+      - default-local-backend-is-huggingface-esm2-unless-user-selects-another-family
+      - hosted-biohub-execution-requires-explicit-backend-and-token-environment
+    runnable_steps:
+      - python skills/protein-embedding/scripts/validate_protein_fasta.py --fasta <PROTEIN_FASTA>
+      - python skills/protein-embedding/scripts/run_real_protein_embedding_workflow.py --fasta <PROTEIN_FASTA> --model-family esm2 --embedding-type <PER_PROTEIN_OR_PER_RESIDUE_OR_BOTH> --dry-run --output-dir output/protein-embedding/<RUN_ID>
+      - python skills/protein-embedding/scripts/run_real_protein_embedding_workflow.py --fasta <PROTEIN_FASTA> --model-family esm2 --embedding-type <PER_PROTEIN_OR_PER_RESIDUE_OR_BOTH> --output-dir output/protein-embedding/<RUN_ID>
+      - awk 'NR<=180{print}' playbooks/protein-embedding/README.md
+    expected_outputs:
+      - plan-json:protein-embedding
+      - expected-file:output/protein-embedding/<RUN_ID>/run_summary.json
+      - expected-file:output/protein-embedding/<RUN_ID>/embeddings.npz
+      - optional-file:output/protein-embedding/<RUN_ID>/protein_embeddings.tsv
+      - optional-file:output/protein-embedding/<RUN_ID>/validation.json
+    fallbacks:
+      - ask-for-protein-sequence-or-fasta-and-embedding-target-if-missing
+      - use-dry-run-and-small-esm2-checkpoint-before-large-model-download
+      - reduce-from-per-residue-or-all-layer-output-to-per-protein-last-layer-when-memory-is-limited
+      - switch-between-supported-protein-model-families-without-routing-to-genomic-embedding-skills
+      - use-local-files-only-or-an-already-cached-checkpoint-when-network-access-is-unavailable
+    retry_policy: clarify-protein-input-target-model-and-backend-then-dry-run-once
+
+  protein-sequence-mutation-effect:
+    assumptions:
+      - protein-residue-numbering-is-1-based-and-wild-type-residues-must-match
+      - sequence-and-evolutionary-model-scores-retain-native-effect-axes
+      - alphamissense-is-a-precomputed-human-missense-lookup-not-arbitrary-inference
+      - missing-model-assets-produce-unavailable-status-never-zero-or-fabricated-scores
+    runnable_steps:
+      - python skills/protein-sequence-mutation-effect/scripts/validate_protein_mutations.py --fasta <WT_FASTA> --mutations-file <MUTATIONS_TSV> --output output/protein-sequence-mutation-effect/<RUN_ID>/inputs/normalized_mutations.tsv --summary-json output/protein-sequence-mutation-effect/<RUN_ID>/inputs/validation.json
+      - python skills/protein-sequence-mutation-effect/scripts/run_sequence_mutation_effect.py --fasta <WT_FASTA> --mutations-file <MUTATIONS_TSV> --models esm-1v,esmc-300m,msa-profile,poet,alphamissense --mode plan --output-dir output/protein-sequence-mutation-effect/<RUN_ID>
+      - awk 'NR<=180{print}' playbooks/protein-mutation-effect/README.md
+    expected_outputs:
+      - plan-json:protein-sequence-mutation-effect
+      - expected-file:output/protein-sequence-mutation-effect/<RUN_ID>/normalized_mutations.tsv
+      - expected-file:output/protein-sequence-mutation-effect/<RUN_ID>/scores.tsv
+      - expected-file:output/protein-sequence-mutation-effect/<RUN_ID>/run_summary.json
+      - expected-file:output/protein-sequence-mutation-effect/<RUN_ID>/manifest.json
+      - expected-file:output/protein-sequence-mutation-effect/<RUN_ID>/commands.sh
+    fallbacks:
+      - use-plan-mode-before-model-downloads
+      - run-a-user-selected-subset-of-sequence-models
+      - import-precomputed-alphamissense-poet-or-model-score-tables
+      - retry-only-failed-backend-and-preserve-successful-results
+    retry_policy: clarify-sequence-numbering-msa-or-model-assets-then-retry-failed-backend-once
+
+  protein-structure-mutation-effect:
+    assumptions:
+      - protein-residue-numbering-is-1-based-and-wild-type-residues-must-match
+      - validate-sequence-to-structure-chain-mapping-before-scoring
+      - thermompnn-positive-ddg-is-destabilizing-in-canonical-output
+      - proteinmpnn-and-esm-if1-likelihoods-are-proxies-not-direct-stability-measurements
+      - raw-scores-from-structure-models-are-never-averaged-without-calibration
+      - missing-structure-or-backend-produces-unavailable-status-never-a-fabricated-score
+    runnable_steps:
+      - python skills/protein-structure-mutation-effect/scripts/validate_structure_mutations.py --fasta <WT_FASTA> --structure <PDB_OR_MMCIF> --chain <CHAIN> --mutations-file <MUTATIONS_TSV> --output-dir output/protein-structure-mutation-effect/<RUN_ID>/inputs
+      - python skills/protein-structure-mutation-effect/scripts/run_structure_mutation_effect.py --fasta <WT_FASTA> --structure <PDB_OR_MMCIF> --chain <CHAIN> --mutations-file <MUTATIONS_TSV> --models saprot,thermompnn,proteinmpnn,esm-if1 --mode plan --output-dir output/protein-structure-mutation-effect/<RUN_ID>
+      - awk 'NR<=180{print}' playbooks/protein-mutation-effect/README.md
+    expected_outputs:
+      - plan-json:protein-structure-mutation-effect
+      - expected-file:output/protein-structure-mutation-effect/<RUN_ID>/normalized_mutations.tsv
+      - expected-file:output/protein-structure-mutation-effect/<RUN_ID>/residue_mapping.tsv
+      - expected-file:output/protein-structure-mutation-effect/<RUN_ID>/structure_mutation_scores.tsv
+      - expected-file:output/protein-structure-mutation-effect/<RUN_ID>/run_summary.json
+      - expected-file:output/protein-structure-mutation-effect/<RUN_ID>/manifest.json
+      - expected-file:output/protein-structure-mutation-effect/<RUN_ID>/commands.sh
+    fallbacks:
+      - ask-for-structure-and-chain-when-structure-conditioned-scoring-is-required
+      - use-sequence-mutation-effect-when-no-valid-structure-mapping-is-available
+      - import-precomputed-structure-model-outputs
+      - retry-only-failed-backend-and-preserve-successful-results
+    retry_policy: clarify-structure-chain-numbering-and-model-assets-then-retry-failed-backend-once
+
+  protein-mutation-effect:
+    assumptions:
+      - protein-residue-numbering-is-1-based-and-wild-type-residues-must-match
+      - sequence-structure-stability-and-human-prior-scores-remain-separate-effect-axes
+      - raw-scores-from-different-models-are-never-averaged-without-explicit-calibration
+      - alphamissense-is-a-precomputed-human-missense-lookup-not-arbitrary-inference
+      - proteinmpnn-and-esm-if1-likelihoods-are-proxies-not-direct-stability-measurements
+      - missing-model-assets-produce-unavailable-status-never-zero-or-fabricated-scores
+    runnable_steps:
+      - python skills/protein-mutation-effect/scripts/normalize_protein_mutations.py --fasta <WT_FASTA> --mutation <PROTEIN_ID:A42V> --output-dir output/protein-mutation-effect/<RUN_ID>/inputs
+      - python skills/protein-mutation-effect/scripts/run_protein_mutation_effect.py --fasta <WT_FASTA> --mutations-file <MUTATIONS_TSV> --models esm1v,esmc-300m,msa-profile,saprot,thermompnn,poet,proteinmpnn,esm-if1,alphamissense --mode plan --output-dir output/protein-mutation-effect/<RUN_ID>
+      - awk 'NR<=180{print}' playbooks/protein-mutation-effect/README.md
+    expected_outputs:
+      - plan-json:protein-mutation-effect
+      - expected-file:output/protein-mutation-effect/<RUN_ID>/inputs/normalized_sequences.fasta
+      - expected-file:output/protein-mutation-effect/<RUN_ID>/inputs/normalized_mutations.tsv
+      - expected-file:output/protein-mutation-effect/<RUN_ID>/protein_mutation_scores.tsv
+      - expected-file:output/protein-mutation-effect/<RUN_ID>/protein_mutation_summary.json
+      - expected-file:output/protein-mutation-effect/<RUN_ID>/run_manifest.json
+      - expected-file:output/protein-mutation-effect/<RUN_ID>/commands.sh
+    output_columns:
+      scores:
+        - protein_id
+        - variant_id
+        - mutation_group
+        - mutation
+        - model_family
+        - model_id
+        - model_revision
+        - score_name
+        - effect_axis
+        - native_effect_axis
+        - raw_score
+        - score_unit
+        - higher_is
+        - native_higher_is
+        - status
+        - error
+        - source_path
+    fallbacks:
+      - use-plan-mode-before-model-downloads
+      - run-sequence-models-when-no-structure-is-available
+      - import-precomputed-alphamissense-or-external-model-scores
+      - retry-only-failed-backend-and-preserve-successful-raw-results
+    retry_policy: clarify-sequence-numbering-or-required-assets-then-retry-failed-backend-once
+  protein-mutation-benchmark:
+    assumptions:
+      - proteingym-is-a-benchmark-data-and-evaluation-substrate-not-a-prediction-model
+      - compare-scores-within-the-same-assay-and-directionality-convention
+      - prevent-assay-protein-and-homology-leakage-in-supervised-evaluation
+      - report-exclusions-and-coverage-with-every-metric
+    runnable_steps:
+      - python skills/protein-mutation-benchmark/scripts/run_proteingym_benchmark.py --assay-data <PROTEINGYM_CSV> --scores <PROTEIN_MUTATION_SCORES_TSV> --output-dir output/protein-mutation-benchmark/<RUN_ID>
+      - awk 'NR<=180{print}' playbooks/protein-mutation-benchmark/README.md
+    expected_outputs:
+      - plan-json:protein-mutation-benchmark
+      - expected-file:output/protein-mutation-benchmark/<RUN_ID>/metrics.tsv
+      - expected-file:output/protein-mutation-benchmark/<RUN_ID>/summary.json
+      - expected-file:output/protein-mutation-benchmark/<RUN_ID>/alignment_report.tsv
+      - expected-file:output/protein-mutation-benchmark/<RUN_ID>/exclusions.tsv
+      - expected-file:output/protein-mutation-benchmark/<RUN_ID>/run_manifest.json
+    fallbacks:
+      - use-a-small-explicit-assay-subset-before-downloading-the-full-release
+      - report-spearman-only-when-class-labels-are-unavailable
+      - import-local-proteingym-assay-files-when-network-download-is-not-approved
+    retry_policy: clarify-assay-score-key-and-directionality-then-realign-once
   variant-effect:
     assumptions:
       - coordinate-convention-must-be-explicit

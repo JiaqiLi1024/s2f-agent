@@ -1,5 +1,5 @@
 schema_version: 1
-updated_at: "2026-07-08"
+updated_at: "2026-07-19"
 skills:
   - id: alphagenome-api
     path: skills/alphagenome-api
@@ -578,3 +578,96 @@ skills:
       - ESMC SAE
       - SAE feature
       - protein representation
+  - id: protein-mutation-effect
+    path: skills/protein-mutation-effect
+    enabled: true
+    family: protein-mutation-effect-orchestration
+    tasks:
+      - protein-mutation-effect
+      - protein-mutation-scoring
+      - protein-missense-scoring
+      - protein-multi-mutant-scoring
+      - model-selection
+      - environment-setup
+      - troubleshooting
+    triggers:
+      - protein mutation effect
+      - protein variant effect
+      - amino acid substitution
+      - missense scoring
+      - mutation fitness
+      - ESM-1v
+      - ESMC 300M
+      - SaProt mutation
+      - ThermoMPNN
+      - MSA profile score
+      - AlphaMissense
+      - PoET
+      - ProteinMPNN
+      - ESM-IF1
+
+  - id: protein-sequence-mutation-effect
+    path: skills/protein-sequence-mutation-effect
+    enabled: true
+    family: protein-mutation-effect
+    tasks:
+      - protein-mutation-effect
+      - protein-sequence-variant-scoring
+      - zero-shot-mutation-scoring
+      - mutation-input-validation
+      - model-score-import
+      - environment-setup
+    triggers:
+      - protein mutation effect
+      - amino acid substitution
+      - missense protein variant
+      - ESM-1v
+      - ESMC 300M
+      - MSA profile
+      - PoET
+      - AlphaMissense
+      - ProteinGym mutation table
+
+  - id: protein-structure-mutation-effect
+    path: skills/protein-structure-mutation-effect
+    enabled: true
+    family: protein-mutation-effect
+    tasks:
+      - protein-mutation-effect
+      - structure-aware-mutation-scoring
+      - protein-stability-change
+      - inverse-folding-likelihood
+      - residue-coordinate-mapping
+      - environment-setup
+      - model-output-import
+      - troubleshooting
+    triggers:
+      - SaProt mutation
+      - ThermoMPNN
+      - ProteinMPNN mutation score
+      - ESM-IF1
+      - structure-aware mutation effect
+      - protein ddG
+      - inverse folding log odds
+      - PDB residue mapping
+      - mmCIF mutation
+
+  - id: protein-mutation-benchmark
+    path: skills/protein-mutation-benchmark
+    enabled: true
+    family: protein-mutation-benchmarking
+    tasks:
+      - protein-mutation-benchmark
+      - proteingym-data-acquisition
+      - assay-schema-validation
+      - mutation-score-alignment
+      - benchmark-evaluation
+      - benchmark-troubleshooting
+    triggers:
+      - ProteinGym
+      - protein mutation benchmark
+      - DMS benchmark
+      - mutation score evaluation
+      - Spearman mutation effect
+      - zero-shot protein benchmark
+      - clinical variant benchmark

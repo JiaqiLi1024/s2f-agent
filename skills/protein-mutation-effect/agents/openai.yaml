@@ -1,0 +1,4 @@
+interface:
+  display_name: "Protein Mutation Effect"
+  short_description: "Orchestrate multi-model protein mutation scoring"
+  default_prompt: "Use $protein-mutation-effect to validate protein mutations, select compatible sequence and structure models, and produce comparable provenance-rich outputs."

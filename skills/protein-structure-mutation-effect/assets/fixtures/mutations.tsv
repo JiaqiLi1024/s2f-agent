@@ -1,0 +1,3 @@
+protein_id	variant_id	mutation_group	mutation	chain	numbering
+toy_protein	v1	A1V	A1V	A	sequence
+toy_protein	v2	C2A	C2A	A	sequence

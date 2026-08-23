@@ -1,6 +1,34 @@
 schema_version: 1
-updated_at: "2026-07-06"
+updated_at: "2026-08-23"
 policies:
+  protein-embedding:
+    retry_policy: clarify-protein-input-target-model-layer-and-backend-then-dry-run-once
+    fallback_skills: []
+  protein-sequence-mutation-effect:
+    retry_policy: clarify-sequence-numbering-msa-or-model-assets-then-retry-failed-backend-once
+    fallback_skills:
+      - protein-mutation-effect
+      - protein-mutation-benchmark
+  protein-structure-mutation-effect:
+    retry_policy: clarify-structure-chain-numbering-and-model-assets-then-retry-failed-backend-once
+    fallback_skills:
+      - protein-sequence-mutation-effect
+      - protein-mutation-effect
+  protein-mutation-effect:
+    retry_policy: clarify-sequence-numbering-model-assets-or-structure-mapping-then-retry-failed-backend-once
+    fallback_skills:
+      - protein-sequence-mutation-effect
+      - protein-structure-mutation-effect
+      - protein-mutation-benchmark
+  protein-mutation-benchmark:
+    retry_policy: clarify-assay-score-key-and-directionality-then-realign-once
+    fallback_skills:
+      - protein-mutation-effect
+      - protein-sequence-mutation-effect
+  protein-mutation-scoring:
+    retry_policy: preserve-completed-models-and-retry-only-failed-adapter
+    fallback_skills:
+      - protein-mutation-effect
   variant-effect:
     retry_policy: adaptive-window-fallback-with-timeout-proxy-retry
     fallback_skills:
@@ -70,3 +98,13 @@ policies:
     fallback_skills:
       - protein-annotation-report
       - protein-domain-motif-annotation
+  protein-localization-signal-annotation:
+    retry_policy: clarify-sequence-tool-selection-organism-or-import-files-then-dry-run-once
+    fallback_skills:
+      - protein-tm-topology-annotation
+      - protein-annotation-report
+  protein-tm-topology-annotation:
+    retry_policy: clarify-sequence-tool-selection-or-import-files-then-dry-run-once
+    fallback_skills:
+      - protein-localization-signal-annotation
+      - protein-annotation-report

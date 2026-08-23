@@ -1,5 +1,5 @@
 schema_version: 1
-updated_at: "2026-07-06"
+updated_at: "2026-08-23"
 cases:
   - id: grounded_001
     query: "Help me run AlphaGenome predict_variant on hg38 with REF ALT."
@@ -103,3 +103,64 @@ cases:
     expected_primary_skill: protein-immunopresentation-annotation
     required_constraint_contains: immunopresentation-results-are-candidate-annotations-not-confirmed-immunogenicity
     forbidden_substring: guaranteed-immunogenic
+
+  - id: grounded_018
+    query: "Retrieve the public AlphaFold DB structure for UniProt P04637."
+    task: protein-structure-lookup
+    expected_primary_skill: protein-structure-get
+    required_constraint_contains: retrieval-not-de-novo-structure-prediction
+    forbidden_substring: guaranteed-native-structure
+  - id: grounded_019
+    query: "Use $protein-structure-visualize to detect candidate pockets in structure 1AKE."
+    task: protein-structure-visualization
+    expected_primary_skill: protein-structure-visualize
+    required_constraint_contains: pocket-detection-is-heuristic-not-docking
+    forbidden_substring: validated-binding-energy
+  - id: grounded_020
+    query: "Annotate domains in proteins.fa with InterProScan6 and eggNOG-mapper reproducibly."
+    task: protein-domain-motif-annotation
+    expected_primary_skill: protein-domain-motif-annotation
+    required_constraint_contains: interproscan6-version-and-interpro-data-release-should-be-pinned-for-reproducibility
+    forbidden_substring: experimentally-confirmed-function
+  - id: grounded_021
+    query: "Use $protein-annotation-report to create a report from an unknown protein sequence and local motif matches."
+    task: protein-annotation-report
+    expected_primary_skill: protein-annotation-report
+    required_constraint_contains: local-regex-motif-hits-are-candidates-not-confirmed-functional-sites
+    forbidden_substring: motif-proves-function
+  - id: grounded_022
+    query: "Use gget ELM while assessing intrinsically disordered regions in proteins.fa."
+    task: protein-idr-disorder-annotation
+    expected_primary_skill: protein-idr-disorder-annotation
+    required_constraint_contains: gget-elm-is-motif-context-not-a-disorder-predictor
+    forbidden_substring: elm-confirms-disorder
+  - id: grounded_023
+    query: "Use SignalP to annotate a signal peptide and help assess subcellular localization for proteins.fa."
+    task: protein-localization-signal-annotation
+    expected_primary_skill: protein-localization-signal-annotation
+    required_constraint_contains: signalp-predicts-signal-peptides-and-cleavage-sites-not-final-localization
+    forbidden_substring: signalp-confirms-final-localization
+  - id: grounded_024
+    query: "Import DeepTMHMM GFF3 and draw a topology plot for proteins.fa."
+    task: protein-tm-topology-annotation
+    expected_primary_skill: protein-tm-topology-annotation
+    required_constraint_contains: gff3-derived-plots-are-topology-state-plots-not-posterior-probability-curves
+    forbidden_substring: posterior-probability-plot
+  - id: grounded_025
+    query: "Generate per-residue ESM2 protein embeddings from proteins.fa."
+    task: protein-embedding
+    expected_primary_skill: protein-embedding
+    required_constraint_contains: validate-protein-alphabet-before-model-download
+    forbidden_substring: genomic-embedding-fallback
+  - id: grounded_026
+    query: "Use $protein-sequence-mutation-effect with AlphaMissense to score substitutions in a wild-type protein FASTA."
+    task: protein-sequence-mutation-effect
+    expected_primary_skill: protein-sequence-mutation-effect
+    required_constraint_contains: alphamissense-is-precomputed-human-variant-lookup-not-arbitrary-inference
+    forbidden_substring: alphamissense-arbitrary-inference
+  - id: grounded_027
+    query: "Use $protein-structure-mutation-effect to score A42V on chain A of model.pdb with ESM-IF1."
+    task: protein-structure-mutation-effect
+    expected_primary_skill: protein-structure-mutation-effect
+    required_constraint_contains: inverse-folding-log-likelihood-is-a-proxy-not-direct-stability
+    forbidden_substring: experimentally-validated-stability

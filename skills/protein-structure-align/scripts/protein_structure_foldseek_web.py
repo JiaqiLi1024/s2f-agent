@@ -11,8 +11,6 @@ import time
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
 
-import pandas as pd
-import requests
 
 
 RESULT_JSON_NAME = "protein_structure_foldseek_web.result.json"
@@ -517,6 +515,12 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: Optional[Sequence[str]] = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
+    global pd, requests
+    try:
+        import pandas as pd
+        import requests
+    except ImportError as exc:
+        parser.error(f"Missing Python dependency: {exc}. Install with: python -m pip install -r skills/protein-structure-align/requirements.txt")
 
     outdir = Path(args.outdir).expanduser()
     outdir.mkdir(parents=True, exist_ok=True)

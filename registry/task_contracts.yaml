@@ -1,9 +1,127 @@
 schema_version: 1
-updated_at: "2026-07-06"
+updated_at: "2026-08-23"
 task_aliases:
   setup: environment-setup
   general-troubleshooting: troubleshooting
+
+  # Protein task aliases resolve to one canonical contract per workflow family.
+  protein-feature-annotation: protein-structure-lookup
+  pdb-structure-lookup: protein-structure-lookup
+  alphafold-db-lookup: protein-structure-lookup
+  domain-map: protein-structure-lookup
+  esmfold-structure-prediction: protein-structure-lookup
+  protein-pymol-visualization-setup: protein-structure-lookup
+
+  protein-contact-map: protein-structure-visualization
+  protein-pocket-detection: protein-structure-visualization
+  protein-structure-confidence: protein-structure-visualization
+  protein-secondary-structure: protein-structure-visualization
+  protein-structure-highlight: protein-structure-visualization
+  protein-ppi-network: protein-structure-visualization
+
+  protein-rmsd-comparison: protein-structure-alignment
+  protein-tm-score: protein-structure-alignment
+  protein-pae-analysis: protein-structure-alignment
+  protein-contact-map-comparison: protein-structure-alignment
+  protein-interface-contact-map: protein-structure-alignment
+  protein-structure-similarity-search: protein-structure-alignment
+  protein-structure-clustering: protein-structure-alignment
+  protein-conformation-comparison: protein-structure-alignment
+
+  protein-family-annotation: protein-domain-motif-annotation
+  protein-orthology-annotation: protein-domain-motif-annotation
+  protein-go-pathway-annotation: protein-domain-motif-annotation
+
+  protein-homolog-search: protein-conservation-assessment
+  protein-msa-conservation: protein-conservation-assessment
+  protein-conserved-region-annotation: protein-conservation-assessment
+  protein-conservation-report: protein-conservation-assessment
+
+  protein-degradation-signal-annotation: protein-degron-annotation
+  protein-elm-degron-scan: protein-degron-annotation
+  protein-degronopedia-annotation: protein-degron-annotation
+  protein-qcdpred-degron-prediction: protein-degron-annotation
+  protein-degron-report: protein-degron-annotation
+
+  protein-mhci-peptide-prediction: protein-immunopresentation-annotation
+  protein-iedb-mhci-annotation: protein-immunopresentation-annotation
+  protein-hla-binder-annotation: protein-immunopresentation-annotation
+  protein-immunogenicity-candidate-annotation: protein-immunopresentation-annotation
+  protein-epitope-candidate-report: protein-immunopresentation-annotation
+
+  protein-uniprot-annotation: protein-annotation-report
+  protein-functional-annotation: protein-annotation-report
+  protein-llps-report: protein-annotation-report
+  protein-aggregation-report: protein-annotation-report
+
+  protein-disorder-composition: protein-idr-disorder-annotation
+  protein-idr-region-calling: protein-idr-disorder-annotation
+  protein-disordered-binding-annotation: protein-idr-disorder-annotation
+  protein-linker-annotation: protein-idr-disorder-annotation
+  protein-redox-disorder-annotation: protein-idr-disorder-annotation
+  protein-llps-annotation: protein-idr-disorder-annotation
+  protein-aggregation-prone-region-annotation: protein-idr-disorder-annotation
+  protein-disorder-visualization: protein-idr-disorder-annotation
+
+  protein-subcellular-localization: protein-localization-signal-annotation
+  protein-signal-peptide-annotation: protein-localization-signal-annotation
+  protein-targeting-peptide-annotation: protein-localization-signal-annotation
+  protein-secretory-pathway-annotation: protein-localization-signal-annotation
+
+  protein-transmembrane-region-annotation: protein-tm-topology-annotation
+  protein-topology-annotation: protein-tm-topology-annotation
+  protein-localization-topology: protein-tm-topology-annotation
+  protein-tm-residue-state-annotation: protein-tm-topology-annotation
+  protein-tm-plot: protein-tm-topology-annotation
+
+  protein-sequence-embedding: protein-embedding
+  protein-residue-embedding: protein-embedding
+  protein-layer-embedding: protein-embedding
+  esmc-forge-embedding: protein-embedding
+  esmc-sae-feature-extraction: protein-embedding
+  embedding-layer-sweep: protein-embedding
+  protein-embedding-cache: protein-embedding
+
 contracts:
+  protein-embedding:
+    canonical_required_inputs:
+      - sequence-or-fasta
+      - embedding-target
+    required_inputs:
+      - sequence-or-fasta
+      - embedding-target
+  protein-sequence-mutation-effect:
+    canonical_required_inputs:
+      - protein-sequence-source
+      - protein-mutation-spec-or-table
+    required_inputs:
+      - protein-sequence-source
+      - protein-mutation-spec-or-table
+  protein-structure-mutation-effect:
+    canonical_required_inputs:
+      - protein-sequence-source
+      - protein-mutation-spec-or-table
+      - protein-structure-source
+      - chain-id
+    required_inputs:
+      - protein-sequence-source
+      - protein-mutation-spec-or-table
+      - protein-structure-source
+      - chain-id
+  protein-mutation-effect:
+    canonical_required_inputs:
+      - protein-sequence-source
+      - protein-mutation-spec-or-table
+    required_inputs:
+      - protein-sequence-source
+      - protein-mutation-spec-or-table
+  protein-mutation-benchmark:
+    canonical_required_inputs:
+      - protein-mutation-benchmark-input
+      - protein-mutation-score-input
+    required_inputs:
+      - protein-mutation-benchmark-input
+      - protein-mutation-score-input
   environment-setup:
     canonical_required_inputs:
       - target-stack-or-model-family

@@ -1,10 +1,11 @@
 schema_version: 1
-updated_at: "2026-07-06"
+updated_at: "2026-08-23"
 
 weight_explicit_skill_mention: 120
 weight_skill_id_mention: 80
 weight_trigger_match: 25
 weight_task_alignment: 20
+weight_provided_task_alignment: 80
 
 infer_phrase_exact_base: 60
 infer_phrase_exact_term_bonus: 12
@@ -41,6 +42,16 @@ task_alias_rules:
   - train=>fine-tuning
   - training=>fine-tuning
   - embedding=>embedding
+  - protein mutation effect=>protein-mutation-effect
+  - protein-mutation-effect=>protein-mutation-effect
+  - protein variant effect=>protein-mutation-effect
+  - amino acid mutation effect=>protein-mutation-effect
+  - amino acid substitution scoring=>protein-mutation-effect
+  - missense scoring=>protein-mutation-effect
+  - mutation fitness=>protein-mutation-effect
+  - ProteinGym=>protein-mutation-benchmark
+  - proteingym benchmark=>protein-mutation-benchmark
+  - DMS benchmark=>protein-mutation-benchmark
   - embed=>embedding
   - variant effect=>variant-effect
   - variant-effect=>variant-effect

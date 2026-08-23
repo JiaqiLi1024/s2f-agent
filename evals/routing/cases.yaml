@@ -1,5 +1,5 @@
 schema_version: 1
-updated_at: "2026-07-06"
+updated_at: "2026-08-23"
 cases:
   - id: route_001
     query: "Use $dnabert2 to validate my train/dev/test CSV and suggest model_max_length."
@@ -175,3 +175,74 @@ cases:
     expected_primary_skill: protein-immunopresentation-annotation
     expected_secondary_skills: []
     task: protein-immunopresentation-annotation
+  - id: route_035
+    query: "Score protein substitutions A42V and G55D with ESM-1v, ESMC 300M, MSA profile, ThermoMPNN, and SaProt while preserving distinct score meanings."
+    expected_primary_skill: protein-mutation-effect
+    expected_secondary_skills:
+      - protein-sequence-mutation-effect
+      - protein-structure-mutation-effect
+    task: protein-mutation-effect
+  - id: route_036
+    query: "Use $protein-sequence-mutation-effect to score A42V with ESM-1v and an MSA profile."
+    expected_primary_skill: protein-sequence-mutation-effect
+    expected_secondary_skills:
+      - protein-mutation-effect
+    task: protein-mutation-effect
+  - id: route_037
+    query: "Use $protein-structure-mutation-effect with ThermoMPNN and ESM-IF1 on chain A of model.pdb."
+    expected_primary_skill: protein-structure-mutation-effect
+    expected_secondary_skills:
+      - protein-mutation-effect
+    task: protein-mutation-effect
+  - id: route_038
+    query: "Evaluate my zero-shot protein mutation scores on ProteinGym v1.3 and report Spearman and exclusions."
+    expected_primary_skill: protein-mutation-benchmark
+    expected_secondary_skills: []
+    task: protein-mutation-benchmark
+  - id: route_039
+    query: "Predict the protein variant effect of p.Ala42Val from this wild-type amino-acid FASTA."
+    expected_primary_skill: protein-mutation-effect
+    expected_secondary_skills:
+      - protein-sequence-mutation-effect
+    task: protein-mutation-effect
+
+  - id: route_040
+    query: "Retrieve the AlphaFold DB model and PDB cross-references for UniProt P04637."
+    expected_primary_skill: protein-structure-get
+    expected_secondary_skills: []
+    task: protein-structure-lookup
+  - id: route_041
+    query: "Find and visualize heuristic binding pockets in protein structure 1AKE."
+    expected_primary_skill: protein-structure-visualize
+    expected_secondary_skills: []
+    task: protein-structure-visualization
+  - id: route_042
+    query: "Annotate Pfam domains and orthology for proteins.fa with InterProScan6 and eggNOG-mapper."
+    expected_primary_skill: protein-domain-motif-annotation
+    expected_secondary_skills: []
+    task: protein-domain-motif-annotation
+  - id: route_043
+    query: "Predict intrinsically disordered regions in proteins.fa with metapredict and AIUPred."
+    expected_primary_skill: protein-idr-disorder-annotation
+    expected_secondary_skills: []
+    task: protein-idr-disorder-annotation
+  - id: route_044
+    query: "Predict signal peptides and subcellular localization in proteins.fa with SignalP and DeepLoc."
+    expected_primary_skill: protein-localization-signal-annotation
+    expected_secondary_skills: []
+    task: protein-localization-signal-annotation
+  - id: route_045
+    query: "Predict transmembrane helices and residue topology states in proteins.fa with DeepTMHMM."
+    expected_primary_skill: protein-tm-topology-annotation
+    expected_secondary_skills: []
+    task: protein-tm-topology-annotation
+  - id: route_046
+    query: "Generate per-protein and per-residue ESM2 embeddings from proteins.fa."
+    expected_primary_skill: protein-embedding
+    expected_secondary_skills: []
+    task: protein-sequence-embedding
+  - id: route_047
+    query: "Create a normalized protein annotation report from InterProScan6, eggNOG, IDR, and degron result files."
+    expected_primary_skill: protein-annotation-report
+    expected_secondary_skills: []
+    task: protein-annotation-report

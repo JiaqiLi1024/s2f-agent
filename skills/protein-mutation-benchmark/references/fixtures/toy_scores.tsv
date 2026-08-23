@@ -1,0 +1,14 @@
+assay_id	protein_id	variant_id	model_id	score_name	raw_score	higher_is
+TOY_DMS	PTEST	A1V	toy-plm	masked_llr	-2	higher
+TOY_DMS	PTEST	C2D	toy-plm	masked_llr	-1	higher
+TOY_DMS	PTEST	D3E	toy-plm	masked_llr	0	higher
+TOY_DMS	PTEST	E4F	toy-plm	masked_llr	1	higher
+TOY_DMS	PTEST	F5G	toy-plm	masked_llr	2	higher
+TOY_DMS	PTEST	G6H	toy-plm	masked_llr	3	higher
+TOY_DMS	PTEST	A1V	toy-ddg	ddg	2	lower
+TOY_DMS	PTEST	C2D	toy-ddg	ddg	1	lower
+TOY_DMS	PTEST	D3E	toy-ddg	ddg	0	lower
+TOY_DMS	PTEST	E4F	toy-ddg	ddg	-1	lower
+TOY_DMS	PTEST	F5G	toy-ddg	ddg	-2	lower
+TOY_DMS	PTEST	G6H	toy-ddg	ddg	-3	lower
+TOY_DMS	PTEST	H7I	toy-plm	masked_llr	4	higher

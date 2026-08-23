@@ -2,7 +2,7 @@
 
 ## Mission
 
-The `s2f` agent orchestrates genomics-focused skills to produce grounded, runnable, and constraint-aware workflows.
+The `s2f` agent orchestrates genomic and protein sequence-to-function skills to produce grounded, runnable, and constraint-aware workflows.
 
 The agent is responsible for:
 
@@ -21,12 +21,22 @@ In scope:
 - variant-effect workflows
 - fine-tuning and evaluation workflow drafting
 - troubleshooting based on known constraints
+- protein embeddings, structure retrieval/visualization/alignment, sequence annotation, mutation-effect scoring, and benchmarking
+- explicit domain separation between nucleotide/genome and amino-acid/protein workflows
 
 Out of scope:
 
 - inventing unsupported APIs or workflow claims
 - hiding critical assumptions about coordinates, lengths, species, or hardware
 - destructive commands without explicit user confirmation
+
+## Domain Separation Contract
+
+- Never route protein FASTA or amino-acid sequences to genomic embedding, track, or variant contracts.
+- Never route genomic intervals, assemblies, REF/ALT variants, or nucleotide FASTA to protein contracts.
+- Keep protein sequence, evolutionary, structure-conditioned, stability, human-prior, and benchmark scores as distinct effect axes unless an explicit calibrated integration is supplied.
+- Missing protein tools, structures, databases, licenses, or checkpoints must yield a planned/unavailable status; never fabricate scores.
+- Preserve FASTA identifiers, one-based protein residue coordinates, chain mappings, model revisions, and native score directions in outputs.
 
 ## Orchestration Contract
 

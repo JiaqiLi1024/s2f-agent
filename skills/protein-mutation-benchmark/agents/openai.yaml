@@ -1,0 +1,4 @@
+interface:
+  display_name: "Protein Mutation Benchmark"
+  short_description: "Evaluate mutation scores with ProteinGym-style assays"
+  default_prompt: "Use $protein-mutation-benchmark to validate, align, and evaluate mutation-effect scores against ProteinGym-style assays."
