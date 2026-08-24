@@ -17,10 +17,14 @@ from typing import Dict
 import numpy as np
 import requests
 import torch
+from gpn import register_auto_classes
 from gpn.data import Tokenizer
 from transformers import AutoModelForMaskedLM
 
-import gpn.model  # noqa: F401, needed for HF class registration
+
+# GPN 0.9+ registers its Hugging Face model families explicitly. This also
+# remains compatible with the current package's legacy GPNRoFormer checkpoints.
+register_auto_classes("gpn")
 
 
 COMPLEMENT: Dict[str, str] = {
@@ -71,6 +75,18 @@ def parse_args() -> argparse.Namespace:
         type=int,
         default=60,
         help="HTTP timeout (seconds) for UCSC sequence API",
+    )
+    parser.add_argument(
+        "--device",
+        choices=["auto", "cuda", "cpu"],
+        default="auto",
+        help="Inference device. Default: auto (CUDA when available, else CPU).",
+    )
+    parser.add_argument(
+        "--seed",
+        type=int,
+        default=0,
+        help="Torch seed used before checkpoint construction. Default: 0.",
     )
     parser.add_argument(
         "--output-dir",
@@ -176,8 +192,28 @@ def main() -> None:
     ids_fwd = encode_sequence(seq_fwd_masked, tokenizer).unsqueeze(0)
     ids_rev = encode_sequence(seq_rev_masked, tokenizer).unsqueeze(0)
 
+    device = "cuda" if args.device == "auto" and torch.cuda.is_available() else args.device
+    if device == "auto":
+        device = "cpu"
+    if device == "cuda" and not torch.cuda.is_available():
+        raise RuntimeError("--device cuda requested but CUDA is unavailable")
+
+    torch.manual_seed(args.seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(args.seed)
     model = AutoModelForMaskedLM.from_pretrained(args.model_id, trust_remote_code=True)
+
+    # Recent Transformers versions no longer restore the legacy RoFormer MLM
+    # decoder-bias alias from this checkpoint. Reconnect it to the trained bias;
+    # otherwise a newly initialized decoder bias is used and scores vary by load.
+    predictions = getattr(getattr(model, "cls", None), "predictions", None)
+    if predictions is not None and hasattr(predictions, "bias"):
+        predictions.decoder.bias = predictions.bias
+
+    model.to(device)
     model.eval()
+    ids_fwd = ids_fwd.to(device)
+    ids_rev = ids_rev.to(device)
     with torch.no_grad():
         logits_fwd = model(input_ids=ids_fwd).logits[0, pos_fwd]
         logits_rev = model(input_ids=ids_rev).logits[0, pos_rev]
@@ -198,6 +234,8 @@ def main() -> None:
         "window_size": args.window_size,
         "window_start_0based": start,
         "window_end_0based_exclusive": end,
+        "device": device,
+        "seed": args.seed,
         "ref": ref,
         "alt_rule": args.alt_rule if args.alt is None else "explicit_alt",
         "alt": alt,

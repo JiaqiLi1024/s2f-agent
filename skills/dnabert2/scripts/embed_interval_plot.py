@@ -94,6 +94,12 @@ def parse_args() -> argparse.Namespace:
         default=60,
         help="HTTP timeout in seconds for UCSC sequence fetch. Default: 60.",
     )
+    parser.add_argument(
+        "--device",
+        choices=("auto", "cuda", "cpu"),
+        default="auto",
+        help="Inference device. Default: auto (CUDA when available).",
+    )
     return parser.parse_args()
 
 
@@ -129,7 +135,33 @@ def parse_major_minor(version_str: str) -> tuple[int, int]:
         return (0, 0)
 
 
-def load_model(model_id: str) -> tuple[AutoTokenizer, AutoModel]:
+def resolve_device(requested: str) -> torch.device:
+    if requested == "auto":
+        requested = "cuda" if torch.cuda.is_available() else "cpu"
+    if requested == "cuda" and not torch.cuda.is_available():
+        raise RuntimeError("--device cuda requested, but torch.cuda.is_available() is false")
+    return torch.device(requested)
+
+
+def force_pytorch_attention(model: AutoModel) -> int:
+    """Select DNABERT2's built-in PyTorch fallback for modern Triton.
+
+    The published remote kernel calls the removed ``tl.dot(..., trans_b=True)``
+    API under Triton 3. Setting this branch sentinel leaves dropout unchanged
+    while selecting the repository's standard PyTorch attention implementation.
+    """
+    changed = 0
+    for module in model.modules():
+        if (
+            module.__class__.__name__ == "BertUnpadSelfAttention"
+            and getattr(module, "p_dropout", None) == 0
+        ):
+            module.p_dropout = 1e-8
+            changed += 1
+    return changed
+
+
+def load_model(model_id: str, device: torch.device) -> tuple[AutoTokenizer, AutoModel, int]:
     tokenizer = AutoTokenizer.from_pretrained(model_id, trust_remote_code=True)
     major_minor = parse_major_minor(transformers.__version__)
     if major_minor > (4, 28):
@@ -137,13 +169,16 @@ def load_model(model_id: str) -> tuple[AutoTokenizer, AutoModel]:
         model = AutoModel.from_pretrained(model_id, trust_remote_code=True, config=config)
     else:
         model = AutoModel.from_pretrained(model_id, trust_remote_code=True)
-    model.eval()
-    return tokenizer, model
+    forced_layers = force_pytorch_attention(model)
+    model.eval().to(device)
+    return tokenizer, model, forced_layers
 
 
 def extract_token_embeddings(tokenizer: AutoTokenizer, model: AutoModel, seq: str) -> tuple[np.ndarray, np.ndarray]:
     with torch.no_grad():
         encoded = tokenizer(seq, return_tensors="pt", truncation=False)
+        device = next(model.parameters()).device
+        encoded = {key: value.to(device) for key, value in encoded.items()}
         outputs = model(**encoded)
 
     hidden = outputs[0]
@@ -221,7 +256,8 @@ def main() -> int:
             f"Fetched sequence length mismatch: expected {expected_len}, got {len(sequence)}"
         )
 
-    tokenizer, model = load_model(args.model_id)
+    device = resolve_device(args.device)
+    tokenizer, model, forced_attention_layers = load_model(args.model_id, device)
     hidden_all, token_emb = extract_token_embeddings(tokenizer, model, sequence)
 
     if token_emb.shape[0] < 2:
@@ -271,7 +307,10 @@ def main() -> int:
         "sequence_source_url": source_url,
         "sequence_length_bp": len(sequence),
         "model_id": args.model_id,
+        "device": str(device),
+        "torch_version": torch.__version__,
         "transformers_version": transformers.__version__,
+        "pytorch_attention_fallback_layers": forced_attention_layers,
         "token_count_with_special_tokens": int(hidden_all.shape[0]),
         "token_count_used_for_pca": int(token_emb.shape[0]),
         "embedding_dim": int(token_emb.shape[1]),
