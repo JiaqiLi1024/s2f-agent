@@ -103,8 +103,9 @@ All scripts that iterate over skills source `scripts/lib_registry.sh`.
 | Variable | Used by | Purpose |
 |---|---|---|
 | `CODEX_HOME` | `link_skills.sh`, `bootstrap.sh` | Codex skills directory root (default: `~/.codex`) |
-| `S2F_DEPLOY_ROOT` | `bootstrap.sh`, `clean_runtime.sh` | Working root for venvs and upstream clones |
-| `S2F_PERSISTENT_ROOT` | `bootstrap.sh`, `clean_runtime.sh` | Stable cross-session deploy/cache root |
+| `S2F_DEPLOY_ROOT` | `bootstrap.sh`, `run_agent.sh`, `clean_runtime.sh` | Working root for venvs and upstream clones; used to resolve deployed stack Python executables |
+| `S2F_PERSISTENT_ROOT` | `bootstrap.sh`, `run_agent.sh`, `clean_runtime.sh` | Stable cross-session deploy/cache root |
+| `S2F_ALPHAGENOME_PYTHON` | `run_agent.sh` | Optional explicit AlphaGenome Python executable; overrides deploy-root discovery |
 | `HF_HOME` | `prefetch_models.sh` | Hugging Face cache directory |
 | `ALPHAGENOME_API_KEY` | `execute_plan.sh` (env precheck) | AlphaGenome API credential |
 | `HF_TOKEN` | `execute_plan.sh` (env precheck) | Hugging Face token (NTv3) |

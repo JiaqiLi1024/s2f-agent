@@ -1280,6 +1280,45 @@ resolve_conda_env_prefix() {
   printf '\n'
 }
 
+resolve_deploy_stack_python() {
+  local stack="$1"
+  local override=""
+  local candidate=""
+  local cache_root=""
+  local -a candidates=()
+
+  if [[ "$stack" == "alphagenome" ]]; then
+    override="${S2F_ALPHAGENOME_PYTHON:-}"
+  fi
+
+  if [[ -n "$override" ]]; then
+    candidates+=("$override")
+  fi
+  if [[ -n "${S2F_DEPLOY_ROOT:-}" ]]; then
+    candidates+=("${S2F_DEPLOY_ROOT%/}/venvs/${stack}/bin/python")
+  fi
+  if [[ -n "${S2F_PERSISTENT_ROOT:-}" ]]; then
+    candidates+=("${S2F_PERSISTENT_ROOT%/}/deploy/venvs/${stack}/bin/python")
+  fi
+  candidates+=("$REPO_ROOT/.deploy/venvs/${stack}/bin/python")
+  candidates+=("$REPO_ROOT/../.s2f-runtime/deploy/venvs/${stack}/bin/python")
+
+  cache_root="${XDG_CACHE_HOME:-${HOME:-}/.cache}"
+  if [[ -n "$cache_root" ]]; then
+    candidates+=("${cache_root%/}/s2f-skills/deploy/venvs/${stack}/bin/python")
+    candidates+=("${cache_root%/}/s2f-agent/deploy/venvs/${stack}/bin/python")
+  fi
+
+  for candidate in "${candidates[@]}"; do
+    if [[ -x "$candidate" ]]; then
+      printf '%s\n' "$candidate"
+      return 0
+    fi
+  done
+
+  printf '\n'
+}
+
 input_satisfied_legacy() {
   local input_name="$1"
   local query_lc="$2"
@@ -2056,7 +2095,9 @@ if [[ "$effective_task" == "track-prediction" && "$primary_skill" == "alphagenom
   ag_track_output_dir="$(extract_alphagenome_track_output_dir_from_query "$query")"
   ag_env_name="$(extract_alphagenome_env_from_query "$query")"
   ag_env_prefix="$(resolve_conda_env_prefix "$ag_env_name")"
+  ag_venv_python="$(resolve_deploy_stack_python "alphagenome")"
   ag_conda_cmd=""
+  ag_runner_cmd=""
   ag_track_chrom=""
   ag_track_start=""
   ag_track_end=""
@@ -2131,12 +2172,17 @@ if [[ "$effective_task" == "track-prediction" && "$primary_skill" == "alphagenom
     fi
   fi
 
-  if [[ -n "$ag_env_prefix" ]]; then
+  if [[ -n "$ag_venv_python" ]]; then
+    ag_runner_cmd="$ag_venv_python"
+    plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "deploy-venv-python-auto-resolved:${ag_venv_python}")"
+  elif [[ -n "$ag_env_prefix" ]]; then
     ag_conda_cmd="conda run -p ${ag_env_prefix}"
+    ag_runner_cmd="${ag_conda_cmd} python"
     plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "conda-env-auto-resolved:prefix")"
     plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "conda-env-prefix:${ag_env_prefix}")"
   else
     ag_conda_cmd="conda run -n ${ag_env_name}"
+    ag_runner_cmd="${ag_conda_cmd} python"
     plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "conda-env-auto-resolved:name")"
     plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "conda-env-name:${ag_env_name}")"
   fi
@@ -2148,8 +2194,8 @@ if [[ "$effective_task" == "track-prediction" && "$primary_skill" == "alphagenom
   ag_track_summary_path="${ag_track_output_dir}/${ag_track_prefix}_bed_batch_summary.json"
 
   if [[ -n "$ag_track_assembly" && -n "$ag_track_bed_resolved" && -z "$ag_track_missing_non_head" ]]; then
-    ag_track_step_cmd="set -a; source .env; set +a; mkdir -p ${ag_track_output_dir}; ${ag_conda_cmd} python skills/alphagenome-api/scripts/run_alphagenome_track_prediction_bed_batch.py --bed ${ag_track_bed_resolved} --species ${ag_track_species} --assembly ${ag_track_assembly} --output-head ${ag_track_head} --ontology-term ${ag_track_ontology} --output-dir ${ag_track_output_dir} --output-prefix ${ag_track_prefix} 2>&1 | tee ${ag_track_log_path}"
-    ag_track_fallback_cmd="set -a; source .env; set +a; mkdir -p ${ag_track_output_dir}; grpc_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 https_proxy=http://127.0.0.1:7890 ${ag_conda_cmd} python skills/alphagenome-api/scripts/run_alphagenome_track_prediction_bed_batch.py --bed ${ag_track_bed_resolved} --species ${ag_track_species} --assembly ${ag_track_assembly} --output-head ${ag_track_head} --ontology-term ${ag_track_ontology} --output-dir ${ag_track_output_dir} --output-prefix ${ag_track_prefix} --request-timeout-sec 120 2>&1 | tee ${ag_track_log_path}"
+    ag_track_step_cmd="if test -f .env; then set -a; source .env; set +a; fi; mkdir -p ${ag_track_output_dir}; ${ag_runner_cmd} skills/alphagenome-api/scripts/run_alphagenome_track_prediction_bed_batch.py --bed ${ag_track_bed_resolved} --species ${ag_track_species} --assembly ${ag_track_assembly} --output-head ${ag_track_head} --ontology-term ${ag_track_ontology} --output-dir ${ag_track_output_dir} --output-prefix ${ag_track_prefix} 2>&1 | tee ${ag_track_log_path}"
+    ag_track_fallback_cmd="if test -f .env; then set -a; source .env; set +a; fi; mkdir -p ${ag_track_output_dir}; grpc_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 https_proxy=http://127.0.0.1:7890 ${ag_runner_cmd} skills/alphagenome-api/scripts/run_alphagenome_track_prediction_bed_batch.py --bed ${ag_track_bed_resolved} --species ${ag_track_species} --assembly ${ag_track_assembly} --output-head ${ag_track_head} --ontology-term ${ag_track_ontology} --output-dir ${ag_track_output_dir} --output-prefix ${ag_track_prefix} --request-timeout-sec 120 2>&1 | tee ${ag_track_log_path}"
 
     plan_steps_csv="$ag_track_step_cmd"
     plan_expected_outputs_csv=""
@@ -2165,8 +2211,8 @@ if [[ "$effective_task" == "track-prediction" && "$primary_skill" == "alphagenom
     plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "inference-window-auto-expanded-to-supported-width")"
   elif [[ -n "$ag_track_assembly" && -n "$ag_track_chrom" && -n "$ag_track_start" && -n "$ag_track_end" && -z "$ag_track_missing_non_head" ]]; then
     if [[ "$ag_track_end" =~ ^[0-9]+$ && "$ag_track_start" =~ ^[0-9]+$ && "$ag_track_end" -gt "$ag_track_start" ]]; then
-      ag_track_step_cmd="set -a; source .env; set +a; mkdir -p ${ag_track_output_dir}; ${ag_conda_cmd} python skills/alphagenome-api/scripts/run_alphagenome_track_prediction_bed_batch.py --interval ${ag_track_chrom}:${ag_track_start}-${ag_track_end} --species ${ag_track_species} --assembly ${ag_track_assembly} --output-head ${ag_track_head} --ontology-term ${ag_track_ontology} --output-dir ${ag_track_output_dir} --output-prefix ${ag_track_prefix} 2>&1 | tee ${ag_track_log_path}"
-      ag_track_fallback_cmd="set -a; source .env; set +a; mkdir -p ${ag_track_output_dir}; grpc_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 https_proxy=http://127.0.0.1:7890 ${ag_conda_cmd} python skills/alphagenome-api/scripts/run_alphagenome_track_prediction_bed_batch.py --interval ${ag_track_chrom}:${ag_track_start}-${ag_track_end} --species ${ag_track_species} --assembly ${ag_track_assembly} --output-head ${ag_track_head} --ontology-term ${ag_track_ontology} --output-dir ${ag_track_output_dir} --output-prefix ${ag_track_prefix} --request-timeout-sec 120 2>&1 | tee ${ag_track_log_path}"
+      ag_track_step_cmd="if test -f .env; then set -a; source .env; set +a; fi; mkdir -p ${ag_track_output_dir}; ${ag_runner_cmd} skills/alphagenome-api/scripts/run_alphagenome_track_prediction_bed_batch.py --interval ${ag_track_chrom}:${ag_track_start}-${ag_track_end} --species ${ag_track_species} --assembly ${ag_track_assembly} --output-head ${ag_track_head} --ontology-term ${ag_track_ontology} --output-dir ${ag_track_output_dir} --output-prefix ${ag_track_prefix} 2>&1 | tee ${ag_track_log_path}"
+      ag_track_fallback_cmd="if test -f .env; then set -a; source .env; set +a; fi; mkdir -p ${ag_track_output_dir}; grpc_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 https_proxy=http://127.0.0.1:7890 ${ag_runner_cmd} skills/alphagenome-api/scripts/run_alphagenome_track_prediction_bed_batch.py --interval ${ag_track_chrom}:${ag_track_start}-${ag_track_end} --species ${ag_track_species} --assembly ${ag_track_assembly} --output-head ${ag_track_head} --ontology-term ${ag_track_ontology} --output-dir ${ag_track_output_dir} --output-prefix ${ag_track_prefix} --request-timeout-sec 120 2>&1 | tee ${ag_track_log_path}"
 
       plan_steps_csv="$ag_track_step_cmd"
       plan_expected_outputs_csv=""
@@ -2807,7 +2853,9 @@ if [[ "$effective_task" == "variant-effect" && "$variant_multi_plan_enabled" -eq
   ag_output_dir="$(extract_alphagenome_output_dir_from_query "$query")"
   ag_env_name="$(extract_alphagenome_env_from_query "$query")"
   ag_env_prefix="$(resolve_conda_env_prefix "$ag_env_name")"
+  ag_venv_python="$(resolve_deploy_stack_python "alphagenome")"
   ag_conda_cmd=""
+  ag_runner_cmd=""
   ag_chrom=""
   ag_position=""
   ag_alt=""
@@ -2837,8 +2885,23 @@ if [[ "$effective_task" == "variant-effect" && "$variant_multi_plan_enabled" -eq
     ag_log_path="${ag_output_dir}/alphagenome_vcf_batch.log"
     ag_vcf_stem="$(basename "${variant_vcf_resolved%.vcf}")"
     ag_tissues_tsv="${ag_output_dir}/${ag_vcf_stem}_tissues.tsv"
-    ag_step_cmd="set -a; source .env; set +a; mkdir -p ${ag_output_dir}; ${ag_conda_cmd:-conda run -n ${ag_env_name}} python skills/alphagenome-api/scripts/run_alphagenome_vcf_batch.py --input ${variant_vcf_resolved} --assembly ${ag_assembly} --output-dir ${ag_output_dir} --non-interactive --request-timeout-sec 120 2>&1 | tee ${ag_log_path}"
-    ag_fallback_cmd="set -a; source .env; set +a; mkdir -p ${ag_output_dir}; grpc_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 https_proxy=http://127.0.0.1:7890 ${ag_conda_cmd:-conda run -n ${ag_env_name}} python skills/alphagenome-api/scripts/run_alphagenome_vcf_batch.py --input ${variant_vcf_resolved} --assembly ${ag_assembly} --output-dir ${ag_output_dir} --non-interactive --request-timeout-sec 120 2>&1 | tee ${ag_log_path}"
+    if [[ -n "$ag_venv_python" ]]; then
+      ag_runner_cmd="$ag_venv_python"
+      plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "deploy-venv-python-auto-resolved:${ag_venv_python}")"
+    elif [[ -n "$ag_env_prefix" ]]; then
+      ag_conda_cmd="conda run -p ${ag_env_prefix}"
+      ag_runner_cmd="${ag_conda_cmd} python"
+      plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "conda-env-auto-resolved:prefix")"
+      plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "conda-env-prefix:${ag_env_prefix}")"
+    else
+      ag_conda_cmd="conda run -n ${ag_env_name}"
+      ag_runner_cmd="${ag_conda_cmd} python"
+      plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "conda-env-auto-resolved:name")"
+      plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "conda-env-name:${ag_env_name}")"
+    fi
+
+    ag_step_cmd="if test -f .env; then set -a; source .env; set +a; fi; mkdir -p ${ag_output_dir}; ${ag_runner_cmd} skills/alphagenome-api/scripts/run_alphagenome_vcf_batch.py --input ${variant_vcf_resolved} --assembly ${ag_assembly} --output-dir ${ag_output_dir} --non-interactive --request-timeout-sec 120 2>&1 | tee ${ag_log_path}"
+    ag_fallback_cmd="if test -f .env; then set -a; source .env; set +a; fi; mkdir -p ${ag_output_dir}; grpc_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 https_proxy=http://127.0.0.1:7890 ${ag_runner_cmd} skills/alphagenome-api/scripts/run_alphagenome_vcf_batch.py --input ${variant_vcf_resolved} --assembly ${ag_assembly} --output-dir ${ag_output_dir} --non-interactive --request-timeout-sec 120 2>&1 | tee ${ag_log_path}"
 
     plan_steps_csv="$ag_step_cmd"
     plan_expected_outputs_csv=""
@@ -2861,22 +2924,27 @@ if [[ "$effective_task" == "variant-effect" && "$variant_multi_plan_enabled" -eq
       provided_csv="$(append_csv "$provided_csv" "ref-alt-or-variant-spec")"
     fi
 
-    ag_summary_glob="${ag_output_dir}/${ag_chrom}_${ag_position}_*_to_${ag_alt}_summary.json"
-    ag_plot_glob="${ag_output_dir}/${ag_chrom}_${ag_position}_*_to_${ag_alt}_rnaseq_overlay.png"
+    ag_summary_glob="${ag_output_dir}/alphagenome_variant-effect_${ag_chrom}_${ag_position}_*_to_${ag_alt}_result.json"
+    ag_plot_glob="${ag_output_dir}/alphagenome_variant-effect_${ag_chrom}_${ag_position}_*_to_${ag_alt}_rnaseq_overlay.png"
     ag_log_path="${ag_output_dir}/alphagenome_predict_variant.log"
 
-    if [[ -n "$ag_env_prefix" ]]; then
+    if [[ -n "$ag_venv_python" ]]; then
+      ag_runner_cmd="$ag_venv_python"
+      plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "deploy-venv-python-auto-resolved:${ag_venv_python}")"
+    elif [[ -n "$ag_env_prefix" ]]; then
       ag_conda_cmd="conda run -p ${ag_env_prefix}"
+      ag_runner_cmd="${ag_conda_cmd} python"
       plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "conda-env-auto-resolved:prefix")"
       plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "conda-env-prefix:${ag_env_prefix}")"
     else
       ag_conda_cmd="conda run -n ${ag_env_name}"
+      ag_runner_cmd="${ag_conda_cmd} python"
       plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "conda-env-auto-resolved:name")"
       plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "conda-env-name:${ag_env_name}")"
     fi
 
-    ag_step_cmd="set -a; source .env; set +a; mkdir -p ${ag_output_dir}; ${ag_conda_cmd} python skills/alphagenome-api/scripts/run_alphagenome_predict_variant.py --assembly ${ag_assembly} --variant-spec ${ag_chrom}:${ag_position}:${ag_alt} --output-dir ${ag_output_dir} 2>&1 | tee ${ag_log_path}"
-    ag_fallback_cmd="set -a; source .env; set +a; mkdir -p ${ag_output_dir}; grpc_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 https_proxy=http://127.0.0.1:7890 ${ag_conda_cmd} python skills/alphagenome-api/scripts/run_alphagenome_predict_variant.py --assembly ${ag_assembly} --variant-spec ${ag_chrom}:${ag_position}:${ag_alt} --output-dir ${ag_output_dir} --request-timeout-sec 120 2>&1 | tee ${ag_log_path}"
+    ag_step_cmd="if test -f .env; then set -a; source .env; set +a; fi; mkdir -p ${ag_output_dir}; ${ag_runner_cmd} skills/alphagenome-api/scripts/run_alphagenome_predict_variant.py --assembly ${ag_assembly} --variant-spec ${ag_chrom}:${ag_position}:${ag_alt} --output-dir ${ag_output_dir} 2>&1 | tee ${ag_log_path}"
+    ag_fallback_cmd="if test -f .env; then set -a; source .env; set +a; fi; mkdir -p ${ag_output_dir}; grpc_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 https_proxy=http://127.0.0.1:7890 ${ag_runner_cmd} skills/alphagenome-api/scripts/run_alphagenome_predict_variant.py --assembly ${ag_assembly} --variant-spec ${ag_chrom}:${ag_position}:${ag_alt} --output-dir ${ag_output_dir} --request-timeout-sec 120 2>&1 | tee ${ag_log_path}"
 
     plan_steps_csv="$ag_step_cmd"
     plan_expected_outputs_csv=""

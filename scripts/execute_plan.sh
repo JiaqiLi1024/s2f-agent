@@ -546,6 +546,13 @@ while IFS= read -r item; do
         fi
         continue
       fi
+      if [[ "$failed" -ne 0 ]]; then
+        verify_failed=$((verify_failed + 1))
+        if [[ "$format" == "text" ]]; then
+          echo "verify skipped after execution failure: $item" >&2
+        fi
+        continue
+      fi
       if path_matches_hint "$path_hint" "$check_a" "$check_b"; then
         verified=$((verified + 1))
       else
