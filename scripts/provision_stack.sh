@@ -28,6 +28,9 @@ Options:
 Environment variables:
   JAX_INSTALL_CMD     Optional command for hardware-specific JAX installation.
                       The script exposes $VENV_PYTHON for convenience.
+  BORZOI_TENSORFLOW_SPEC
+                      TensorFlow package for Borzoi. Default on Linux:
+                      tensorflow[and-cuda]==2.15.1
   TORCH_INSTALL_CMD   Required for evo2-light. Example:
                       TORCH_INSTALL_CMD='$VENV_PYTHON -m pip install torch==2.7.1 --index-url https://download.pytorch.org/whl/cu128'
 EOF
@@ -55,6 +58,19 @@ clone_if_missing() {
 
   mkdir -p "$(dirname "$target")"
   git clone "$url" "$target"
+}
+
+checkout_tag() {
+  local target="$1"
+  local tag="$2"
+
+  if git -C "$target" describe --tags --exact-match 2>/dev/null | grep -qx "$tag"; then
+    echo "using existing tag $tag: $target"
+    return 0
+  fi
+
+  git -C "$target" fetch --depth 1 origin "refs/tags/$tag:refs/tags/$tag"
+  git -C "$target" checkout --detach "$tag"
 }
 
 stack=""
@@ -134,10 +150,18 @@ case "$stack" in
     if [[ -n "${JAX_INSTALL_CMD:-}" ]]; then
       VENV_PYTHON="$venv_python" bash -lc "$JAX_INSTALL_CMD"
     else
-      "$venv_python" -m pip install "jax>=0.3.25"
+      "$venv_python" -m pip install "jax>=0.6,<0.7"
     fi
     clone_if_missing "https://github.com/instadeepai/nucleotide-transformer.git" "$src_root/nucleotide-transformer"
-    "$venv_python" -m pip install "$src_root/nucleotide-transformer"
+    # Upstream's unified metadata also pulls the unrelated NTv3/Torch training
+    # stack. Keep this environment scoped to classic NT and SegmentNT JAX APIs.
+    "$venv_python" -m pip install \
+      "numpy<2" \
+      "ml-dtypes>=0.5,<0.6" \
+      "dm-haiku>=0.0.12" \
+      jmp joblib einops regex requests huggingface-hub
+    "$venv_python" -m pip install --no-deps "$src_root/nucleotide-transformer"
+    "$venv_python" -c 'import jax; from nucleotide_transformer.pretrained import get_pretrained_segment_nt_model, get_pretrained_segment_enformer_model, get_pretrained_segment_borzoi_model; print("JAX devices:", jax.devices())'
     echo "ready: nt-jax environment at $venv_dir"
     ;;
   ntv3-hf)
@@ -160,13 +184,28 @@ case "$stack" in
       echo "hint: rerun with --python python3.10 (or newer)." >&2
       exit 2
     fi
-    "$venv_python" -m pip install --upgrade pip setuptools wheel
+    "$venv_python" -m pip install --upgrade pip wheel
+    # Baskerville still imports pkg_resources, removed in Setuptools 81+.
+    "$venv_python" -m pip install "setuptools==80.9.0" cython pysam
+    "$venv_python" -m pip install "pybedtools==0.10.0" --no-build-isolation
+    if [[ -n "${BORZOI_TENSORFLOW_SPEC:-}" ]]; then
+      "$venv_python" -m pip install "$BORZOI_TENSORFLOW_SPEC"
+    elif [[ "$(uname -s)" == "Linux" ]]; then
+      "$venv_python" -m pip install 'tensorflow[and-cuda]==2.15.1'
+    else
+      "$venv_python" -m pip install 'tensorflow==2.15.1'
+    fi
     clone_if_missing "https://github.com/calico/baskerville.git" "$src_root/baskerville"
     clone_if_missing "https://github.com/calico/borzoi.git" "$src_root/borzoi"
     clone_if_missing "https://github.com/calico/westminster.git" "$src_root/westminster"
+    # Current Westminster requires NumPy 2.3+, which conflicts with the
+    # TensorFlow 2.15 line required by the published Borzoi workflow.
+    checkout_tag "$src_root/westminster" "v0.0.1"
     "$venv_python" -m pip install "$src_root/baskerville"
     "$venv_python" -m pip install "$src_root/borzoi"
     "$venv_python" -m pip install "$src_root/westminster"
+    "$venv_python" -m pip install "setuptools==80.9.0"
+    "$venv_python" -m pip check
     echo "ready: borzoi environment at $venv_dir"
     echo "note: some Borzoi scripts still expect BORZOI_DIR/BORZOI_HG38/BORZOI_MM10 style environment variables."
     ;;
