@@ -1287,9 +1287,13 @@ resolve_deploy_stack_python() {
   local cache_root=""
   local -a candidates=()
 
-  if [[ "$stack" == "alphagenome" ]]; then
-    override="${S2F_ALPHAGENOME_PYTHON:-}"
-  fi
+  case "$stack" in
+    alphagenome) override="${S2F_ALPHAGENOME_PYTHON:-}" ;;
+    gpn) override="${S2F_GPN_PYTHON:-}" ;;
+    ntv3-hf) override="${S2F_NTV3_PYTHON:-}" ;;
+    borzoi) override="${S2F_BORZOI_PYTHON:-}" ;;
+    evo2-light) override="${S2F_EVO2_PYTHON:-}" ;;
+  esac
 
   if [[ -n "$override" ]]; then
     candidates+=("$override")
@@ -1317,6 +1321,46 @@ resolve_deploy_stack_python() {
   done
 
   printf '\n'
+}
+
+resolve_stack_runner() {
+  local stack="$1"
+  local conda_env="$2"
+  local python_path=""
+
+  python_path="$(resolve_deploy_stack_python "$stack")"
+  if [[ -n "$python_path" ]]; then
+    printf '%q' "$python_path"
+  else
+    printf 'conda run -n %q python' "$conda_env"
+  fi
+}
+
+resolve_borzoi_model_dir() {
+  local candidate=""
+  local -a candidates=()
+
+  if [[ -n "${BORZOI_MODEL_DIR:-}" ]]; then
+    candidates+=("$BORZOI_MODEL_DIR")
+  fi
+  if [[ -n "${S2F_PERSISTENT_ROOT:-}" ]]; then
+    candidates+=("${S2F_PERSISTENT_ROOT%/}/models/borzoi_fast")
+  fi
+  if [[ -n "${S2F_DEPLOY_ROOT:-}" ]]; then
+    candidates+=("${S2F_DEPLOY_ROOT%/}/../models/borzoi_fast")
+  fi
+  candidates+=("$REPO_ROOT/../.s2f-runtime/models/borzoi_fast")
+  candidates+=("$REPO_ROOT/.deploy/models/borzoi_fast")
+  candidates+=("$REPO_ROOT/case-study/borzoi_fast")
+
+  for candidate in "${candidates[@]}"; do
+    if [[ -f "$candidate/params.json" && -f "$candidate/model0_best.h5" && -f "$candidate/hg38/targets.txt" ]]; then
+      printf '%q' "$candidate"
+      return 0
+    fi
+  done
+
+  printf '${BORZOI_MODEL_DIR:-case-study/borzoi_fast}'
 }
 
 input_satisfied_legacy() {
@@ -1872,6 +1916,7 @@ for req in $(printf '%s\n' "$required_csv" | tr ',' ' '); do
 done
 
 if [[ "$effective_task" == "track-prediction" && "$primary_skill" == "nucleotide-transformer-v3" ]]; then
+  ntv3_runner_cmd="$(resolve_stack_runner "ntv3-hf" "ntv3")"
   if has_track_head_intent "$query_lc" && in_csv_list "output-head" "$missing_csv"; then
     missing_csv="$(remove_csv_item "$missing_csv" "output-head")"
     provided_csv="$(append_csv "$provided_csv" "output-head")"
@@ -2065,8 +2110,8 @@ if [[ "$effective_task" == "track-prediction" && "$primary_skill" == "nucleotide
       ntv3_result_path="${ntv3_output_dir}/${ntv3_prefix}_result.json"
       ntv3_log_path="${ntv3_output_dir}/ntv3_run.log"
 
-      ntv3_step_cmd="set -a; source .env; set +a; mkdir -p ${ntv3_output_dir}; conda run -n ntv3 python skills/nucleotide-transformer-v3/scripts/run_track_prediction.py --model ${ntv3_model} --species ${ntv3_species} --assembly ${ntv3_assembly} --interval ${ntv3_chrom}:${ntv3_start}-${ntv3_end} --output-dir ${ntv3_output_dir} 2>&1 | tee ${ntv3_log_path}"
-      ntv3_fallback_cmd="set -a; source .env; set +a; mkdir -p ${ntv3_output_dir}; conda run -n ntv3 python skills/nucleotide-transformer-v3/scripts/run_track_prediction.py --model ${ntv3_model} --species ${ntv3_species} --assembly ${ntv3_assembly} --interval ${ntv3_chrom}:${ntv3_start}-${ntv3_end} --output-dir ${ntv3_output_dir} --disable-xet 2>&1 | tee ${ntv3_log_path}"
+      ntv3_step_cmd="set -a; source .env; set +a; mkdir -p ${ntv3_output_dir}; ${ntv3_runner_cmd} skills/nucleotide-transformer-v3/scripts/run_track_prediction.py --model ${ntv3_model} --species ${ntv3_species} --assembly ${ntv3_assembly} --interval ${ntv3_chrom}:${ntv3_start}-${ntv3_end} --output-dir ${ntv3_output_dir} 2>&1 | tee ${ntv3_log_path}"
+      ntv3_fallback_cmd="set -a; source .env; set +a; mkdir -p ${ntv3_output_dir}; ${ntv3_runner_cmd} skills/nucleotide-transformer-v3/scripts/run_track_prediction.py --model ${ntv3_model} --species ${ntv3_species} --assembly ${ntv3_assembly} --interval ${ntv3_chrom}:${ntv3_start}-${ntv3_end} --output-dir ${ntv3_output_dir} --disable-xet 2>&1 | tee ${ntv3_log_path}"
 
       plan_steps_csv="$ntv3_step_cmd"
       plan_expected_outputs_csv=""
@@ -2617,6 +2662,8 @@ if [[ "$effective_task" == "variant-effect" && "$variant_compare_intent" -eq 1 &
 fi
 
 if [[ "$effective_task" == "variant-effect" && "$variant_multi_plan_enabled" -eq 0 && "$primary_skill" == "borzoi-workflows" ]]; then
+  bz_runner_cmd="$(resolve_stack_runner "borzoi" "borzoi_py310")"
+  bz_model_dir_cmd="$(resolve_borzoi_model_dir)"
   bz_assembly="$variant_assembly"
   bz_output_dir="$(extract_borzoi_variant_output_dir_from_query "$query")"
   bz_variant_csv="$(extract_alphagenome_variant_from_query "$query")"
@@ -2683,7 +2730,7 @@ if [[ "$effective_task" == "variant-effect" && "$variant_multi_plan_enabled" -eq
 
     bz_prefix="borzoi_variant-effect_${bz_chrom}_${bz_position}"
     bz_log_path="${bz_output_dir}/borzoi_variant_effect.log"
-    bz_step_cmd="set -a; source .env; set +a; mkdir -p ${bz_output_dir}; conda run -n borzoi_py310 python skills/borzoi-workflows/scripts/run_borzoi_predict.py --chrom ${bz_chrom} --position ${bz_position}${bz_alt_arg} --assembly ${bz_assembly} --model-dir \${BORZOI_MODEL_DIR:-case-study/borzoi_fast} --output-dir ${bz_output_dir} --output-prefix ${bz_prefix} 2>&1 | tee ${bz_log_path}"
+    bz_step_cmd="set -a; source .env; set +a; mkdir -p ${bz_output_dir}; ${bz_runner_cmd} skills/borzoi-workflows/scripts/run_borzoi_predict.py --chrom ${bz_chrom} --position ${bz_position}${bz_alt_arg} --assembly ${bz_assembly} --model-dir ${bz_model_dir_cmd} --output-dir ${bz_output_dir} --output-prefix ${bz_prefix} 2>&1 | tee ${bz_log_path}"
 
     plan_steps_csv="$bz_step_cmd"
     plan_expected_outputs_csv=""
@@ -2693,11 +2740,12 @@ if [[ "$effective_task" == "variant-effect" && "$variant_multi_plan_enabled" -eq
     plan_expected_outputs_csv="$(append_csv "$plan_expected_outputs_csv" "expected-file:${bz_output_dir}/${bz_prefix}_tracks.npz")"
     plan_expected_outputs_csv="$(append_csv "$plan_expected_outputs_csv" "expected-file:${bz_log_path}")"
     plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "borzoi-single-site-fastpath-enabled")"
-    plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "borzoi-model-dir-env-fallback:BORZOI_MODEL_DIR")"
+    plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "borzoi-model-dir-auto-resolved:${bz_model_dir_cmd}")"
   fi
 fi
 
 if [[ "$effective_task" == "variant-effect" && "$variant_multi_plan_enabled" -eq 0 && "$primary_skill" == "gpn-models" ]]; then
+  gpn_runner_cmd="$(resolve_stack_runner "gpn" "gpn-py310")"
   gpn_assembly="$variant_assembly"
   gpn_output_dir="$(extract_gpn_variant_output_dir_from_query "$query")"
   gpn_variant_csv="$(extract_alphagenome_variant_from_query "$query")"
@@ -2763,7 +2811,7 @@ if [[ "$effective_task" == "variant-effect" && "$variant_multi_plan_enabled" -eq
 
     gpn_log_path="${gpn_output_dir}/gpn_variant_effect.log"
     gpn_result_json="${gpn_output_dir}/gpn_variant-effect_${gpn_chrom}_${gpn_position}_result.json"
-    plan_steps_csv="set -a; source .env; set +a; mkdir -p ${gpn_output_dir}; conda run -n gpn-py310 python skills/gpn-models/references/predict_variant_single_site.py --genome ${gpn_assembly} --chrom ${gpn_chrom} --pos ${gpn_position}${gpn_alt_arg} --output-json ${gpn_result_json} 2>&1 | tee ${gpn_log_path}"
+    plan_steps_csv="set -a; source .env; set +a; mkdir -p ${gpn_output_dir}; ${gpn_runner_cmd} skills/gpn-models/references/predict_variant_single_site.py --genome ${gpn_assembly} --chrom ${gpn_chrom} --pos ${gpn_position}${gpn_alt_arg} --output-json ${gpn_result_json} 2>&1 | tee ${gpn_log_path}"
     plan_expected_outputs_csv=""
     plan_expected_outputs_csv="$(append_csv "$plan_expected_outputs_csv" "expected-file:${gpn_result_json}")"
     plan_expected_outputs_csv="$(append_csv "$plan_expected_outputs_csv" "expected-file:${gpn_log_path}")"
@@ -2772,6 +2820,7 @@ if [[ "$effective_task" == "variant-effect" && "$variant_multi_plan_enabled" -eq
 fi
 
 if [[ "$effective_task" == "variant-effect" && "$variant_multi_plan_enabled" -eq 0 && "$primary_skill" == "evo2-inference" ]]; then
+  evo2_runner_cmd="$(resolve_stack_runner "evo2-light" "evo2-py311")"
   evo2_assembly="$variant_assembly"
   evo2_output_dir="$(extract_evo2_variant_output_dir_from_query "$query")"
   evo2_variant_csv="$(extract_alphagenome_variant_from_query "$query")"
@@ -2835,13 +2884,13 @@ if [[ "$effective_task" == "variant-effect" && "$variant_multi_plan_enabled" -eq
     fi
 
     evo2_log_path="${evo2_output_dir}/evo2_variant_effect.log"
-    plan_steps_csv="set -a; source .env; set +a; mkdir -p ${evo2_output_dir}; conda run -n evo2-py311 python skills/evo2-inference/scripts/run_real_evo2_workflow.py --variant-coordinate ${evo2_variant_coordinate} --variant-window-len 2048 --output-dir ${evo2_output_dir} 2>&1 | tee ${evo2_log_path}"
+    plan_steps_csv="set -a; source .env; set +a; mkdir -p ${evo2_output_dir}; ${evo2_runner_cmd} skills/evo2-inference/scripts/run_real_evo2_workflow.py --variant-coordinate ${evo2_variant_coordinate} --variant-window-len 2048 --output-dir ${evo2_output_dir} 2>&1 | tee ${evo2_log_path}"
     plan_expected_outputs_csv=""
     plan_expected_outputs_csv="$(append_csv "$plan_expected_outputs_csv" "expected-file:${evo2_output_dir}/evo2_real_workflow_results.json")"
     plan_expected_outputs_csv="$(append_csv "$plan_expected_outputs_csv" "expected-plot:${evo2_output_dir}/evo2_chr12_variant_effect.png")"
     plan_expected_outputs_csv="$(append_csv "$plan_expected_outputs_csv" "expected-plot:${evo2_output_dir}/evo2_chr19_forward_embedding_generation.png")"
     plan_expected_outputs_csv="$(append_csv "$plan_expected_outputs_csv" "expected-file:${evo2_log_path}")"
-    plan_fallbacks_csv="$(append_csv "$plan_fallbacks_csv" "set -a; source .env; set +a; mkdir -p ${evo2_output_dir}; http_proxy=http://127.0.0.1:7890 https_proxy=http://127.0.0.1:7890 grpc_proxy=http://127.0.0.1:7890 conda run -n evo2-py311 python skills/evo2-inference/scripts/run_real_evo2_workflow.py --variant-coordinate ${evo2_variant_coordinate} --variant-window-len 1024 --output-dir ${evo2_output_dir} 2>&1 | tee ${evo2_log_path}")"
+    plan_fallbacks_csv="$(append_csv "$plan_fallbacks_csv" "set -a; source .env; set +a; mkdir -p ${evo2_output_dir}; http_proxy=http://127.0.0.1:7890 https_proxy=http://127.0.0.1:7890 grpc_proxy=http://127.0.0.1:7890 ${evo2_runner_cmd} skills/evo2-inference/scripts/run_real_evo2_workflow.py --variant-coordinate ${evo2_variant_coordinate} --variant-window-len 1024 --output-dir ${evo2_output_dir} 2>&1 | tee ${evo2_log_path}")"
     plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "evo2-single-site-fastpath-enabled")"
     plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "evo2-adaptive-window-fallback-enabled")"
   fi
