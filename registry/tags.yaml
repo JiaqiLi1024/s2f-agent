@@ -2,75 +2,145 @@ schema_version: 1
 tags:
   variant-effect:
     - alphagenome-api
+    - alphagenome-research
     - borzoi-workflows
     - gpn-models
     - evo2-inference
+    - basenji-workflows
+    - caduceus-inference
+    - pangolin-workflows
+    - sei-workflows
+    - spliceai-workflows
   embedding:
     - dnabert2
     - nucleotide-transformer
     - nucleotide-transformer-v3
     - evo2-inference
+    - caduceus-inference
+    - hyenadna-inference
   fine-tuning:
     - dnabert2
     - nucleotide-transformer-v3
+    - bpnet-skill
+    - chrombpnet-skill
     - bpnet
     - basset-workflows
+    - caduceus-inference
+    - hyenadna-inference
   track-prediction:
     - alphagenome-api
+    - alphagenome-research
     - nucleotide-transformer-v3
     - segment-nt
     - borzoi-workflows
+    - basenji-workflows
+    - sei-workflows
   environment-setup:
     - alphagenome-api
+    - alphagenome-research
+    - bpnet-skill
+    - chrombpnet-skill
     - gpn-models
     - nucleotide-transformer
     - nucleotide-transformer-v3
     - borzoi-workflows
     - evo2-inference
+    - basenji-workflows
+    - caduceus-inference
+    - hyenadna-inference
+    - pangolin-workflows
+    - sei-workflows
+    - spliceai-workflows
   troubleshooting:
     - alphagenome-api
+    - alphagenome-research
+    - bpnet-skill
+    - chrombpnet-skill
     - dnabert2
     - nucleotide-transformer-v3
     - segment-nt
     - evo2-inference
+    - basenji-workflows
+    - caduceus-inference
+    - hyenadna-inference
+    - pangolin-workflows
+    - sei-workflows
+    - spliceai-workflows
   framework-selection:
     - gpn-models
     - nucleotide-transformer
     - nucleotide-transformer-v3
   interpretation:
     - basset-workflows
+    - bpnet-skill
     - bpnet
+    - alphagenome-research
+    - chrombpnet-skill
     - borzoi-workflows
+    - basenji-workflows
+    - pangolin-workflows
+    - sei-workflows
+    - spliceai-workflows
     - segment-nt
   interval-prediction:
     - alphagenome-api
+    - alphagenome-research
   plotting:
     - alphagenome-api
   preprocessing:
     - basset-workflows
+    - bpnet-skill
     - bpnet
+    - chrombpnet-skill
+    - basenji-workflows
   training:
     - basset-workflows
+    - bpnet-skill
     - bpnet
+    - chrombpnet-skill
     - borzoi-workflows
     - gpn-models
+    - basenji-workflows
+    - sei-workflows
+    - caduceus-inference
+    - hyenadna-inference
   prediction:
     - basset-workflows
+    - bpnet-skill
     - bpnet
+    - chrombpnet-skill
+    - basenji-workflows
+    - pangolin-workflows
+    - sei-workflows
+    - spliceai-workflows
+  sequence-prediction:
+    - alphagenome-research
   sad-analysis:
     - basset-workflows
   attribution:
+    - bpnet-skill
     - bpnet
+    - chrombpnet-skill
+    - basenji-workflows
   motif-analysis:
+    - bpnet-skill
     - bpnet
+    - chrombpnet-skill
+    - basenji-workflows
+  bias-model-training:
+    - chrombpnet-skill
+  footprinting:
+    - chrombpnet-skill
+  forward:
+    - evo2-inference
+    - caduceus-inference
+    - hyenadna-inference
   structural-variant-analysis:
     - borzoi-workflows
   gue-evaluation:
     - dnabert2
   csv-validation:
     - dnabert2
-  forward:
-    - evo2-inference
   generation:
     - evo2-inference
   hosted-api:
@@ -94,4 +164,25 @@ tags:
   skill-template-generation:
     - skill-factory
   skill-validation:
+    - skill-factory
+  parameter-selection:
+    - alphagenome-api
+    - alphagenome-research
+    - basset-workflows
+    - bpnet
+    - bpnet-skill
+    - basenji-workflows
+    - caduceus-inference
+    - borzoi-workflows
+    - chrombpnet-skill
+    - dnabert2
+    - evo2-inference
+    - gpn-models
+    - hyenadna-inference
+    - nucleotide-transformer
+    - nucleotide-transformer-v3
+    - pangolin-workflows
+    - segment-nt
+    - sei-workflows
+    - spliceai-workflows
     - skill-factory

@@ -75,12 +75,12 @@ First run after bootstrap:
 | Variant-effect analysis | Compare REF vs ALT impact or prioritize variants | `alphagenome-api`, `borzoi-workflows`, `gpn-models`, `evo2-inference` | [`variant-effect`](./playbooks/variant-effect/README.md) | [`contracts`](./docs/contracts.md), [`input-schema`](./docs/input-schema.md) |
 | Embedding and representation | Produce sequence embeddings for downstream analyses | `dnabert2`, `nucleotide-transformer-v3`, `nucleotide-transformer`, `evo2-inference` | [`embedding`](./playbooks/embedding/README.md) | [`contracts`](./docs/contracts.md), [`input-schema`](./docs/input-schema.md) |
 | Track prediction workflows | Run sequence-to-signal prediction with model-appropriate constraints | `alphagenome-api`, `nucleotide-transformer-v3`, `borzoi-workflows`, `segment-nt` | [`track-prediction`](./playbooks/track-prediction/README.md) | [`contracts`](./docs/contracts.md), [`input-schema`](./docs/input-schema.md) |
-| Fine-tuning and training setup | Prepare schemas, training configs, and model-specific run paths | `dnabert2`, `nucleotide-transformer-v3`, `bpnet`, `basset-workflows` | [`fine-tuning`](./playbooks/fine-tuning/README.md) | [`contracts`](./docs/contracts.md), [`input-schema`](./docs/input-schema.md) |
+| Fine-tuning and training setup | Prepare schemas, training configs, and model-specific run paths | `dnabert2`, `nucleotide-transformer-v3`, `bpnet-skill`, `basset-workflows` | [`fine-tuning`](./playbooks/fine-tuning/README.md) | [`contracts`](./docs/contracts.md), [`input-schema`](./docs/input-schema.md) |
 | Environment bring-up and migration | Build reproducible stacks and verify operational readiness | `skill-factory` plus stack-specific skills | [`environment-setup`](./playbooks/environment-setup/README.md) | [`scripts-reference`](./docs/scripts-reference.md), [`architecture`](./docs/architecture.md) |
 
 ## Skill Catalog
 
-The repository currently includes **11** packaged skills.
+The repository catalog currently includes **20** packaged skills.
 
 Status definition:
 
@@ -91,16 +91,25 @@ Status definition:
 | Skill ID | Status | Path | Best for | Explicit invocation | Docs |
 | --- | --- | --- | --- | --- | --- |
 | `alphagenome-api` | Stable | `skills/alphagenome-api` | AlphaGenome setup, variant-effect, interval/track prediction, plotting, troubleshooting | `$alphagenome-api` | [`SKILL.md`](./skills/alphagenome-api/SKILL.md) · [`references/`](./skills/alphagenome-api/references/) |
+| `alphagenome-research` | Stable | `skills/alphagenome-research` | Local AlphaGenome model setup, sequence/interval prediction, variant scoring | `$alphagenome-research` | [`SKILL.md`](./skills/alphagenome-research/SKILL.md) · [`references/`](./skills/alphagenome-research/references/) |
+| `basenji-workflows` | Stable | `skills/basenji-workflows` | Basenji training, binned prediction, SAD/SED, mutagenesis, motif analysis | `$basenji-workflows` | [`SKILL.md`](./skills/basenji-workflows/SKILL.md) · [`references/`](./skills/basenji-workflows/references/) |
 | `basset-workflows` | Dev | `skills-dev/basset-workflows` | Legacy Basset Torch7 preprocessing, prediction, interpretation, SAD | `$basset-workflows` | [`SKILL.md`](./skills-dev/basset-workflows/SKILL.md) · [`references/`](./skills-dev/basset-workflows/references/) |
 | `bpnet` | Dev | `skills-dev/bpnet` | BPNet preprocessing, train/predict/SHAP, motif integration | `$bpnet` | [`SKILL.md`](./skills-dev/bpnet/SKILL.md) · [`references/`](./skills-dev/bpnet/references/) |
+| `bpnet-skill` | Stable | `skills/bpnet-skill` | BPNet 2.x setup, input validation, train/predict/SHAP, motif integration | `$bpnet-skill` | [`SKILL.md`](./skills/bpnet-skill/SKILL.md) · [`references/`](./skills/bpnet-skill/references/) |
+| `caduceus-inference` | Stable | `skills/caduceus-inference` | Caduceus masked-LM, RC-aware embeddings, VEP dump, fine-tuning | `$caduceus-inference` | [`SKILL.md`](./skills/caduceus-inference/SKILL.md) · [`references/`](./skills/caduceus-inference/references/) |
+| `chrombpnet-skill` | Stable | `skills/chrombpnet-skill` | ChromBPNet bias-factorized ATAC/DNase training and interpretation | `$chrombpnet-skill` | [`SKILL.md`](./skills/chrombpnet-skill/SKILL.md) · [`references/`](./skills/chrombpnet-skill/references/) |
 | `borzoi-workflows` | Stable | `skills/borzoi-workflows` | Borzoi setup, tutorials, variant scoring, interpretation | `$borzoi-workflows` | [`SKILL.md`](./skills/borzoi-workflows/SKILL.md) · [`references/`](./skills/borzoi-workflows/references/) |
 | `dnabert2` | Stable | `skills/dnabert2` | Embeddings, GUE evaluation, CSV validation, fine-tuning | `$dnabert2` | [`SKILL.md`](./skills/dnabert2/SKILL.md) · [`references/`](./skills/dnabert2/references/) |
 | `evo2-inference` | Stable | `skills/evo2-inference` | Evo 2 setup, checkpoint choice, inference, deployment | `$evo2-inference` | [`SKILL.md`](./skills/evo2-inference/SKILL.md) · [`references/`](./skills/evo2-inference/references/) |
 | `gpn-models` | Stable | `skills/gpn-models` | GPN-family framework selection and usage | `$gpn-models` | [`SKILL.md`](./skills/gpn-models/SKILL.md) · [`references/`](./skills/gpn-models/references/) |
+| `hyenadna-inference` | Stable | `skills/hyenadna-inference` | HyenaDNA long-context embeddings, classification, pretraining and fine-tuning | `$hyenadna-inference` | [`SKILL.md`](./skills/hyenadna-inference/SKILL.md) · [`references/`](./skills/hyenadna-inference/references/) |
 | `nucleotide-transformer` | Dev | `skills-dev/nucleotide-transformer` | Classic NT v1/v2 JAX inference, tokenization, embeddings | `$nucleotide-transformer` | [`SKILL.md`](./skills-dev/nucleotide-transformer/SKILL.md) · [`references/`](./skills-dev/nucleotide-transformer/references/) |
 | `nucleotide-transformer-v3` | Stable | `skills/nucleotide-transformer-v3` | NTv3 inference, species conditioning, mode-aware fine-tuning (`prep`/`train`) | `$nucleotide-transformer-v3` | [`SKILL.md`](./skills/nucleotide-transformer-v3/SKILL.md) · [`references/`](./skills/nucleotide-transformer-v3/references/) |
+| `pangolin-workflows` | Stable | `skills/pangolin-workflows` | Pangolin VCF/CSV splice strength, annotation DB, masking and cutoffs | `$pangolin-workflows` | [`SKILL.md`](./skills/pangolin-workflows/SKILL.md) · [`references/`](./skills/pangolin-workflows/references/) |
 | `segment-nt` | Stable | `skills/segment-nt` | SegmentNT-family segmentation inference and scaling logic | `$segment-nt` | [`SKILL.md`](./skills/segment-nt/SKILL.md) · [`references/`](./skills/segment-nt/references/) |
+| `sei-workflows` | Stable | `skills/sei-workflows` | Sei chromatin profiles, 40 sequence classes and variant effects | `$sei-workflows` | [`SKILL.md`](./skills/sei-workflows/SKILL.md) · [`references/`](./skills/sei-workflows/references/) |
 | `skill-factory` | Stable | `skills/skill-factory` | Scaffold and validate consistent skill packages from specs | `$skill-factory` | [`SKILL.md`](./skills/skill-factory/SKILL.md) · [`references/`](./skills/skill-factory/references/) |
+| `spliceai-workflows` | Stable | `skills/spliceai-workflows` | SpliceAI VCF delta-score annotation and custom sequence scoring | `$spliceai-workflows` | [`SKILL.md`](./skills/spliceai-workflows/SKILL.md) · [`references/`](./skills/spliceai-workflows/references/) |
 
 Reference notes used during skill development are in [`Readme/`](./Readme/).
 
@@ -241,12 +250,21 @@ Install the stable Codex skill set:
 npx --yes skills add JiaqiLiZju/s2f-agent \
   -a codex -g -y --copy --full-depth \
   --skill alphagenome-api \
+  --skill alphagenome-research \
+  --skill basenji-workflows \
+  --skill bpnet-skill \
   --skill borzoi-workflows \
+  --skill caduceus-inference \
+  --skill chrombpnet-skill \
   --skill dnabert2 \
   --skill evo2-inference \
   --skill gpn-models \
+  --skill hyenadna-inference \
   --skill nucleotide-transformer-v3 \
+  --skill pangolin-workflows \
   --skill segment-nt \
+  --skill sei-workflows \
+  --skill spliceai-workflows \
   --skill skill-factory
 ```
 

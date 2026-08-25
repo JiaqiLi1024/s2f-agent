@@ -256,6 +256,82 @@ inputs:
     examples:
       - "choose between GPN and GPN-Star"
 
+  - key: model-source
+    type: enum
+
+  - key: parameter-name
+    type: string
+    query_tokens:
+      - parameter
+      - setting
+      - default
+      - learning-rate
+      - batch-size
+      - length
+      - window
+      - 参数
+      - 设置
+
+  - key: parameter-evidence-context
+    type: string
+    query_tokens:
+      - documented
+      - source
+      - evidence
+      - config
+      - version
+      - 文档
+      - 来源
+    query_tokens:
+      - kaggle
+      - huggingface
+      - checkpoint
+      - weights
+      - model source
+    examples:
+      - "Hugging Face checkpoint"
+
+  - key: model-version
+    type: string
+    query_tokens:
+      - model-version
+      - version
+      - all_folds
+    examples:
+      - "all_folds"
+
+  - key: checkpoint-path
+    type: path
+    query_tokens:
+      - checkpoint
+      - checkpoint-path
+      - local-weights
+      - weights
+    examples:
+      - "/models/alphagenome"
+
+  - key: reference-fasta
+    type: path
+    query_tokens:
+      - reference-fasta
+      - fasta
+      - fa
+      - reference-genome
+    examples:
+      - "hg38.fa"
+
+  - key: annotation-assets
+    type: list
+    query_tokens:
+      - annotation-assets
+      - gtf
+      - feather
+      - pas
+      - splice-site
+      - annotation
+    examples:
+      - "genes.gtf, pas.feather"
+
   - key: objective
     type: string
     query_tokens:

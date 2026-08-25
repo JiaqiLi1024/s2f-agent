@@ -1,5 +1,5 @@
 schema_version: 1
-updated_at: "2026-04-17"
+updated_at: "2026-08-10"
 cases:
   - id: route_001
     query: "Use $dnabert2 to validate my train/dev/test CSV and suggest model_max_length."
@@ -29,12 +29,14 @@ cases:
     task: framework-selection
   - id: route_006
     query: "Please help me run legacy Torch7 Basset prediction and SAD analysis."
+    covered_skill: basset-workflows
     expected_decision: clarify
-    expected_clarify_contains: "which skill should lead"
+    expected_clarify_contains: "disabled"
   - id: route_007
     query: "I want classic NT v2 embeddings with 6-mer tokenization details."
+    covered_skill: nucleotide-transformer
     expected_decision: clarify
-    expected_clarify_contains: "which skill should lead"
+    expected_clarify_contains: "disabled"
   - id: route_008
     query: "How should I compute SegmentNT rescaling_factor for a 40 kb sequence?"
     expected_primary_skill: segment-nt
@@ -78,7 +80,7 @@ cases:
   - id: route_016
     query: "I want to analyze my genomic sequences."
     expected_decision: clarify
-    expected_clarify_contains: "which task do you want"
+    expected_clarify_contains: "which skill should lead"
   - id: route_017
     query: "Run AlphaGenome variant effect prediction."
     expected_primary_skill: alphagenome-api
@@ -118,3 +120,71 @@ cases:
     expected_secondary_skills:
       - dnabert2
     task: fine-tuning
+  - id: route_024
+    query: "Use $chrombpnet-skill to troubleshoot an ATAC ChromBPNet pipeline failure caused by inconsistent chromosomes in narrowPeak and fold JSON inputs."
+    expected_primary_skill: chrombpnet-skill
+    expected_secondary_skills: []
+    task: troubleshooting
+  - id: route_025
+    query: "Train ChromBPNet on ATAC-seq BAM with a pretrained bias model and hg38 inputs."
+    expected_primary_skill: chrombpnet-skill
+    expected_secondary_skills: []
+    task: fine-tuning
+  - id: route_026
+    query: "Use $bpnet-skill and bpnet-train for a ChIP-nexus BPNet model with input_data.json."
+    expected_primary_skill: bpnet-skill
+    expected_secondary_skills: []
+    task: fine-tuning
+  - id: route_027
+    query: "Use SpliceAI to annotate a GRCh38 VCF and report DS_AG and DS_DL."
+    expected_primary_skill: spliceai-workflows
+    expected_secondary_skills: []
+    task: variant-effect
+  - id: route_028
+    query: "Run Pangolin tissue-specific splice prediction on my VCF with a gffutils annotation database."
+    expected_primary_skill: pangolin-workflows
+    expected_secondary_skills: []
+    task: variant-effect
+  - id: route_029
+    query: "Use basenji_sad.py to calculate SNP Activity Difference from a trained Basenji model."
+    expected_primary_skill: basenji-workflows
+    expected_secondary_skills: []
+    task: variant-effect
+  - id: route_030
+    query: "Use Sei to project chromatin profiles into sequence class scores."
+    expected_primary_skill: sei-workflows
+    expected_secondary_skills: []
+    task: prediction
+  - id: route_031
+    query: "Use the Caduceus-PS checkpoint with RCPS to dump VEP embeddings."
+    expected_primary_skill: caduceus-inference
+    expected_secondary_skills: []
+    task: embedding
+  - id: route_032
+    query: "Use HyenaDNA small-32k to obtain single-nucleotide DNA embeddings."
+    expected_primary_skill: hyenadna-inference
+    expected_secondary_skills: []
+    task: embedding
+  - id: route_033
+    query: "Use the local AlphaGenome Research checkpoint with JAX to predict a sequence."
+    expected_primary_skill: alphagenome-research
+    expected_secondary_skills: []
+    task: interval-prediction
+  - id: route_034
+    query: "Use legacy $basset-workflows Torch7 to calculate SNP Accessibility Difference."
+    covered_skill: basset-workflows
+    expected_decision: clarify
+    expected_clarify_contains: "disabled"
+    task: training
+  - id: route_035
+    query: "Use the disabled $bpnet CLI to train a profile model."
+    covered_skill: bpnet
+    expected_decision: clarify
+    expected_clarify_contains: "disabled"
+    task: training
+  - id: route_036
+    query: "Use the disabled $nucleotide-transformer classic v2 JAX 6-mer embeddings."
+    covered_skill: nucleotide-transformer
+    expected_decision: clarify
+    expected_clarify_contains: "disabled"
+    task: embedding
