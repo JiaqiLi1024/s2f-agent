@@ -3,17 +3,25 @@
 .pycache/
 __pycache__/
 
-Readme/
-skills-dev/
-
 .env
+.BP/
+.cache
 .DEV/
+.third_party
 
-manuscript
+benchmark
+benchmark/runs/
+benchmark/reports/
 
 case-study
 case-study-skills
 case-study-playbooks
+case-study-cancer
+case-study-disease
+case-study-resource
 
-benchmark/runs/
-benchmark/reports/
+Paper
+manuscript
+
+Readme/
+skills-dev/

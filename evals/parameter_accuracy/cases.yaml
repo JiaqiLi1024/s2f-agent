@@ -1,0 +1,301 @@
+schema_version: 1
+updated_at: "2026-08-23"
+description: >-
+  Paired parameter claims. Documented cases require an exact source-grounded
+  claim; unknown cases require status=unknown and evidence that the value is
+  not a universal documented default. The scorer inspects structured
+  parameter_claims only.
+cases:
+  - id: parameter_001
+    query: "For $alphagenome-api track prediction, what is the documented default output head?"
+    task: parameter-selection
+    expected_primary_skill: alphagenome-api
+    parameter_name: output_head_default
+    expected_parameter_status: documented
+    required_parameter_contains: [output_head_default, RNA_SEQ]
+    required_evidence_contains: [skills/alphagenome-api/SKILL.md]
+  - id: parameter_002
+    query: "For local $alphagenome-research, what minimum Python version is documented?"
+    task: parameter-selection
+    expected_primary_skill: alphagenome-research
+    parameter_name: python_version
+    expected_parameter_status: documented
+    required_parameter_contains: [python_version, ">=3.11"]
+    required_evidence_contains: [skills/alphagenome-research/SKILL.md]
+  - id: parameter_003
+    query: "Can the disabled $basset-workflows skill be used as the default route for a new job?"
+    task: parameter-selection
+    expected_decision: clarify
+    expected_clarify_contains: disabled
+    require_parameter_claims: false
+    forbid_parameter_claims: true
+  - id: parameter_004
+    query: "Can the disabled legacy $bpnet skill be executed by default?"
+    task: parameter-selection
+    expected_decision: clarify
+    expected_clarify_contains: disabled
+    require_parameter_claims: false
+    forbid_parameter_claims: true
+  - id: parameter_005
+    query: "For $bpnet-skill, what relationship must output-window-size satisfy?"
+    task: parameter-selection
+    expected_primary_skill: bpnet-skill
+    parameter_name: output_window_size
+    expected_parameter_status: documented
+    required_parameter_contains: [output_window_size, "must be <= output-len"]
+    required_evidence_contains: [skills/bpnet-skill/SKILL.md]
+  - id: parameter_006
+    query: "For $basenji-workflows SAD, what input file type is required?"
+    task: parameter-selection
+    expected_primary_skill: basenji-workflows
+    parameter_name: sad_input
+    expected_parameter_status: documented
+    required_parameter_contains: [sad_input, "bi-allelic VCF"]
+    required_evidence_contains: [skills/basenji-workflows/SKILL.md]
+  - id: parameter_007
+    query: "For the $caduceus-inference published checkpoint, what sequence length is documented?"
+    task: parameter-selection
+    expected_primary_skill: caduceus-inference
+    parameter_name: seq_len
+    expected_parameter_status: documented
+    required_parameter_contains: [seq_len, "131072"]
+    required_evidence_contains: [skills/caduceus-inference/references/inference-and-training.md]
+  - id: parameter_008
+    query: "For $borzoi-workflows, which Python version is the grounded path documented to use?"
+    task: parameter-selection
+    expected_primary_skill: borzoi-workflows
+    parameter_name: python_version
+    expected_parameter_status: documented
+    required_parameter_contains: [python_version, "3.10"]
+    required_evidence_contains: [skills/borzoi-workflows/SKILL.md]
+  - id: parameter_009
+    query: "For $chrombpnet-skill, what default batch_size is documented?"
+    task: parameter-selection
+    expected_primary_skill: chrombpnet-skill
+    parameter_name: batch_size
+    expected_parameter_status: documented
+    required_parameter_contains: [batch_size, "64"]
+    required_evidence_contains: [skills/chrombpnet-skill/SKILL.md]
+  - id: parameter_010
+    query: "For $dnabert2 fine-tuning, what learning rate is documented as the starting default?"
+    task: parameter-selection
+    expected_primary_skill: dnabert2
+    parameter_name: learning_rate
+    expected_parameter_status: documented
+    required_parameter_contains: [learning_rate, "3e-5"]
+    required_evidence_contains: [skills/dnabert2/SKILL.md]
+  - id: parameter_011
+    query: "For $evo2-inference evo2_40b, what hardware requirement is documented?"
+    task: parameter-selection
+    expected_primary_skill: evo2-inference
+    parameter_name: evo2_40b_hardware
+    expected_parameter_status: documented
+    required_parameter_contains: [evo2_40b_hardware, "multiple H100 GPUs"]
+    required_evidence_contains: [skills/evo2-inference/SKILL.md]
+  - id: parameter_012
+    query: "Which documented checkpoint can $gpn-models use for GPN-Star on hg38?"
+    task: parameter-selection
+    expected_primary_skill: gpn-models
+    parameter_name: gpn_star_checkpoint
+    expected_parameter_status: documented
+    required_parameter_contains: [gpn_star_checkpoint, "songlab/gpn-star-hg38-p243-200m"]
+    required_evidence_contains: [gpn-models/references/framework-selection.md]
+  - id: parameter_013
+    query: "For $hyenadna-inference, how is model_max_length related to max_length?"
+    task: parameter-selection
+    expected_primary_skill: hyenadna-inference
+    parameter_name: model_max_length
+    expected_parameter_status: documented
+    required_parameter_contains: [model_max_length, "max_length + 2"]
+    required_evidence_contains: [skills/hyenadna-inference/SKILL.md]
+  - id: parameter_014
+    query: "Can the disabled classic $nucleotide-transformer v2 skill be used as the default route?"
+    task: parameter-selection
+    expected_decision: clarify
+    expected_clarify_contains: disabled
+    require_parameter_claims: false
+    forbid_parameter_claims: true
+  - id: parameter_015
+    query: "For $nucleotide-transformer-v3, how should the center crop fraction be reported?"
+    task: parameter-selection
+    expected_primary_skill: nucleotide-transformer-v3
+    parameter_name: center_crop
+    expected_parameter_status: documented
+    required_parameter_contains: [center_crop, "do not hardcode a universal fraction"]
+    required_evidence_contains: [skills/nucleotide-transformer-v3/SKILL.md]
+  - id: parameter_016
+    query: "For $pangolin-workflows, what is the documented default for mask?"
+    task: parameter-selection
+    expected_primary_skill: pangolin-workflows
+    parameter_name: mask_default
+    expected_parameter_status: documented
+    required_parameter_contains: [mask_default, "True"]
+    required_evidence_contains: [skills/pangolin-workflows/SKILL.md]
+  - id: parameter_017
+    query: "For $segment-nt, what divisibility rule applies to tokens excluding CLS?"
+    task: parameter-selection
+    expected_primary_skill: segment-nt
+    parameter_name: token_divisibility
+    expected_parameter_status: documented
+    required_parameter_contains: [token_divisibility, "divisible by 4"]
+    required_evidence_contains: [skills/segment-nt/skill.yaml]
+  - id: parameter_018
+    query: "How many chromatin profiles does $sei-workflows document for primary prediction?"
+    task: parameter-selection
+    expected_primary_skill: sei-workflows
+    parameter_name: chromatin_profiles
+    expected_parameter_status: documented
+    required_parameter_contains: [chromatin_profiles, "21907"]
+    required_evidence_contains: [skills/sei-workflows/SKILL.md]
+  - id: parameter_019
+    query: "For $spliceai-workflows, what is the default maximum splice-site distance?"
+    task: parameter-selection
+    expected_primary_skill: spliceai-workflows
+    parameter_name: distance_default
+    expected_parameter_status: documented
+    required_parameter_contains: [distance_default, "50"]
+    required_evidence_contains: [skills/spliceai-workflows/SKILL.md]
+  - id: parameter_020
+    query: "What skill ID format does $skill-factory document?"
+    task: parameter-selection
+    expected_primary_skill: skill-factory
+    parameter_name: skill_id_format
+    expected_parameter_status: documented
+    required_parameter_contains: [skill_id_format, "lowercase hyphen-case"]
+    required_evidence_contains: [skills/skill-factory/skill.yaml]
+  - id: parameter_021
+    query: "Does $alphagenome-api document a universal temperature default?"
+    task: parameter-selection
+    expected_primary_skill: alphagenome-api
+    parameter_name: temperature
+    expected_parameter_status: unknown
+    required_parameter_contains: [temperature, unknown]
+    required_evidence_contains: [not documented]
+  - id: parameter_022
+    query: "Does local $alphagenome-research document a universal dropout value?"
+    task: parameter-selection
+    expected_primary_skill: alphagenome-research
+    parameter_name: dropout
+    expected_parameter_status: unknown
+    required_parameter_contains: [dropout, unknown]
+    required_evidence_contains: [not documented]
+  - id: parameter_023
+    query: "Does $bpnet-skill document one universal learning_rate for every config?"
+    task: parameter-selection
+    expected_primary_skill: bpnet-skill
+    parameter_name: learning_rate
+    expected_parameter_status: unknown
+    required_parameter_contains: [learning_rate, unknown]
+    required_evidence_contains: [not documented]
+  - id: parameter_024
+    query: "Does $basenji-workflows document one universal dropout default?"
+    task: parameter-selection
+    expected_primary_skill: basenji-workflows
+    parameter_name: dropout
+    expected_parameter_status: unknown
+    required_parameter_contains: [dropout, unknown]
+    required_evidence_contains: [not documented]
+  - id: parameter_025
+    query: "Does $caduceus-inference document one universal learning_rate?"
+    task: parameter-selection
+    expected_primary_skill: caduceus-inference
+    parameter_name: learning_rate
+    expected_parameter_status: unknown
+    required_parameter_contains: [learning_rate, unknown]
+    required_evidence_contains: [not documented]
+  - id: parameter_026
+    query: "Does $borzoi-workflows document one universal dropout value?"
+    task: parameter-selection
+    expected_primary_skill: borzoi-workflows
+    parameter_name: dropout
+    expected_parameter_status: unknown
+    required_parameter_contains: [dropout, unknown]
+    required_evidence_contains: [not documented]
+  - id: parameter_027
+    query: "Does $chrombpnet-skill document one universal learning_rate?"
+    task: parameter-selection
+    expected_primary_skill: chrombpnet-skill
+    parameter_name: learning_rate
+    expected_parameter_status: unknown
+    required_parameter_contains: [learning_rate, unknown]
+    required_evidence_contains: [not documented]
+  - id: parameter_028
+    query: "Does $dnabert2 document one universal dropout default?"
+    task: parameter-selection
+    expected_primary_skill: dnabert2
+    parameter_name: dropout
+    expected_parameter_status: unknown
+    required_parameter_contains: [dropout, unknown]
+    required_evidence_contains: [not documented]
+  - id: parameter_029
+    query: "Does $evo2-inference document one universal learning_rate?"
+    task: parameter-selection
+    expected_primary_skill: evo2-inference
+    parameter_name: learning_rate
+    expected_parameter_status: unknown
+    required_parameter_contains: [learning_rate, unknown]
+    required_evidence_contains: [not documented]
+  - id: parameter_030
+    query: "Does $gpn-models document one universal dropout value?"
+    task: parameter-selection
+    expected_primary_skill: gpn-models
+    parameter_name: dropout
+    expected_parameter_status: unknown
+    required_parameter_contains: [dropout, unknown]
+    required_evidence_contains: [not documented]
+  - id: parameter_031
+    query: "Does $hyenadna-inference document one universal learning_rate?"
+    task: parameter-selection
+    expected_primary_skill: hyenadna-inference
+    parameter_name: learning_rate
+    expected_parameter_status: unknown
+    required_parameter_contains: [learning_rate, unknown]
+    required_evidence_contains: [not documented]
+  - id: parameter_032
+    query: "Does $nucleotide-transformer-v3 document one universal pad_to_multiple_of divisor?"
+    task: parameter-selection
+    expected_primary_skill: nucleotide-transformer-v3
+    parameter_name: pad_to_multiple_of
+    expected_parameter_status: unknown
+    required_parameter_contains: [pad_to_multiple_of, unknown]
+    required_evidence_contains: [not documented]
+  - id: parameter_033
+    query: "Does $pangolin-workflows document one universal learning_rate?"
+    task: parameter-selection
+    expected_primary_skill: pangolin-workflows
+    parameter_name: learning_rate
+    expected_parameter_status: unknown
+    required_parameter_contains: [learning_rate, unknown]
+    required_evidence_contains: [not documented]
+  - id: parameter_034
+    query: "Does $segment-nt document one universal batch_size?"
+    task: parameter-selection
+    expected_primary_skill: segment-nt
+    parameter_name: batch_size
+    expected_parameter_status: unknown
+    required_parameter_contains: [batch_size, unknown]
+    required_evidence_contains: [not documented]
+  - id: parameter_035
+    query: "Does $sei-workflows document one universal dropout value?"
+    task: parameter-selection
+    expected_primary_skill: sei-workflows
+    parameter_name: dropout
+    expected_parameter_status: unknown
+    required_parameter_contains: [dropout, unknown]
+    required_evidence_contains: [not documented]
+  - id: parameter_036
+    query: "Does $spliceai-workflows document one universal learning_rate?"
+    task: parameter-selection
+    expected_primary_skill: spliceai-workflows
+    parameter_name: learning_rate
+    expected_parameter_status: unknown
+    required_parameter_contains: [learning_rate, unknown]
+    required_evidence_contains: [not documented]
+  - id: parameter_037
+    query: "Does $skill-factory document a universal skill_id_max_length?"
+    task: parameter-selection
+    expected_primary_skill: skill-factory
+    parameter_name: skill_id_max_length
+    expected_parameter_status: unknown
+    required_parameter_contains: [skill_id_max_length, unknown]
+    required_evidence_contains: [not documented]

@@ -1,0 +1,316 @@
+schema_version: 1
+updated_at: "2026-08-23"
+description: >-
+  Source-grounded parameter claims for the parameter-accuracy benchmark. A
+  documented entry is a fact that can be stated without guessing. An
+  unsupported entry is intentionally not a universal default; the correct
+  behavior is to mark it unknown and verify the selected version or config.
+skills:
+  alphagenome-api:
+    documented:
+      - name: python_version
+        value: ">=3.10"
+        status: documented
+        evidence: "skills/alphagenome-api/SKILL.md:16"
+      - name: output_head_default
+        value: "RNA_SEQ"
+        status: documented
+        evidence: "skills/alphagenome-api/SKILL.md:83"
+      - name: ontology_term_default
+        value: "UBERON:0001157"
+        status: documented
+        evidence: "skills/alphagenome-api/SKILL.md:84"
+    unsupported: [temperature, top_p]
+  alphagenome-research:
+    documented:
+      - name: python_version
+        value: ">=3.11"
+        status: documented
+        evidence: "skills/alphagenome-research/SKILL.md:20"
+      - name: default_device
+        value: "GPU or TPU; CPU must be explicit"
+        status: documented
+        evidence: "skills/alphagenome-research/SKILL.md:21"
+      - name: all_folds_organisms
+        value: "HOMO_SAPIENS and MUS_MUSCULUS"
+        status: documented
+        evidence: "skills/alphagenome-research/SKILL.md:45"
+    unsupported: [dropout, learning_rate]
+  basset-workflows:
+    documented:
+      - name: python_major
+        value: "2"
+        status: documented
+        evidence: "skills-dev/basset-workflows/SKILL.md:20-24"
+      - name: runtime
+        value: "Torch7 with th entry point"
+        status: documented
+        evidence: "skills-dev/basset-workflows/SKILL.md:20-24"
+    unsupported: [batch_size, dropout]
+  bpnet:
+    documented:
+      - name: python_version
+        value: "3.7"
+        status: documented
+        evidence: "skills-dev/bpnet/SKILL.md:19"
+      - name: tensorflow_version
+        value: "2.4.1"
+        status: documented
+        evidence: "skills-dev/bpnet/SKILL.md:19"
+    unsupported: [dropout, learning_rate]
+  bpnet-skill:
+    documented:
+      - name: input_len
+        value: "must align with --input-seq-len"
+        status: documented
+        evidence: "skills/bpnet-skill/SKILL.md:39"
+      - name: output_profile_len
+        value: "must align with --output-len"
+        status: documented
+        evidence: "skills/bpnet-skill/SKILL.md:39"
+      - name: output_window_size
+        value: "must be <= output-len"
+        status: documented
+        evidence: "skills/bpnet-skill/SKILL.md:40"
+    unsupported: [dropout, learning_rate]
+  basenji-workflows:
+    documented:
+      - name: sad_input
+        value: "bi-allelic VCF"
+        status: documented
+        evidence: "skills/basenji-workflows/SKILL.md:23"
+      - name: sad_command
+        value: "basenji_sad.py params_file model_file variants.vcf"
+        status: documented
+        evidence: "skills/basenji-workflows/SKILL.md:13"
+    unsupported: [default_batch_size, dropout]
+  caduceus-inference:
+    documented:
+      - name: seq_len
+        value: "131072"
+        status: documented
+        evidence: "skills/caduceus-inference/references/inference-and-training.md:8"
+      - name: d_model
+        value: "256"
+        status: documented
+        evidence: "skills/caduceus-inference/references/inference-and-training.md:8"
+      - name: n_layer
+        value: "16"
+        status: documented
+        evidence: "skills/caduceus-inference/references/inference-and-training.md:8"
+      - name: bp_per_token
+        value: "1"
+        status: documented
+        evidence: "skills/caduceus-inference/references/inference-and-training.md:18"
+    unsupported: [dropout, learning_rate]
+  borzoi-workflows:
+    documented:
+      - name: python_version
+        value: "3.10"
+        status: documented
+        evidence: "skills/borzoi-workflows/SKILL.md:24"
+      - name: tensorflow_version
+        value: "2.15.x"
+        status: documented
+        evidence: "skills/borzoi-workflows/SKILL.md:24"
+      - name: fast_human_model
+        value: "mini/human_gtex"
+        status: documented
+        evidence: "skills/borzoi-workflows/SKILL.md:36"
+    unsupported: [dropout, learning_rate]
+  chrombpnet-skill:
+    documented:
+      - name: inputlen
+        value: "2114"
+        status: documented
+        evidence: "skills/chrombpnet-skill/SKILL.md:46"
+      - name: outputlen
+        value: "1000"
+        status: documented
+        evidence: "skills/chrombpnet-skill/SKILL.md:46"
+      - name: filters
+        value: "512"
+        status: documented
+        evidence: "skills/chrombpnet-skill/SKILL.md:46"
+      - name: n_dilation_layers
+        value: "8"
+        status: documented
+        evidence: "skills/chrombpnet-skill/SKILL.md:46"
+      - name: max_jitter
+        value: "500"
+        status: documented
+        evidence: "skills/chrombpnet-skill/SKILL.md:46"
+      - name: batch_size
+        value: "64"
+        status: documented
+        evidence: "skills/chrombpnet-skill/SKILL.md:46"
+    unsupported: [dropout, learning_rate]
+  dnabert2:
+    documented:
+      - name: learning_rate
+        value: "3e-5"
+        status: documented
+        evidence: "skills/dnabert2/SKILL.md:38"
+      - name: num_train_epochs
+        value: "5"
+        status: documented
+        evidence: "skills/dnabert2/SKILL.md:38"
+      - name: model_max_length
+        value: "about 0.25 * sequence_length_bp"
+        status: documented
+        evidence: "skills/dnabert2/SKILL.md:39"
+      - name: embedding_width
+        value: "768"
+        status: documented
+        evidence: "skills/dnabert2/SKILL.md:47"
+    unsupported: [dropout, weight_decay]
+  evo2-inference:
+    documented:
+      - name: python_version
+        value: "3.11 or 3.12"
+        status: documented
+        evidence: "skills/evo2-inference/SKILL.md:35"
+      - name: cuda_version
+        value: ">=12.1"
+        status: documented
+        evidence: "skills/evo2-inference/SKILL.md:36"
+      - name: evo2_40b_hardware
+        value: "multiple H100 GPUs"
+        status: documented
+        evidence: "skills/evo2-inference/SKILL.md:22"
+      - name: hosted_generate_fields
+        value: "num_tokens and top_k"
+        status: documented
+        evidence: "skills/evo2-inference/SKILL.md:59"
+    unsupported: [dropout, learning_rate]
+  gpn-models:
+    documented:
+      - name: gpn_msa_status
+        value: "deprecated in favor of GPN-Star"
+        status: documented
+        evidence: "skills/gpn-models/SKILL.md:18"
+      - name: gpn_variant_score
+        value: "LLR = logit(alt) - logit(ref)"
+        status: documented
+        evidence: "skills/gpn-models/SKILL.md:41"
+      - name: gpn_star_checkpoint
+        value: "songlab/gpn-star-hg38-p243-200m"
+        status: documented
+        evidence: "skills/gpn-models/references/framework-selection.md:27"
+    unsupported: [dropout, learning_rate]
+  hyenadna-inference:
+    documented:
+      - name: checkpoint_lengths
+        value: "1k, 32k, 160k, 450k, 1m"
+        status: documented
+        evidence: "skills/hyenadna-inference/SKILL.md:13"
+      - name: model_max_length
+        value: "max_length + 2"
+        status: documented
+        evidence: "skills/hyenadna-inference/SKILL.md:20"
+      - name: tokenizer_padding
+        value: "left padding"
+        status: documented
+        evidence: "skills/hyenadna-inference/SKILL.md:20"
+    unsupported: [dropout, learning_rate]
+  nucleotide-transformer:
+    documented:
+      - name: tokenization
+        value: "6-mer; N is not grouped into 6-mers"
+        status: documented
+        evidence: "skills-dev/nucleotide-transformer/references/model-variants.md:5-23"
+      - name: nt_v1_context
+        value: "1000 tokens including CLS"
+        status: documented
+        evidence: "skills-dev/nucleotide-transformer/references/model-variants.md:43-47"
+      - name: nt_v2_context
+        value: "2000 tokens including CLS"
+        status: documented
+        evidence: "skills-dev/nucleotide-transformer/references/model-variants.md:43-47"
+    unsupported: [dropout, learning_rate]
+  nucleotide-transformer-v3:
+    documented:
+      - name: auth
+        value: "HF_TOKEN required"
+        status: documented
+        evidence: "skills/nucleotide-transformer-v3/skill.yaml:46"
+      - name: interval_coordinates
+        value: "0-based half-open"
+        status: documented
+        evidence: "skills/nucleotide-transformer-v3/skill.yaml:48"
+      - name: center_crop
+        value: "may apply; do not hardcode a universal fraction"
+        status: documented
+        evidence: "skills/nucleotide-transformer-v3/SKILL.md:45"
+    unsupported: [pad_to_multiple_of, dropout]
+  pangolin-workflows:
+    documented:
+      - name: python_version
+        value: ">=3.6"
+        status: documented
+        evidence: "skills/pangolin-workflows/SKILL.md:7"
+      - name: mask_default
+        value: "True"
+        status: documented
+        evidence: "skills/pangolin-workflows/SKILL.md:23"
+      - name: score_window_default
+        value: "50 bp"
+        status: documented
+        evidence: "skills/pangolin-workflows/SKILL.md:19"
+    unsupported: [learning_rate, dropout]
+  segment-nt:
+    documented:
+      - name: token_divisibility
+        value: "token count excluding CLS must be divisible by 4"
+        status: documented
+        evidence: "skills/segment-nt/skill.yaml:38"
+      - name: interval_coordinates
+        value: "0-based half-open"
+        status: documented
+        evidence: "skills/segment-nt/skill.yaml:40"
+      - name: n_bases
+        value: "not accepted"
+        status: documented
+        evidence: "skills/segment-nt/skill.yaml:37"
+    unsupported: [batch_size, dropout]
+  sei-workflows:
+    documented:
+      - name: chromatin_profiles
+        value: "21907"
+        status: documented
+        evidence: "skills/sei-workflows/SKILL.md:3"
+      - name: sequence_classes
+        value: "40"
+        status: documented
+        evidence: "skills/sei-workflows/SKILL.md:3"
+      - name: selene_version
+        value: ">=0.5.0"
+        status: documented
+        evidence: "skills/sei-workflows/SKILL.md:7"
+    unsupported: [dropout, learning_rate]
+  spliceai-workflows:
+    documented:
+      - name: version
+        value: "1.3.1"
+        status: documented
+        evidence: "skills/spliceai-workflows/SKILL.md:3"
+      - name: distance_default
+        value: "50"
+        status: documented
+        evidence: "skills/spliceai-workflows/SKILL.md:14"
+      - name: custom_sequence_context
+        value: "10000 bp"
+        status: documented
+        evidence: "skills/spliceai-workflows/SKILL.md:15"
+    unsupported: [dropout, learning_rate]
+  skill-factory:
+    documented:
+      - name: skill_id_format
+        value: "lowercase hyphen-case"
+        status: documented
+        evidence: "skills/skill-factory/skill.yaml:27"
+      - name: generated_files
+        value: "SKILL.md, skill.yaml, agents/openai.yaml"
+        status: documented
+        evidence: "skills/skill-factory/SKILL.md:38"
+    unsupported: [skill_id_max_length, retry_temperature]
