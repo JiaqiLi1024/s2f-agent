@@ -232,7 +232,7 @@ tag_registry_list_tasks() {
       in_tags = 1
       next
     }
-    in_tags && /^[[:space:]]{2}[a-zA-Z0-9_-]+:[[:space:]]*$/ {
+    in_tags && /^[[:space:]][[:space:]][a-zA-Z0-9_-]+:[[:space:]]*$/ {
       key = $0
       sub(/^[[:space:]]*/, "", key)
       sub(/:[[:space:]]*$/, "", key)
@@ -260,30 +260,30 @@ task_contract_list_required_inputs() {
       in_contracts = 1
       next
     }
-    in_contracts && $0 ~ ("^[[:space:]]{2}" target ":[[:space:]]*$") {
+    in_contracts && $0 ~ ("^[[:space:]][[:space:]]" target ":[[:space:]]*$") {
       in_task = 1
       in_required = 0
       next
     }
-    in_contracts && in_task && /^[[:space:]]{2}[a-zA-Z0-9_-]+:[[:space:]]*$/ {
+    in_contracts && in_task && /^[[:space:]][[:space:]][a-zA-Z0-9_-]+:[[:space:]]*$/ {
       in_task = 0
       in_required = 0
       next
     }
-    in_task && /^[[:space:]]{4}required_inputs:[[:space:]]*$/ {
+    in_task && /^[[:space:]][[:space:]][[:space:]][[:space:]]required_inputs:[[:space:]]*$/ {
       in_required = 1
       next
     }
-    in_task && in_required && /^[[:space:]]{6}-[[:space:]]*/ {
+    in_task && in_required && /^[[:space:]][[:space:]][[:space:]][[:space:]][[:space:]][[:space:]]-[[:space:]]*/ {
       item = $0
-      sub(/^[[:space:]]{6}-[[:space:]]*/, "", item)
+      sub(/^[[:space:]][[:space:]][[:space:]][[:space:]][[:space:]][[:space:]]-[[:space:]]*/, "", item)
       item = cleaned(item)
       if (item != "") {
         print item
       }
       next
     }
-    in_task && in_required && /^[[:space:]]{4}[a-zA-Z0-9_-]+:[[:space:]]*/ {
+    in_task && in_required && /^[[:space:]][[:space:]][[:space:]][[:space:]][a-zA-Z0-9_-]+:[[:space:]]*/ {
       in_required = 0
       next
     }
@@ -304,30 +304,30 @@ task_contract_list_canonical_required_inputs() {
       in_contracts = 1
       next
     }
-    in_contracts && $0 ~ ("^[[:space:]]{2}" target ":[[:space:]]*$") {
+    in_contracts && $0 ~ ("^[[:space:]][[:space:]]" target ":[[:space:]]*$") {
       in_task = 1
       in_required = 0
       next
     }
-    in_contracts && in_task && /^[[:space:]]{2}[a-zA-Z0-9_-]+:[[:space:]]*$/ {
+    in_contracts && in_task && /^[[:space:]][[:space:]][a-zA-Z0-9_-]+:[[:space:]]*$/ {
       in_task = 0
       in_required = 0
       next
     }
-    in_task && /^[[:space:]]{4}canonical_required_inputs:[[:space:]]*$/ {
+    in_task && /^[[:space:]][[:space:]][[:space:]][[:space:]]canonical_required_inputs:[[:space:]]*$/ {
       in_required = 1
       next
     }
-    in_task && in_required && /^[[:space:]]{6}-[[:space:]]*/ {
+    in_task && in_required && /^[[:space:]][[:space:]][[:space:]][[:space:]][[:space:]][[:space:]]-[[:space:]]*/ {
       item = $0
-      sub(/^[[:space:]]{6}-[[:space:]]*/, "", item)
+      sub(/^[[:space:]][[:space:]][[:space:]][[:space:]][[:space:]][[:space:]]-[[:space:]]*/, "", item)
       item = cleaned(item)
       if (item != "") {
         print item
       }
       next
     }
-    in_task && in_required && /^[[:space:]]{4}[a-zA-Z0-9_-]+:[[:space:]]*/ {
+    in_task && in_required && /^[[:space:]][[:space:]][[:space:]][[:space:]][a-zA-Z0-9_-]+:[[:space:]]*/ {
       in_required = 0
       next
     }
@@ -505,9 +505,9 @@ input_schema_resolve_key() {
       in_map = 1
       next
     }
-    in_map && /^[[:space:]]{2}[a-zA-Z0-9_.-]+:[[:space:]]*/ {
+    in_map && /^[[:space:]][[:space:]][a-zA-Z0-9_.-]+:[[:space:]]*/ {
       line = $0
-      sub(/^[[:space:]]{2}/, "", line)
+      sub(/^[[:space:]][[:space:]]/, "", line)
       key = line
       sub(/:[[:space:]]*.*/, "", key)
       val = line
@@ -618,14 +618,14 @@ task_contract_get_task_alias() {
       in_aliases = 1
       next
     }
-    in_aliases && $0 ~ ("^[[:space:]]{2}" target ":[[:space:]]*") {
+    in_aliases && $0 ~ ("^[[:space:]][[:space:]]" target ":[[:space:]]*") {
       v = $0
-      sub("^[[:space:]]{2}" target ":[[:space:]]*", "", v)
+      sub("^[[:space:]][[:space:]]" target ":[[:space:]]*", "", v)
       v = cleaned(v)
       print v
       exit
     }
-    in_aliases && /^[[:space:]]{2}[a-zA-Z0-9_-]+:[[:space:]]*/ {
+    in_aliases && /^[[:space:]][[:space:]][a-zA-Z0-9_-]+:[[:space:]]*/ {
       next
     }
     in_aliases && /^[^[:space:]]/ {
@@ -650,30 +650,30 @@ output_contract_list_field() {
       in_contracts = 1
       next
     }
-    in_contracts && $0 ~ ("^[[:space:]]{2}" target ":[[:space:]]*$") {
+    in_contracts && $0 ~ ("^[[:space:]][[:space:]]" target ":[[:space:]]*$") {
       in_task = 1
       in_field = 0
       next
     }
-    in_contracts && in_task && /^[[:space:]]{2}[a-zA-Z0-9_-]+:[[:space:]]*$/ {
+    in_contracts && in_task && /^[[:space:]][[:space:]][a-zA-Z0-9_-]+:[[:space:]]*$/ {
       in_task = 0
       in_field = 0
       next
     }
-    in_task && $0 ~ ("^[[:space:]]{4}" field ":[[:space:]]*$") {
+    in_task && $0 ~ ("^[[:space:]][[:space:]][[:space:]][[:space:]]" field ":[[:space:]]*$") {
       in_field = 1
       next
     }
-    in_task && in_field && /^[[:space:]]{6}-[[:space:]]*/ {
+    in_task && in_field && /^[[:space:]][[:space:]][[:space:]][[:space:]][[:space:]][[:space:]]-[[:space:]]*/ {
       item = $0
-      sub(/^[[:space:]]{6}-[[:space:]]*/, "", item)
+      sub(/^[[:space:]][[:space:]][[:space:]][[:space:]][[:space:]][[:space:]]-[[:space:]]*/, "", item)
       item = cleaned(item)
       if (item != "") {
         print item
       }
       next
     }
-    in_task && in_field && /^[[:space:]]{4}[a-zA-Z0-9_-]+:[[:space:]]*/ {
+    in_task && in_field && /^[[:space:]][[:space:]][[:space:]][[:space:]][a-zA-Z0-9_-]+:[[:space:]]*/ {
       in_field = 0
       next
     }
@@ -695,17 +695,17 @@ output_contract_get_scalar() {
       in_contracts = 1
       next
     }
-    in_contracts && $0 ~ ("^[[:space:]]{2}" target ":[[:space:]]*$") {
+    in_contracts && $0 ~ ("^[[:space:]][[:space:]]" target ":[[:space:]]*$") {
       in_task = 1
       next
     }
-    in_contracts && in_task && /^[[:space:]]{2}[a-zA-Z0-9_-]+:[[:space:]]*$/ {
+    in_contracts && in_task && /^[[:space:]][[:space:]][a-zA-Z0-9_-]+:[[:space:]]*$/ {
       in_task = 0
       next
     }
-    in_task && $0 ~ ("^[[:space:]]{4}" field ":[[:space:]]*") {
+    in_task && $0 ~ ("^[[:space:]][[:space:]][[:space:]][[:space:]]" field ":[[:space:]]*") {
       v = $0
-      sub("^[[:space:]]{4}" field ":[[:space:]]*", "", v)
+      sub("^[[:space:]][[:space:]][[:space:]][[:space:]]" field ":[[:space:]]*", "", v)
       v = cleaned(v)
       print v
       exit
@@ -727,17 +727,17 @@ recovery_policy_get_retry_policy() {
       in_policies = 1
       next
     }
-    in_policies && $0 ~ ("^[[:space:]]{2}" target ":[[:space:]]*$") {
+    in_policies && $0 ~ ("^[[:space:]][[:space:]]" target ":[[:space:]]*$") {
       in_task = 1
       next
     }
-    in_policies && in_task && /^[[:space:]]{2}[a-zA-Z0-9_-]+:[[:space:]]*$/ {
+    in_policies && in_task && /^[[:space:]][[:space:]][a-zA-Z0-9_-]+:[[:space:]]*$/ {
       in_task = 0
       next
     }
-    in_task && /^[[:space:]]{4}retry_policy:[[:space:]]*/ {
+    in_task && /^[[:space:]][[:space:]][[:space:]][[:space:]]retry_policy:[[:space:]]*/ {
       v = $0
-      sub(/^[[:space:]]{4}retry_policy:[[:space:]]*/, "", v)
+      sub(/^[[:space:]][[:space:]][[:space:]][[:space:]]retry_policy:[[:space:]]*/, "", v)
       print cleaned(v)
       exit
     }
@@ -758,30 +758,30 @@ recovery_policy_list_fallback_skills() {
       in_policies = 1
       next
     }
-    in_policies && $0 ~ ("^[[:space:]]{2}" target ":[[:space:]]*$") {
+    in_policies && $0 ~ ("^[[:space:]][[:space:]]" target ":[[:space:]]*$") {
       in_task = 1
       in_fallback = 0
       next
     }
-    in_policies && in_task && /^[[:space:]]{2}[a-zA-Z0-9_-]+:[[:space:]]*$/ {
+    in_policies && in_task && /^[[:space:]][[:space:]][a-zA-Z0-9_-]+:[[:space:]]*$/ {
       in_task = 0
       in_fallback = 0
       next
     }
-    in_task && /^[[:space:]]{4}fallback_skills:[[:space:]]*$/ {
+    in_task && /^[[:space:]][[:space:]][[:space:]][[:space:]]fallback_skills:[[:space:]]*$/ {
       in_fallback = 1
       next
     }
-    in_task && in_fallback && /^[[:space:]]{6}-[[:space:]]*/ {
+    in_task && in_fallback && /^[[:space:]][[:space:]][[:space:]][[:space:]][[:space:]][[:space:]]-[[:space:]]*/ {
       item = $0
-      sub(/^[[:space:]]{6}-[[:space:]]*/, "", item)
+      sub(/^[[:space:]][[:space:]][[:space:]][[:space:]][[:space:]][[:space:]]-[[:space:]]*/, "", item)
       item = cleaned(item)
       if (item != "") {
         print item
       }
       next
     }
-    in_task && in_fallback && /^[[:space:]]{4}[a-zA-Z0-9_-]+:[[:space:]]*/ {
+    in_task && in_fallback && /^[[:space:]][[:space:]][[:space:]][[:space:]][a-zA-Z0-9_-]+:[[:space:]]*/ {
       in_fallback = 0
       next
     }

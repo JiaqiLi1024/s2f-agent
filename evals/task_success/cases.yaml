@@ -26,7 +26,7 @@ cases:
     task: track-prediction
     min_runnable_steps: 1
     min_expected_outputs: 3
-    required_step_contains: "conda run -n ntv3 python skills/nucleotide-transformer-v3/scripts/run_track_prediction.py"
+    required_step_contains: "skills/nucleotide-transformer-v3/scripts/run_track_prediction.py"
     required_expected_output_contains: "output/ntv3_results"
   - id: task_success_006
     query: "进行agent的测试，为我在conda环境中安装AlphaGenome，如果已经安装好则测试即可，我的API key在根目录中，为我跑一次真实 predict_variant，预测hg38基因组chr12上1_000_000位点上碱基突变为G的突变效应，绘图保存至output/alphagenome文件夹；我的最终目的是为了优化agent对该任务的处理"

@@ -184,9 +184,9 @@ while IFS= read -r task_name; do
 done < <(
   awk '
     /^[[:space:]]*contracts:[[:space:]]*$/ {in_contracts=1; next}
-    in_contracts && /^[[:space:]]{2}[a-zA-Z0-9_-]+:[[:space:]]*$/ {
+    in_contracts && /^[[:space:]][[:space:]][a-zA-Z0-9_-]+:[[:space:]]*$/ {
       t=$0
-      sub(/^[[:space:]]{2}/, "", t)
+      sub(/^[[:space:]][[:space:]]/, "", t)
       sub(/:[[:space:]]*$/, "", t)
       print t
       next
