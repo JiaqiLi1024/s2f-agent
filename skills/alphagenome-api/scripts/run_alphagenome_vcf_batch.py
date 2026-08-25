@@ -23,6 +23,7 @@ import argparse
 import csv
 import json
 import os
+import random
 import subprocess
 import sys
 import time
@@ -32,6 +33,18 @@ from pathlib import Path
 
 DEFAULT_PROXY_URL = "http://127.0.0.1:7890"
 PROXY_ENV_KEYS = ("grpc_proxy", "http_proxy", "https_proxy")
+TRANSIENT_API_ERROR_TOKENS = (
+    "StatusCode.UNAVAILABLE",
+    "StatusCode.DEADLINE_EXCEEDED",
+    "StatusCode.RESOURCE_EXHAUSTED",
+    "FD shutdown",
+    "failed to connect to all addresses",
+    "grpc_status:14",
+)
+
+
+class TransientAlphaGenomeApiError(RuntimeError):
+    """Raised when AlphaGenome API stayed unavailable after retries."""
 
 
 def load_tissue_dict(tissues_arg: str | None) -> dict[str, str]:
@@ -142,6 +155,49 @@ def create_client_with_retry(dna_client, api_key: str, timeout: float, proxy_url
         return model
 
 
+def create_client_resilient(
+    dna_client,
+    api_key: str,
+    timeout: float,
+    proxy_url: str | None,
+    max_retries: int,
+    retry_base_delay: float,
+    retry_max_delay: float,
+):
+    last_exc: Exception | None = None
+    for attempt in range(1, max_retries + 2):
+        try:
+            return create_client_with_retry(dna_client, api_key, timeout, proxy_url)
+        except Exception as exc:
+            last_exc = exc
+            if not is_transient_api_error(exc) and type(exc).__name__ != "FutureTimeoutError":
+                raise
+            if attempt > max_retries:
+                raise
+            sleep_for = retry_sleep_seconds(attempt, retry_base_delay, retry_max_delay)
+            log(
+                f"[RETRY] AlphaGenome client create transient error "
+                f"({attempt}/{max_retries}); sleeping {sleep_for:.1f}s: {brief_error(exc)}"
+            )
+            time.sleep(sleep_for)
+    raise TransientAlphaGenomeApiError(f"exhausted client-create retries: {last_exc}")
+
+
+def is_transient_api_error(exc: Exception) -> bool:
+    text = f"{type(exc).__name__}: {exc}"
+    return any(token in text for token in TRANSIENT_API_ERROR_TOKENS)
+
+
+def brief_error(exc: Exception, limit: int = 240) -> str:
+    text = " ".join(f"{type(exc).__name__}: {exc}".split())
+    return text if len(text) <= limit else text[: limit - 3] + "..."
+
+
+def retry_sleep_seconds(attempt: int, base: float, max_delay: float) -> float:
+    delay = min(max_delay, base * (2 ** max(0, attempt - 1)))
+    return delay + random.uniform(0.0, min(1.0, delay * 0.1))
+
+
 SUPPORTED_WIDTHS = {16_384, 131_072, 524_288, 1_048_576}
 
 
@@ -225,6 +281,9 @@ def run_batch(
     delay: float,
     resume: bool,
     proxy_url: str | None,
+    max_retries: int,
+    retry_base_delay: float,
+    retry_max_delay: float,
 ) -> list[dict]:
     import numpy as np
     from alphagenome.data import genome
@@ -238,8 +297,10 @@ def run_batch(
     if resume and done_path.exists():
         with open(done_path, newline="", encoding="utf-8") as fh:
             for r in csv.DictReader(fh, delimiter="\t"):
-                done_keys.add(f"{r['chrom']}:{r['position']}:{r['ref']}>{r['alt']}")
-        log(f"[INFO] Resuming: {len(done_keys)} already done")
+                status = (r.get("status") or "").strip().lower()
+                if status == "success":
+                    done_keys.add(f"{r['chrom']}:{r['position']}:{r['ref']}>{r['alt']}")
+        log(f"[INFO] Resuming: {len(done_keys)} already successful")
 
     tissue_fields = []
     for t in tissue_names:
@@ -261,7 +322,15 @@ def run_batch(
     failed = 0
 
     try:
-        model = create_client_with_retry(dna_client, api_key, timeout, proxy_url)
+        model = create_client_resilient(
+            dna_client,
+            api_key,
+            timeout,
+            proxy_url,
+            max_retries,
+            retry_base_delay,
+            retry_max_delay,
+        )
         log(f"[INFO] Tissues: {tissue_names}")
 
         for i, v in enumerate(variants):
@@ -305,12 +374,37 @@ def run_batch(
                     reference_bases=v["ref"],
                     alternate_bases=v["alt"],
                 )
-                outputs = model.predict_variant(
-                    interval=interval,
-                    variant=variant,
-                    requested_outputs=[dna_client.OutputType.RNA_SEQ],
-                    ontology_terms=all_ontology_terms,
-                )
+                last_exc: Exception | None = None
+                for attempt in range(1, max_retries + 2):
+                    try:
+                        outputs = model.predict_variant(
+                            interval=interval,
+                            variant=variant,
+                            requested_outputs=[dna_client.OutputType.RNA_SEQ],
+                            ontology_terms=all_ontology_terms,
+                        )
+                        break
+                    except Exception as exc:
+                        last_exc = exc
+                        if not is_transient_api_error(exc) or attempt > max_retries:
+                            raise
+                        sleep_for = retry_sleep_seconds(attempt, retry_base_delay, retry_max_delay)
+                        log(
+                            f"[RETRY] {key}: transient AlphaGenome API error "
+                            f"({attempt}/{max_retries}); sleeping {sleep_for:.1f}s: {brief_error(exc)}"
+                        )
+                        time.sleep(sleep_for)
+                        model = create_client_resilient(
+                            dna_client,
+                            api_key,
+                            timeout,
+                            proxy_url,
+                            max_retries,
+                            retry_base_delay,
+                            retry_max_delay,
+                        )
+                else:
+                    raise TransientAlphaGenomeApiError(f"exhausted retries: {last_exc}")
                 if outputs.reference.rna_seq is None or outputs.alternate.rna_seq is None:
                     raise RuntimeError("RNA_SEQ output missing")
 
@@ -384,6 +478,24 @@ def parse_args() -> argparse.Namespace:
             "Set to empty string to disable retry."
         ),
     )
+    p.add_argument(
+        "--max-retries",
+        type=int,
+        default=int(os.environ.get("ALPHAGENOME_MAX_RETRIES", "6")),
+        help="Per-variant retries for transient AlphaGenome API/gRPC failures.",
+    )
+    p.add_argument(
+        "--retry-base-delay-sec",
+        type=float,
+        default=float(os.environ.get("ALPHAGENOME_RETRY_BASE_DELAY_SEC", "8")),
+        help="Initial delay before retrying transient AlphaGenome API failures.",
+    )
+    p.add_argument(
+        "--retry-max-delay-sec",
+        type=float,
+        default=float(os.environ.get("ALPHAGENOME_RETRY_MAX_DELAY_SEC", "120")),
+        help="Maximum delay between transient AlphaGenome API retries.",
+    )
     return p.parse_args()
 
 
@@ -423,6 +535,7 @@ def main() -> int:
         variants, info_keys, tissue_dict, args.assembly, args.interval_width,
         output_dir, output_name, api_key,
         args.request_timeout_sec, args.delay, args.resume, proxy_url,
+        args.max_retries, args.retry_base_delay_sec, args.retry_max_delay_sec,
     )
 
     failed = [s for s in summaries if s["status"] != "success"]

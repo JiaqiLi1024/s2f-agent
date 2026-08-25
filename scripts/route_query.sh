@@ -47,6 +47,31 @@ contains_token() {
   [[ "$haystack" == *"$needle"* ]]
 }
 
+contains_trigger() {
+  local haystack="$1"
+  local needle="$2"
+  if [[ -z "$needle" ]]; then
+    return 1
+  fi
+  if [[ "$needle" =~ ^[[:alnum:]]+$ ]]; then
+    [[ " $haystack " =~ (^|[^[:alnum:]])${needle}([^[:alnum:]]|$) ]]
+    return
+  fi
+  contains_token "$haystack" "$needle"
+}
+
+contains_skill_id() {
+  local haystack="$1"
+  local needle="$2"
+  [[ "$haystack" =~ (^|[^[:alnum:]_-])${needle}([^[:alnum:]_-]|$) ]]
+}
+
+contains_explicit_skill_id() {
+  local haystack="$1"
+  local needle="$2"
+  [[ "$haystack" =~ (^|[^[:alnum:]_-])\$${needle}([^[:alnum:]_-]|$) ]]
+}
+
 query_mentions_dnabert2() {
   local query_lc="$1"
   contains_token "$query_lc" "\$dnabert2" || \
@@ -246,7 +271,7 @@ matched_triggers_csv() {
   while IFS= read -r trigger; do
     [[ -z "$trigger" ]] && continue
     trigger_lc="$(to_lower "$trigger")"
-    if contains_token "$query_lc" "$trigger_lc"; then
+    if contains_trigger "$query_lc" "$trigger_lc"; then
       csv="$(append_unique_csv "$csv" "$trigger")"
     fi
   done < <(registry_get_list_field "$registry_file" "$skill_id" "triggers")
@@ -263,18 +288,20 @@ score_skill_for_query() {
 
   skill_lc="$(to_lower "$skill_id")"
 
-  if contains_token "$query_lc" "\$$skill_lc"; then
+  if contains_explicit_skill_id "$query_lc" "$skill_lc"; then
     score=$((score + WEIGHT_EXPLICIT_SKILL_MENTION))
   fi
-  if contains_token "$query_lc" "$skill_lc"; then
+  if contains_skill_id "$query_lc" "$skill_lc"; then
     score=$((score + WEIGHT_SKILL_ID_MENTION))
   fi
 
   while IFS= read -r trigger; do
     [[ -z "$trigger" ]] && continue
     trigger_lc="$(to_lower "$trigger")"
-    if contains_token "$query_lc" "$trigger_lc"; then
-      score=$((score + WEIGHT_TRIGGER_MATCH))
+    if contains_trigger "$query_lc" "$trigger_lc"; then
+      # Longer, more specific phrases (for example, "local alphagenome")
+      # outrank broad family triggers ("alphagenome") when both match.
+      score=$((score + WEIGHT_TRIGGER_MATCH + ${#trigger_lc}))
     fi
   done < <(registry_get_list_field "$registry_file" "$skill_id" "triggers")
 
@@ -405,7 +432,7 @@ infer_task() {
       while IFS= read -r trigger; do
         [[ -z "$trigger" ]] && continue
         trigger_lc="$(to_lower "$trigger")"
-        if contains_token "$query_lc" "$trigger_lc"; then
+        if contains_trigger "$query_lc" "$trigger_lc"; then
           score=$((score + INFER_TRIGGER_MATCH_IN_TASK))
           trigger_hits=$((trigger_hits + 1))
           if [[ "$trigger_hits" -ge "$INFER_TRIGGER_MATCH_CAP" ]]; then
@@ -440,10 +467,10 @@ build_reasons_pipe() {
 
   skill_lc="$(to_lower "$skill_id")"
 
-  if contains_token "$query_lc" "\$$skill_lc"; then
+  if contains_explicit_skill_id "$query_lc" "$skill_lc"; then
     reasons="$(append_reason "$reasons" "explicit skill mention: \$$skill_lc")"
   fi
-  if contains_token "$query_lc" "$skill_lc"; then
+  if contains_skill_id "$query_lc" "$skill_lc"; then
     reasons="$(append_reason "$reasons" "query mentions skill id")"
   fi
 
@@ -488,7 +515,7 @@ compute_confidence() {
     margin=0
   fi
 
-  if [[ -n "$primary_skill" ]] && ( contains_token "$query_lc" "\$$skill_lc" || contains_token "$query_lc" "$skill_lc" ); then
+  if [[ -n "$primary_skill" ]] && ( contains_explicit_skill_id "$query_lc" "$skill_lc" || contains_skill_id "$query_lc" "$skill_lc" ); then
     printf 'high|0.92\n'
     return 0
   fi
@@ -694,6 +721,9 @@ fi
 score_table=""
 for sid in "${skill_ids[@]}"; do
   score="$(score_skill_for_query "$sid" "$query_lc" "$effective_task")"
+  if ! registry_skill_enabled "$registry_file" "$sid" && ! contains_explicit_skill_id "$query_lc" "$(to_lower "$sid")"; then
+    score=$((score - 1))
+  fi
   score_table+="$score"$'\t'"$sid"$'\n'
 done
 
@@ -702,6 +732,28 @@ primary_skill="$(printf '%s\n' "$sorted_scores" | awk 'NF{print $2; exit}')"
 primary_score="$(printf '%s\n' "$sorted_scores" | awk 'NF{print $1; exit}')"
 if [[ -z "$primary_score" ]]; then
   primary_score=0
+fi
+
+# Explicit references to a disabled registry ID are safety-critical even when
+# disabled skills are hidden from the normal candidate pool. Preserve the
+# request so the decision becomes a clear disabled/development clarification.
+forced_disabled_skill=""
+while IFS= read -r sid; do
+  [[ -z "$sid" ]] && continue
+  if ! registry_skill_enabled "$registry_file" "$sid" && contains_explicit_skill_id "$query_lc" "$(to_lower "$sid")"; then
+    forced_disabled_skill="$sid"
+    break
+  fi
+done < <(registry_list_ids "$registry_file")
+if [[ -n "$forced_disabled_skill" ]]; then
+  primary_skill="$forced_disabled_skill"
+  primary_score="$WEIGHT_EXPLICIT_SKILL_MENTION"
+fi
+
+primary_disabled=0
+if [[ -n "$primary_skill" ]] && ! registry_skill_enabled "$registry_file" "$primary_skill" \
+  && (contains_explicit_skill_id "$query_lc" "$(to_lower "$primary_skill")" || contains_skill_id "$query_lc" "$(to_lower "$primary_skill")" || contains_token "$query_lc" "legacy" || contains_token "$query_lc" "classic"); then
+  primary_disabled=1
 fi
 
 primary_from_tag_fallback=0
@@ -765,6 +817,10 @@ if [[ -z "$primary_skill" ]]; then
 fi
 if [[ "$decision" == "route" && "$fine_tuning_ambiguous" -eq 1 ]]; then
   decision="clarify"
+fi
+if [[ "$decision" == "route" && "$primary_disabled" -eq 1 ]]; then
+  decision="clarify"
+  clarify_question="The requested skill '$primary_skill' is disabled/development-only. Should I use an enabled replacement or enable it explicitly?"
 fi
 if [[ "$decision" == "route" && "$task_source" != "provided" && "$CLARIFY_LOW_CONFIDENCE_BEHAVIOR" == "ask" && "$confidence_level" == "low" ]]; then
   decision="clarify"

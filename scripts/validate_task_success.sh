@@ -72,6 +72,8 @@ parse_cases() {
       required_step_contains = ""
       required_expected_output_contains = ""
       required_selected_skill = ""
+      required_selected_inputs_group = ""
+      required_missing_input_contains = ""
       required_assumption_contains = ""
       forbidden_step_contains = ""
     }
@@ -89,7 +91,7 @@ parse_cases() {
     }
     function emit_case() {
       if (case_id != "") {
-        print case_id, query, task, min_steps, min_outputs, required_step_contains, required_expected_output_contains, required_selected_skill, required_assumption_contains, forbidden_step_contains
+        print case_id, query, task, min_steps, min_outputs, required_step_contains, required_expected_output_contains, required_selected_skill, required_selected_inputs_group, required_missing_input_contains, required_assumption_contains, forbidden_step_contains
       }
     }
     /^[[:space:]]*-[[:space:]]id:[[:space:]]*/ {
@@ -104,6 +106,8 @@ parse_cases() {
       required_step_contains = ""
       required_expected_output_contains = ""
       required_selected_skill = ""
+      required_selected_inputs_group = ""
+      required_missing_input_contains = ""
       required_assumption_contains = ""
       forbidden_step_contains = ""
       next
@@ -148,6 +152,18 @@ parse_cases() {
       required_selected_skill = $0
       sub(/^[[:space:]]*required_selected_skill:[[:space:]]*/, "", required_selected_skill)
       required_selected_skill = unquote(required_selected_skill)
+      next
+    }
+    /^[[:space:]]*required_selected_inputs_group:[[:space:]]*/ {
+      required_selected_inputs_group = $0
+      sub(/^[[:space:]]*required_selected_inputs_group:[[:space:]]*/, "", required_selected_inputs_group)
+      required_selected_inputs_group = unquote(required_selected_inputs_group)
+      next
+    }
+    /^[[:space:]]*required_missing_input_contains:[[:space:]]*/ {
+      required_missing_input_contains = $0
+      sub(/^[[:space:]]*required_missing_input_contains:[[:space:]]*/, "", required_missing_input_contains)
+      required_missing_input_contains = unquote(required_missing_input_contains)
       next
     }
     /^[[:space:]]*required_assumption_contains:[[:space:]]*/ {
@@ -237,7 +253,7 @@ total=0
 passed=0
 failed=0
 
-while IFS=$'\x1f' read -r case_id query task min_steps min_outputs required_step_contains required_expected_output_contains required_selected_skill required_assumption_contains forbidden_step_contains; do
+while IFS=$'\x1f' read -r case_id query task min_steps min_outputs required_step_contains required_expected_output_contains required_selected_skill required_selected_inputs_group required_missing_input_contains required_assumption_contains forbidden_step_contains; do
   [[ -z "$case_id" ]] && continue
   total=$((total + 1))
 
@@ -277,6 +293,8 @@ while IFS=$'\x1f' read -r case_id query task min_steps min_outputs required_step
   plan_task="$(extract_plan_scalar "$output" "task")"
   selected_skill="$(extract_plan_scalar "$output" "selected_skill")"
   retry_policy="$(extract_plan_scalar "$output" "retry_policy")"
+  selected_inputs_group="$(printf '%s\n' "$output" | sed -n 's/.*"selected_required_inputs_group":"\([^"]*\)".*/\1/p')"
+  missing_inputs_csv="$(printf '%s\n' "$output" | sed -n 's/.*"missing_inputs":\[\([^]]*\)\].*/\1/p' | sed 's/^"//; s/"$//; s/","/,/g')"
 
   if [[ -n "$task" && "$plan_task" != "$task" ]]; then
     failed=$((failed + 1))
@@ -299,6 +317,24 @@ while IFS=$'\x1f' read -r case_id query task min_steps min_outputs required_step
     echo "  expected selected_skill: $required_selected_skill" >&2
     echo "  got selected_skill: ${selected_skill:-none}" >&2
     continue
+  fi
+
+  if [[ -n "$required_selected_inputs_group" && "$selected_inputs_group" != "$required_selected_inputs_group" ]]; then
+    failed=$((failed + 1))
+    echo "fail: $case_id" >&2
+    echo "  expected selected_required_inputs_group: $required_selected_inputs_group" >&2
+    echo "  got selected_required_inputs_group: ${selected_inputs_group:-none}" >&2
+    continue
+  fi
+
+  if [[ -n "$required_missing_input_contains" ]]; then
+    if ! contains_fragment_ci "$missing_inputs_csv" "$required_missing_input_contains"; then
+      failed=$((failed + 1))
+      echo "fail: $case_id" >&2
+      echo "  missing_inputs does not contain: $required_missing_input_contains" >&2
+      echo "  missing_inputs: ${missing_inputs_csv:-none}" >&2
+      continue
+    fi
   fi
 
   missing_array_field=0

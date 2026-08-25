@@ -9,6 +9,7 @@ DEFAULT_CONTRACTS_FILE="$REPO_ROOT/registry/task_contracts.yaml"
 DEFAULT_OUTPUT_CONTRACTS_FILE="$REPO_ROOT/registry/output_contracts.yaml"
 DEFAULT_RECOVERY_POLICIES_FILE="$REPO_ROOT/registry/recovery_policies.yaml"
 DEFAULT_INPUT_SCHEMA_FILE="$REPO_ROOT/registry/input_schema.yaml"
+DEFAULT_PARAMETER_CATALOG_FILE="$REPO_ROOT/registry/parameter_catalog.yaml"
 DEFAULT_ROUTER_SCRIPT="$REPO_ROOT/scripts/route_query.sh"
 source "$REPO_ROOT/scripts/lib_registry.sh"
 
@@ -34,6 +35,8 @@ Options:
   --output-contracts FILE Output contracts file. Default: <repo>/registry/output_contracts.yaml
   --recovery FILE        Recovery policy file. Default: <repo>/registry/recovery_policies.yaml
   --input-schema FILE    Canonical input schema file. Default: <repo>/registry/input_schema.yaml
+  --parameter-catalog FILE
+                         Source-grounded parameter claims. Default: <repo>/registry/parameter_catalog.yaml
   --router FILE          Router script path. Default: <repo>/scripts/route_query.sh
   --include-disabled     Include disabled skills in routing candidates.
   -h, --help             Show this help message.
@@ -203,6 +206,21 @@ emit_text_plan_block() {
     echo "    - none"
   fi
   echo "  retry_policy: ${retry_policy:-none}"
+}
+
+csv_join_with_semicolon() {
+  local csv="${1:-}"
+  local out=""
+  local item=""
+  while IFS= read -r item; do
+    [[ -z "$item" ]] && continue
+    if [[ -z "$out" ]]; then
+      out="$item"
+    else
+      out="$out;$item"
+    fi
+  done < <(printf '%s\n' "$csv" | tr ',' '\n')
+  printf '%s\n' "$out"
 }
 
 emit_json_plan_object() {
@@ -945,6 +963,76 @@ csv_count() {
   printf '%s\n' "$count"
 }
 
+input_group_missing_csv() {
+  local required_group_csv="${1:-}"
+  local provided_group_csv="${2:-}"
+  local missing_group_csv=""
+  local req=""
+  while IFS= read -r req; do
+    [[ -z "$req" ]] && continue
+    if ! in_csv_list "$req" "$provided_group_csv"; then
+      missing_group_csv="$(append_csv "$missing_group_csv" "$req")"
+    fi
+  done < <(printf '%s\n' "$required_group_csv" | tr ',' '\n')
+  printf '%s\n' "$missing_group_csv"
+}
+
+emit_json_any_of_groups() {
+  local groups_csv="${1:-}"
+  local first=1
+  local record=""
+  local group_id=""
+  local description=""
+  local required=""
+  local canonical=""
+  printf '['
+  while IFS= read -r record; do
+    [[ -z "$record" ]] && continue
+    IFS='|' read -r group_id description required canonical <<<"$record"
+    if [[ "$first" -eq 0 ]]; then
+      printf ','
+    fi
+    printf '{'
+    printf '"id":"%s",' "$(json_escape "$group_id")"
+    printf '"description":"%s",' "$(json_escape "$description")"
+    printf '"required_inputs":'
+    emit_json_array_from_csv "$required"
+    printf ','
+    printf '"canonical_required_inputs":'
+    emit_json_array_from_csv "$canonical"
+    printf '}'
+    first=0
+  done < <(printf '%s\n' "$groups_csv")
+  printf ']'
+}
+
+emit_json_missing_by_group() {
+  local missing_groups_csv="${1:-}"
+  local first=1
+  local record=""
+  local group_id=""
+  local missing=""
+  local canonical_missing=""
+  printf '['
+  while IFS= read -r record; do
+    [[ -z "$record" ]] && continue
+    IFS='|' read -r group_id missing canonical_missing <<<"$record"
+    if [[ "$first" -eq 0 ]]; then
+      printf ','
+    fi
+    printf '{'
+    printf '"id":"%s",' "$(json_escape "$group_id")"
+    printf '"missing_inputs":'
+    emit_json_array_from_csv "$missing"
+    printf ','
+    printf '"missing_inputs_canonical":'
+    emit_json_array_from_csv "$canonical_missing"
+    printf '}'
+    first=0
+  done < <(printf '%s\n' "$missing_groups_csv")
+  printf ']'
+}
+
 track_query_mentions_all_skills() {
   local query_lc="$1"
   contains_token "$query_lc" "all skills" || \
@@ -1452,6 +1540,7 @@ contracts_file="$DEFAULT_CONTRACTS_FILE"
 output_contracts_file="$DEFAULT_OUTPUT_CONTRACTS_FILE"
 recovery_policies_file="$DEFAULT_RECOVERY_POLICIES_FILE"
 input_schema_file="$DEFAULT_INPUT_SCHEMA_FILE"
+parameter_catalog_file="$DEFAULT_PARAMETER_CATALOG_FILE"
 router_script="$DEFAULT_ROUTER_SCRIPT"
 include_disabled=0
 
@@ -1501,6 +1590,10 @@ while [[ $# -gt 0 ]]; do
       input_schema_file="$2"
       shift 2
       ;;
+    --parameter-catalog)
+      parameter_catalog_file="$2"
+      shift 2
+      ;;
     --router)
       router_script="$2"
       shift 2
@@ -1548,6 +1641,7 @@ registry_require_file "$contracts_file"
 registry_require_file "$output_contracts_file"
 registry_require_file "$recovery_policies_file"
 registry_require_file "$input_schema_file"
+registry_require_file "$parameter_catalog_file"
 if [[ ! -f "$router_script" ]]; then
   echo "error: router script not found: $router_script" >&2
   exit 1
@@ -1626,6 +1720,7 @@ if [[ "$decision" == "clarify" ]]; then
   printf '"missing_inputs":[],'
   printf '"missing_inputs_canonical":[],'
   printf '"constraints":[],'
+  printf '"parameter_claims":[],'
   printf '"tools":[],'
   printf '"plan":null,'
   printf '"next_prompt":"%s"' "$(json_escape "Ask one focused clarification question before selecting a skill.")"
@@ -1641,6 +1736,12 @@ if [[ -z "$primary_skill" ]]; then
   exit 1
 fi
 
+parameter_claims_json="[]"
+if [[ -f "$REPO_ROOT/scripts/emit_parameter_claims.py" ]]; then
+  parameter_claims_json="$(python3 "$REPO_ROOT/scripts/emit_parameter_claims.py" \
+    --catalog "$parameter_catalog_file" --skill "$primary_skill" --query "$query" 2>/dev/null || printf '[]')"
+fi
+
 skill_path="$(registry_get_path "$registry_file" "$primary_skill" || true)"
 if [[ -z "$skill_path" ]]; then
   skill_path="$primary_skill"
@@ -1653,6 +1754,9 @@ skill_required_csv=""
 required_csv=""
 required_canonical_csv=""
 required_inputs_source="skill"
+required_any_of_groups_csv=""
+selected_required_inputs_group=""
+missing_inputs_by_group_csv=""
 constraints_csv=""
 tools_csv=""
 
@@ -1684,6 +1788,11 @@ if [[ -n "$effective_task" ]]; then
   else
     required_canonical_csv="$(canonicalize_csv "$required_csv" "$input_schema_file")"
   fi
+
+  while IFS= read -r group_record; do
+    [[ -z "$group_record" ]] && continue
+    required_any_of_groups_csv="${required_any_of_groups_csv}${group_record}"$'\n'
+  done < <(task_contract_list_any_of_groups "$contracts_file" "$effective_task")
 else
   required_inputs_source="skill:$primary_skill"
 fi
@@ -1875,6 +1984,8 @@ if [[ "$effective_task" == "variant-effect" ]]; then
       plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "vcf-input-path-resolution:${variant_vcf_source}")"
       plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "vcf-input-resolved:${variant_vcf_resolved}")"
     else
+      provided_csv="$(remove_csv_item "$provided_csv" "vcf-input")"
+      provided_canonical_csv="$(remove_csv_item "$provided_canonical_csv" "vcf-input")"
       if ! in_csv_list "vcf-input" "$missing_csv"; then
         missing_csv="$(append_csv "$missing_csv" "vcf-input")"
       fi
@@ -1895,6 +2006,38 @@ fi
 
 if [[ -z "$plan_assumptions_csv" ]]; then
   plan_assumptions_csv="follow-task-contract-and-skill-constraints"
+fi
+
+if [[ "$effective_task" == "fine-tuning" && "$primary_skill" == "bpnet-skill" ]]; then
+  plan_assumptions_csv=""
+  plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "bpnet-2x-source-grounded-workflow")"
+  plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "validate-input-data-model-params-and-splits-before-gpu-training")"
+  plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "reference-fasta-chrom-sizes-and-output-directory-must-exist")"
+  if [[ -n "$missing_csv" ]]; then
+    while IFS= read -r req; do
+      [[ -z "$req" ]] && continue
+      plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "missing-input-needs-clarification:$req")"
+    done < <(printf '%s\n' "$missing_csv" | tr ',' '\n')
+  fi
+
+  plan_steps_csv=""
+  plan_steps_csv="$(append_csv "$plan_steps_csv" "python3 skills/bpnet-skill/scripts/validate_bpnet_inputs.py --input-data input_data.json --model-params bpnet_params.json --splits splits.json --command train --check-paths --json > bpnet_input_validation.json")"
+  plan_steps_csv="$(append_csv "$plan_steps_csv" "bpnet-counts-loss-weight --input-data input_data.json > counts_loss_weight.txt")"
+  plan_steps_csv="$(append_csv "$plan_steps_csv" "awk 'NR<=45{print}' skills/bpnet-skill/references/cli-workflows.md")"
+
+  plan_expected_outputs_csv=""
+  plan_expected_outputs_csv="$(append_csv "$plan_expected_outputs_csv" "plan-json:fine-tuning")"
+  plan_expected_outputs_csv="$(append_csv "$plan_expected_outputs_csv" "expected-file:bpnet_input_validation.json")"
+  plan_expected_outputs_csv="$(append_csv "$plan_expected_outputs_csv" "expected-file:counts_loss_weight.txt")"
+  plan_expected_outputs_csv="$(append_csv "$plan_expected_outputs_csv" "train:expected-file:models/model_split000")"
+  plan_expected_outputs_csv="$(append_csv "$plan_expected_outputs_csv" "train:expected-file:models/model_split000.history.json")"
+  plan_expected_outputs_csv="$(append_csv "$plan_expected_outputs_csv" "train:expected-file:models/config_split000.json")"
+
+  plan_fallbacks_csv=""
+  plan_fallbacks_csv="$(append_csv "$plan_fallbacks_csv" "use-upstream-documented-bpnet-docker-image")"
+  plan_fallbacks_csv="$(append_csv "$plan_fallbacks_csv" "reduce-batch-size-or-threads-after-config-validation")"
+  plan_fallbacks_csv="$(append_csv "$plan_fallbacks_csv" "run-a-single-split-or-chromosome-subset-first")"
+  plan_retry_policy="fix-config-validation-errors-then-retry-once"
 fi
 
 if [[ "$effective_task" == "fine-tuning" && "$primary_skill" == "nucleotide-transformer-v3" && "$fine_tuning_ntv3_explicit" -eq 1 && -n "$fine_tuning_mode" ]]; then
@@ -2528,6 +2671,8 @@ if [[ "$effective_task" == "variant-effect" && "$variant_compare_intent" -eq 1 &
   fi
 
   if [[ -z "$variant_vcf_resolved" ]]; then
+    provided_csv="$(remove_csv_item "$provided_csv" "vcf-input")"
+    provided_canonical_csv="$(remove_csv_item "$provided_canonical_csv" "vcf-input")"
     if ! in_csv_list "vcf-input" "$missing_csv"; then
       missing_csv="$(append_csv "$missing_csv" "vcf-input")"
     fi
@@ -2892,6 +3037,75 @@ if [[ "$effective_task" == "variant-effect" && "$variant_multi_plan_enabled" -eq
   fi
 fi
 
+if [[ -n "$required_any_of_groups_csv" ]]; then
+  best_group_id=""
+  best_group_description=""
+  best_required_csv=""
+  best_canonical_csv=""
+  best_missing_csv=""
+  best_missing_canonical_csv=""
+  best_missing_count=-1
+  best_required_count=0
+  best_priority=0
+  any_record=""
+  any_group_id=""
+  any_description=""
+  any_required_csv=""
+  any_canonical_csv=""
+  any_missing_csv=""
+  any_missing_canonical_csv=""
+  any_missing_count=0
+  any_required_count=0
+  any_priority=0
+  missing_inputs_by_group_csv=""
+
+  while IFS= read -r any_record; do
+    [[ -z "$any_record" ]] && continue
+    IFS='|' read -r any_group_id any_description any_required_csv any_canonical_csv <<<"$any_record"
+    if [[ -z "$any_canonical_csv" ]]; then
+      any_canonical_csv="$(canonicalize_csv "$any_required_csv" "$input_schema_file")"
+    fi
+
+    any_missing_csv="$(input_group_missing_csv "$any_required_csv" "$provided_csv")"
+    any_missing_canonical_csv="$(input_group_missing_csv "$any_canonical_csv" "$provided_canonical_csv")"
+    any_missing_count="$(csv_count "$any_missing_csv")"
+    any_required_count="$(csv_count "$any_required_csv")"
+    any_priority=0
+    if [[ "$effective_task" == "variant-effect" && -n "$variant_vcf_query_path" && "$any_group_id" == "vcf-batch" ]]; then
+      any_priority=1
+    fi
+    if [[ "$effective_task" == "track-prediction" && -n "$track_bed_query_path" && "$any_group_id" == "bed-batch" ]]; then
+      any_priority=1
+    fi
+
+    missing_inputs_by_group_csv="${missing_inputs_by_group_csv}${any_group_id}|${any_missing_csv}|${any_missing_canonical_csv}"$'\n'
+
+    if [[ "$best_missing_count" -lt 0 || "$any_priority" -gt "$best_priority" || ( "$any_priority" -eq "$best_priority" && "$any_missing_count" -lt "$best_missing_count" ) || ( "$any_priority" -eq "$best_priority" && "$any_missing_count" -eq "$best_missing_count" && "$any_required_count" -lt "$best_required_count" ) ]]; then
+      best_group_id="$any_group_id"
+      best_group_description="$any_description"
+      best_required_csv="$any_required_csv"
+      best_canonical_csv="$any_canonical_csv"
+      best_missing_csv="$any_missing_csv"
+      best_missing_canonical_csv="$any_missing_canonical_csv"
+      best_missing_count="$any_missing_count"
+      best_required_count="$any_required_count"
+      best_priority="$any_priority"
+    fi
+  done < <(printf '%s\n' "$required_any_of_groups_csv")
+
+  if [[ -n "$best_group_id" ]]; then
+    selected_required_inputs_group="$best_group_id"
+    required_csv="$best_required_csv"
+    required_canonical_csv="$best_canonical_csv"
+    missing_csv="$best_missing_csv"
+    missing_canonical_csv="$best_missing_canonical_csv"
+    plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "selected-required-inputs-group:${best_group_id}")"
+    if [[ -n "$best_group_description" ]]; then
+      plan_assumptions_csv="$(append_csv "$plan_assumptions_csv" "selected-required-inputs-group-description:${best_group_description}")"
+    fi
+  fi
+fi
+
 if [[ -z "$required_canonical_csv" ]]; then
   required_canonical_csv="$(canonicalize_csv "$required_csv" "$input_schema_file")"
 fi
@@ -2965,6 +3179,24 @@ if [[ "$format" == "text" ]]; then
     echo "required_inputs_canonical: none"
   fi
 
+  if [[ -n "$required_any_of_groups_csv" ]]; then
+    echo "required_inputs_any_of:"
+    while IFS= read -r any_record; do
+      [[ -z "$any_record" ]] && continue
+      IFS='|' read -r any_group_id any_description any_required any_canonical <<<"$any_record"
+      any_required_text="$(csv_join_with_semicolon "$any_required")"
+      echo "- ${any_group_id}: ${any_required_text}"
+    done < <(printf '%s\n' "$required_any_of_groups_csv")
+  else
+    echo "required_inputs_any_of: none"
+  fi
+
+  if [[ -n "$selected_required_inputs_group" ]]; then
+    echo "selected_required_inputs_group: $selected_required_inputs_group"
+  else
+    echo "selected_required_inputs_group: none"
+  fi
+
   if [[ -n "$provided_csv" ]]; then
     echo "provided_inputs:"
     csv_to_lines_prefixed "$provided_csv" "- "
@@ -2991,6 +3223,22 @@ if [[ "$format" == "text" ]]; then
     csv_to_lines_prefixed "$missing_canonical_csv" "- "
   else
     echo "missing_inputs_canonical: none"
+  fi
+
+  if [[ -n "$missing_inputs_by_group_csv" ]]; then
+    echo "missing_inputs_by_group:"
+    while IFS= read -r missing_record; do
+      [[ -z "$missing_record" ]] && continue
+      IFS='|' read -r missing_group_id missing_group missing_group_canonical <<<"$missing_record"
+      if [[ -n "$missing_group" ]]; then
+        missing_group_text="$(csv_join_with_semicolon "$missing_group")"
+      else
+        missing_group_text="none"
+      fi
+      echo "- ${missing_group_id}: ${missing_group_text}"
+    done < <(printf '%s\n' "$missing_inputs_by_group_csv")
+  else
+    echo "missing_inputs_by_group: none"
   fi
 
   if [[ -n "$constraints_csv" ]]; then
@@ -3056,6 +3304,14 @@ printf '"required_inputs_canonical":'
 emit_json_array_from_csv "${required_canonical_csv:-}"
 printf ','
 printf '"required_inputs_source":"%s",' "$(json_escape "$required_inputs_source")"
+printf '"required_inputs_any_of":'
+emit_json_any_of_groups "${required_any_of_groups_csv:-}"
+printf ','
+if [[ -n "$selected_required_inputs_group" ]]; then
+  printf '"selected_required_inputs_group":"%s",' "$(json_escape "$selected_required_inputs_group")"
+else
+  printf '"selected_required_inputs_group":null,'
+fi
 printf '"provided_inputs":'
 emit_json_array_from_csv "${provided_csv:-}"
 printf ','
@@ -3068,9 +3324,13 @@ printf ','
 printf '"missing_inputs_canonical":'
 emit_json_array_from_csv "${missing_canonical_csv:-}"
 printf ','
+printf '"missing_inputs_by_group":'
+emit_json_missing_by_group "${missing_inputs_by_group_csv:-}"
+printf ','
 printf '"constraints":'
 emit_json_array_from_csv "${constraints_csv:-}"
 printf ','
+printf '"parameter_claims":%s,' "$parameter_claims_json"
 printf '"tools":'
 emit_json_array_from_csv "${tools_csv:-}"
 printf ','

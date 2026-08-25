@@ -12,9 +12,12 @@ import os
 import random
 import subprocess
 import sys
+import re
+import shutil
 import time
 import urllib.error
 import urllib.request
+from urllib.parse import urlsplit, urlunsplit
 from pathlib import Path
 from typing import Any, Callable, Dict, Iterable, List, Optional, Sequence, Tuple
 
@@ -29,6 +32,8 @@ REQUIRED_PLAN_ARRAY_FIELDS = [
     "expected_outputs",
     "fallbacks",
 ]
+
+SCORE_TRACKS = ["strict", "lenient"]
 
 PROMPT_VARIANT_TO_TEMPLATE = {
     "direct": "direct.md",
@@ -136,6 +141,32 @@ def lower_contains(haystack: str, needle: str) -> bool:
     return needle.lower() in haystack.lower()
 
 
+def first_nonempty_str(*values: Any) -> Optional[str]:
+    for value in values:
+        if isinstance(value, str) and value.strip():
+            return value.strip()
+    return None
+
+
+def combine_unique(items: Iterable[Any]) -> List[str]:
+    seen = set()
+    out: List[str] = []
+    for item in items:
+        for value in to_str_list(item):
+            if value not in seen:
+                out.append(value)
+                seen.add(value)
+    return out
+
+
+def extract_selected_group_from_assumptions(assumptions: Iterable[str]) -> Optional[str]:
+    for assumption in assumptions:
+        match = re.search(r"selected[-_]required[-_]inputs[-_]group[:=]([A-Za-z0-9_.-]+)", assumption)
+        if match:
+            return match.group(1)
+    return None
+
+
 def normalize_from_object(
     obj: Dict[str, Any],
     raw_response: str,
@@ -181,11 +212,55 @@ def normalize_from_object(
     if not isinstance(clarify_question, str):
         clarify_question = None
 
-    constraints = to_str_list(obj.get("constraints"))
-
     plan = obj.get("plan")
     if not isinstance(plan, dict):
         plan = None
+
+    plan_constraints = to_str_list(plan.get("constraints") if plan else None)
+    constraints = to_str_list(obj.get("constraints"))
+    all_constraints = combine_unique([constraints, plan_constraints])
+
+    top_missing_inputs = to_str_list(obj.get("missing_inputs"))
+    plan_missing_inputs = to_str_list(plan.get("missing_inputs") if plan else None)
+    missing_inputs = combine_unique([top_missing_inputs, plan_missing_inputs])
+
+    top_assumptions = to_str_list(obj.get("assumptions"))
+    plan_assumptions = to_str_list(plan.get("assumptions") if plan else None)
+    assumptions = combine_unique([top_assumptions, plan_assumptions])
+
+    selected_required_inputs_group = first_nonempty_str(
+        obj.get("selected_required_inputs_group"),
+        obj.get("selected_inputs_group"),
+        plan.get("selected_required_inputs_group") if plan else None,
+        plan.get("selected_inputs_group") if plan else None,
+    )
+    if not selected_required_inputs_group:
+        selected_required_inputs_group = extract_selected_group_from_assumptions(assumptions)
+
+    plan_selected_skill = None
+    inferred_task = first_nonempty_str(obj.get("task"), plan.get("task") if plan else None)
+    parameter_claims: List[Dict[str, str]] = []
+    raw_parameter_claims = obj.get("parameter_claims")
+    if isinstance(raw_parameter_claims, list):
+        for item in raw_parameter_claims:
+            if not isinstance(item, dict):
+                continue
+            name = item.get("name")
+            value = item.get("value")
+            if not isinstance(name, str) or not name.strip() or value is None:
+                continue
+            parameter_claims.append({
+                "name": name.strip(),
+                "value": str(value),
+                "status": str(item.get("status") or "unknown"),
+                "evidence": str(item.get("evidence") or ""),
+            })
+    runnable_steps: List[str] = []
+    expected_outputs: List[str] = []
+    if plan is not None:
+        plan_selected_skill = first_nonempty_str(plan.get("selected_skill"))
+        runnable_steps = to_str_list(plan.get("runnable_steps"))
+        expected_outputs = to_str_list(plan.get("expected_outputs"))
 
     validation_errors: List[str] = []
     if primary_skill and primary_skill not in known:
@@ -206,6 +281,15 @@ def normalize_from_object(
         "secondary_skills": secondary_skills,
         "clarify_question": clarify_question,
         "constraints": constraints,
+        "all_constraints": all_constraints,
+        "missing_inputs": missing_inputs,
+        "assumptions": assumptions,
+        "selected_required_inputs_group": selected_required_inputs_group,
+        "plan_selected_skill": plan_selected_skill,
+        "inferred_task": inferred_task,
+        "parameter_claims": parameter_claims,
+        "runnable_steps": runnable_steps,
+        "expected_outputs": expected_outputs,
         "plan": plan,
         "raw_response": raw_response,
         "validation_errors": validation_errors,
@@ -221,6 +305,15 @@ def normalize_from_raw_text(raw_text: str, known_skills: Iterable[str]) -> Dict[
             "secondary_skills": [],
             "clarify_question": None,
             "constraints": [],
+            "all_constraints": [],
+            "parameter_claims": [],
+            "missing_inputs": [],
+            "assumptions": [],
+            "selected_required_inputs_group": None,
+            "plan_selected_skill": None,
+            "inferred_task": None,
+            "runnable_steps": [],
+            "expected_outputs": [],
             "plan": None,
             "raw_response": raw_text,
             "validation_errors": [f"raw_json_parse_error:{parse_error or 'not_object'}"],
@@ -228,7 +321,7 @@ def normalize_from_raw_text(raw_text: str, known_skills: Iterable[str]) -> Dict[
     return normalize_from_object(parsed, raw_text, known_skills)
 
 
-def score_routing_case(case: Dict[str, Any], normalized: Dict[str, Any]) -> Dict[str, Any]:
+def score_routing_case(case: Dict[str, Any], normalized: Dict[str, Any], track: str = "strict") -> Dict[str, Any]:
     checks: List[Dict[str, Any]] = []
 
     expected_decision = str(case.get("expected_decision") or "route").strip().lower()
@@ -256,6 +349,8 @@ def score_routing_case(case: Dict[str, Any], normalized: Dict[str, Any]) -> Dict
 
     primary_expected = case.get("expected_primary_skill")
     primary_actual = normalized.get("primary_skill")
+    if track == "lenient" and not primary_actual:
+        primary_actual = normalized.get("plan_selected_skill")
     primary_ok = primary_actual == primary_expected
     checks.append({"name": "primary_skill", "pass": primary_ok, "expected": primary_expected, "actual": primary_actual})
     overall_ok = overall_ok and primary_ok
@@ -281,7 +376,7 @@ def score_routing_case(case: Dict[str, Any], normalized: Dict[str, Any]) -> Dict
     return {"pass": overall_ok, "checks": checks}
 
 
-def score_groundedness_case(case: Dict[str, Any], normalized: Dict[str, Any]) -> Dict[str, Any]:
+def score_groundedness_case(case: Dict[str, Any], normalized: Dict[str, Any], track: str = "strict") -> Dict[str, Any]:
     checks: List[Dict[str, Any]] = []
 
     decision = normalized.get("decision")
@@ -293,7 +388,18 @@ def score_groundedness_case(case: Dict[str, Any], normalized: Dict[str, Any]) ->
     primary_ok = actual_primary == expected_primary
     checks.append({"name": "primary_skill", "pass": primary_ok, "expected": expected_primary, "actual": actual_primary})
 
-    constraints = ",".join(to_str_list(normalized.get("constraints")))
+    if track == "lenient":
+        constraints = ",".join(
+            combine_unique(
+                [
+                    normalized.get("all_constraints"),
+                    normalized.get("assumptions"),
+                    str(normalized.get("raw_response") or ""),
+                ]
+            )
+        )
+    else:
+        constraints = ",".join(to_str_list(normalized.get("constraints")))
     required_fragment = str(case.get("required_constraint_contains") or "").strip()
     constraint_ok = True
     if required_fragment:
@@ -329,7 +435,7 @@ def score_groundedness_case(case: Dict[str, Any], normalized: Dict[str, Any]) ->
     return {"pass": overall_ok, "checks": checks}
 
 
-def score_task_success_case(case: Dict[str, Any], normalized: Dict[str, Any]) -> Dict[str, Any]:
+def score_task_success_case(case: Dict[str, Any], normalized: Dict[str, Any], track: str = "strict") -> Dict[str, Any]:
     checks: List[Dict[str, Any]] = []
 
     decision = normalized.get("decision")
@@ -355,6 +461,9 @@ def score_task_success_case(case: Dict[str, Any], normalized: Dict[str, Any]) ->
     missing_arrays: List[str] = []
     runnable_steps: List[str] = []
     expected_outputs: List[str] = []
+    assumptions: List[str] = []
+    missing_inputs: List[str] = []
+    selected_inputs_group: Optional[str] = None
 
     if isinstance(plan, dict):
         selected_skill = plan.get("selected_skill")
@@ -374,6 +483,21 @@ def score_task_success_case(case: Dict[str, Any], normalized: Dict[str, Any]) ->
             runnable_steps = to_str_list(plan.get("runnable_steps"))
         if isinstance(plan.get("expected_outputs"), list):
             expected_outputs = to_str_list(plan.get("expected_outputs"))
+        assumptions = to_str_list(plan.get("assumptions"))
+        missing_inputs = to_str_list(plan.get("missing_inputs"))
+
+    if track == "lenient":
+        runnable_steps = combine_unique([runnable_steps, normalized.get("runnable_steps")])
+        expected_outputs = combine_unique([expected_outputs, normalized.get("expected_outputs")])
+        assumptions = combine_unique([assumptions, normalized.get("assumptions")])
+        missing_inputs = combine_unique([missing_inputs, normalized.get("missing_inputs")])
+    else:
+        if not missing_inputs:
+            missing_inputs = to_str_list(normalized.get("missing_inputs"))
+        if not assumptions:
+            assumptions = to_str_list(normalized.get("assumptions"))
+
+    selected_inputs_group = first_nonempty_str(normalized.get("selected_required_inputs_group"))
 
     checks.append({"name": "selected_skill_present", "pass": selected_skill_ok})
     checks.append({"name": "retry_policy_present", "pass": retry_policy_ok})
@@ -414,6 +538,74 @@ def score_task_success_case(case: Dict[str, Any], normalized: Dict[str, Any]) ->
         }
     )
 
+    required_selected_skill = str(case.get("required_selected_skill") or "").strip()
+    required_selected_skill_ok = True
+    actual_selected_skill = None
+    if isinstance(plan, dict):
+        actual_selected_skill = plan.get("selected_skill")
+    if required_selected_skill:
+        required_selected_skill_ok = actual_selected_skill == required_selected_skill
+    checks.append(
+        {
+            "name": "required_selected_skill",
+            "pass": required_selected_skill_ok,
+            "expected": required_selected_skill,
+            "actual": actual_selected_skill,
+        }
+    )
+
+    required_selected_group = str(case.get("required_selected_inputs_group") or "").strip()
+    required_selected_group_ok = True
+    if required_selected_group:
+        required_selected_group_ok = selected_inputs_group == required_selected_group
+    checks.append(
+        {
+            "name": "required_selected_inputs_group",
+            "pass": required_selected_group_ok,
+            "expected": required_selected_group,
+            "actual": selected_inputs_group,
+        }
+    )
+
+    required_missing_fragment = str(case.get("required_missing_input_contains") or "").strip()
+    required_missing_ok = True
+    if required_missing_fragment:
+        required_missing_ok = any(lower_contains(item, required_missing_fragment) for item in missing_inputs)
+    checks.append(
+        {
+            "name": "required_missing_input_contains",
+            "pass": required_missing_ok,
+            "expected": required_missing_fragment,
+            "actual": missing_inputs,
+        }
+    )
+
+    required_assumption_fragment = str(case.get("required_assumption_contains") or "").strip()
+    required_assumption_ok = True
+    if required_assumption_fragment:
+        required_assumption_ok = any(lower_contains(item, required_assumption_fragment) for item in assumptions)
+    checks.append(
+        {
+            "name": "required_assumption_contains",
+            "pass": required_assumption_ok,
+            "expected": required_assumption_fragment,
+            "actual": assumptions,
+        }
+    )
+
+    forbidden_step_fragment = str(case.get("forbidden_step_contains") or "").strip()
+    forbidden_step_ok = True
+    if forbidden_step_fragment:
+        forbidden_step_ok = not any(lower_contains(step, forbidden_step_fragment) for step in runnable_steps)
+    checks.append(
+        {
+            "name": "forbidden_step_contains",
+            "pass": forbidden_step_ok,
+            "expected_absent": forbidden_step_fragment,
+            "actual": runnable_steps,
+        }
+    )
+
     overall_ok = (
         decision_ok
         and plan_ok
@@ -426,17 +618,95 @@ def score_task_success_case(case: Dict[str, Any], normalized: Dict[str, Any]) ->
         and outputs_ok
         and step_fragment_ok
         and output_fragment_ok
+        and required_selected_skill_ok
+        and required_selected_group_ok
+        and required_missing_ok
+        and required_assumption_ok
+        and forbidden_step_ok
     )
     return {"pass": overall_ok, "checks": checks}
 
 
-def score_case(suite: str, case: Dict[str, Any], normalized: Dict[str, Any]) -> Dict[str, Any]:
+def score_parameter_accuracy_case(case: Dict[str, Any], normalized: Dict[str, Any], track: str = "strict") -> Dict[str, Any]:
+    """Score explicit parameter claims without treating fluent prose as evidence."""
+    claims = normalized.get("parameter_claims") or []
+    claim_text = json.dumps(claims, ensure_ascii=False, sort_keys=True)
+    checks: List[Dict[str, Any]] = []
+
+    expected_decision = str(case.get("expected_decision") or "route").strip().lower()
+    decision_ok = normalized.get("decision") == expected_decision
+    checks.append({"name": "decision", "pass": decision_ok, "expected": expected_decision,
+                   "actual": normalized.get("decision")})
+
+    expected_primary = str(case.get("expected_primary_skill") or "").strip()
+    primary_ok = not expected_primary or normalized.get("primary_skill") == expected_primary
+    checks.append({"name": "primary_skill", "pass": primary_ok, "expected": expected_primary,
+                   "actual": normalized.get("primary_skill")})
+
+    expected_clarify = str(case.get("expected_clarify_contains") or "").strip()
+    clarify_text = str(normalized.get("clarify_question") or "")
+    clarify_ok = not expected_clarify or lower_contains(clarify_text, expected_clarify)
+    checks.append({"name": "clarify_question_contains", "pass": clarify_ok,
+                   "expected": expected_clarify, "actual": clarify_text})
+
+    require_claims = bool(case.get("require_parameter_claims", True))
+    claims_present = isinstance(claims, list) and bool(claims)
+    claims_ok = claims_present if require_claims else True
+    checks.append({"name": "parameter_claims_present", "pass": claims_ok,
+                   "expected": require_claims, "actual": len(claims)})
+    forbid_claims = bool(case.get("forbid_parameter_claims", False))
+    no_claims_ok = not claims if forbid_claims else True
+    checks.append({"name": "parameter_claims_absent", "pass": no_claims_ok,
+                   "expected": forbid_claims, "actual": len(claims)})
+
+    parameter_name = str(case.get("parameter_name") or "").strip()
+    expected_status = str(case.get("expected_parameter_status") or "").strip().lower()
+    matching_claims = [item for item in claims if str(item.get("name") or "").lower() == parameter_name.lower()]
+    status_ok = not parameter_name or any(str(item.get("status") or "").lower() == expected_status for item in matching_claims)
+    checks.append({"name": "parameter_status", "pass": status_ok, "expected": expected_status,
+                   "parameter": parameter_name, "actual": [item.get("status") for item in matching_claims]})
+
+    required = case.get("required_parameter_contains") or []
+    required = [required] if isinstance(required, str) else [str(item) for item in required]
+    matching_text = json.dumps(matching_claims, ensure_ascii=False, sort_keys=True)
+    required_missing = [item for item in required if not lower_contains(matching_text, item)]
+    required_ok = not required_missing
+    checks.append({"name": "required_parameter_contains", "pass": required_ok,
+                   "expected": required, "missing": required_missing})
+
+    forbidden = case.get("forbidden_parameter_contains") or []
+    forbidden = [forbidden] if isinstance(forbidden, str) else [str(item) for item in forbidden]
+    forbidden_present = [item for item in forbidden if lower_contains(matching_text, item)]
+    forbidden_ok = not forbidden_present
+    checks.append({"name": "forbidden_parameter_contains_absent", "pass": forbidden_ok,
+                   "expected_absent": forbidden, "present": forbidden_present})
+
+    evidence = case.get("required_evidence_contains") or []
+    evidence = [evidence] if isinstance(evidence, str) else [str(item) for item in evidence]
+    evidence_missing = [item for item in evidence if not lower_contains(matching_text, item)]
+    evidence_ok = not evidence_missing
+    checks.append({"name": "required_evidence_contains", "pass": evidence_ok,
+                   "expected": evidence, "missing": evidence_missing})
+
+    validation_ok = not normalized.get("validation_errors")
+    checks.append({"name": "normalization_validation", "pass": validation_ok,
+                   "actual": normalized.get("validation_errors") or []})
+    overall_ok = decision_ok and primary_ok and clarify_ok and claims_ok and no_claims_ok and status_ok and required_ok and forbidden_ok and evidence_ok and validation_ok
+    return {"pass": overall_ok, "checks": checks, "components": {
+        "documented_claim_count": sum(1 for item in claims if item.get("status") == "documented"),
+        "unknown_claim_count": sum(1 for item in claims if item.get("status") == "unknown"),
+    }}
+
+
+def score_case(suite: str, case: Dict[str, Any], normalized: Dict[str, Any], track: str = "strict") -> Dict[str, Any]:
     if suite == "routing":
-        return score_routing_case(case, normalized)
+        return score_routing_case(case, normalized, track=track)
     if suite == "groundedness":
-        return score_groundedness_case(case, normalized)
+        return score_groundedness_case(case, normalized, track=track)
     if suite == "task_success":
-        return score_task_success_case(case, normalized)
+        return score_task_success_case(case, normalized, track=track)
+    if suite == "parameter_accuracy":
+        return score_parameter_accuracy_case(case, normalized, track=track)
     raise ValueError(f"Unsupported suite: {suite}")
 
 
@@ -446,15 +716,22 @@ def safe_percent(value: Optional[float]) -> str:
     return f"{value * 100.0:.2f}%"
 
 
-def compute_suite_micro(records: List[Dict[str, Any]]) -> Optional[float]:
+def record_passes(record: Dict[str, Any], score_track: str = "strict") -> bool:
+    score = record.get("scores", {}).get(score_track)
+    if not isinstance(score, dict):
+        score = record.get("score", {})
+    return bool(score.get("pass"))
+
+
+def compute_suite_micro(records: List[Dict[str, Any]], score_track: str = "strict") -> Optional[float]:
     scored = [record for record in records if record.get("status") == "scored"]
     if not scored:
         return None
-    passed = sum(1 for record in scored if record.get("score", {}).get("pass"))
+    passed = sum(1 for record in scored if record_passes(record, score_track))
     return passed / float(len(scored))
 
 
-def compute_suite_macro(records: List[Dict[str, Any]]) -> Optional[float]:
+def compute_suite_macro(records: List[Dict[str, Any]], score_track: str = "strict") -> Optional[float]:
     scored = [record for record in records if record.get("status") == "scored"]
     if not scored:
         return None
@@ -462,7 +739,7 @@ def compute_suite_macro(records: List[Dict[str, Any]]) -> Optional[float]:
     by_task: Dict[str, List[bool]] = {}
     for record in scored:
         task = record.get("case", {}).get("task") or "general"
-        by_task.setdefault(task, []).append(bool(record.get("score", {}).get("pass")))
+        by_task.setdefault(task, []).append(record_passes(record, score_track))
 
     macro_values: List[float] = []
     for values in by_task.values():
@@ -483,12 +760,17 @@ def bootstrap_ci(values: List[float], alpha: float = 0.05) -> Optional[List[floa
     return [ordered[low_idx], ordered[high_idx]]
 
 
-def bootstrap_micro_ci(records: List[Dict[str, Any]], iterations: int, rng: random.Random) -> Optional[List[float]]:
+def bootstrap_micro_ci(
+    records: List[Dict[str, Any]],
+    iterations: int,
+    rng: random.Random,
+    score_track: str = "strict",
+) -> Optional[List[float]]:
     scored = [record for record in records if record.get("status") == "scored"]
     if not scored:
         return None
 
-    outcomes = [1.0 if record.get("score", {}).get("pass") else 0.0 for record in scored]
+    outcomes = [1.0 if record_passes(record, score_track) else 0.0 for record in scored]
     if len(outcomes) == 1:
         return [outcomes[0], outcomes[0]]
 
@@ -500,20 +782,25 @@ def bootstrap_micro_ci(records: List[Dict[str, Any]], iterations: int, rng: rand
     return bootstrap_ci(draws)
 
 
-def bootstrap_macro_ci(records: List[Dict[str, Any]], iterations: int, rng: random.Random) -> Optional[List[float]]:
+def bootstrap_macro_ci(
+    records: List[Dict[str, Any]],
+    iterations: int,
+    rng: random.Random,
+    score_track: str = "strict",
+) -> Optional[List[float]]:
     scored = [record for record in records if record.get("status") == "scored"]
     if not scored:
         return None
 
     if len(scored) == 1:
-        value = 1.0 if scored[0].get("score", {}).get("pass") else 0.0
+        value = 1.0 if record_passes(scored[0], score_track) else 0.0
         return [value, value]
 
     draws: List[float] = []
     n = len(scored)
     for _ in range(iterations):
         sampled = [scored[rng.randrange(n)] for _ in range(n)]
-        macro = compute_suite_macro(sampled)
+        macro = compute_suite_macro(sampled, score_track=score_track)
         if macro is not None:
             draws.append(macro)
     return bootstrap_ci(draws)
@@ -581,12 +868,65 @@ def build_openai_payload(participant: Dict[str, Any], prompt: str) -> Dict[str, 
         "model": participant["model"],
         "messages": [{"role": "user", "content": prompt}],
         "temperature": 0,
-        "response_format": {"type": "json_object"},
     }
+    if participant.get("strict_json_schema"):
+        payload["response_format"] = {
+            "type": "json_schema",
+            "json_schema": {
+                "name": "s2f_benchmark_response",
+                "strict": True,
+                "schema": target_response_json_schema(),
+            },
+        }
+    else:
+        payload["response_format"] = {"type": "json_object"}
     reasoning_effort = participant.get("reasoning_effort")
     if isinstance(reasoning_effort, str) and reasoning_effort.strip():
         payload["reasoning_effort"] = reasoning_effort.strip()
     return payload
+
+
+def build_responses_payload(participant: Dict[str, Any], prompt: str) -> Dict[str, Any]:
+    payload: Dict[str, Any] = {
+        "model": participant["model"],
+        "input": prompt,
+        "text": {
+            "format": {
+                "type": "json_schema",
+                "name": "s2f_benchmark_response",
+                "schema": target_response_json_schema(),
+                "strict": True,
+            },
+            "verbosity": str(participant.get("verbosity") or "low"),
+        },
+    }
+    reasoning_effort = participant.get("reasoning_effort")
+    if isinstance(reasoning_effort, str) and reasoning_effort.strip():
+        payload["reasoning"] = {"effort": reasoning_effort.strip()}
+    return payload
+
+
+def extract_responses_text(parsed: Dict[str, Any]) -> str:
+    output_text = parsed.get("output_text")
+    if isinstance(output_text, str) and output_text.strip():
+        return output_text
+
+    chunks: List[str] = []
+    output = parsed.get("output")
+    if isinstance(output, list):
+        for item in output:
+            if not isinstance(item, dict):
+                continue
+            content = item.get("content")
+            if not isinstance(content, list):
+                continue
+            for content_item in content:
+                if not isinstance(content_item, dict):
+                    continue
+                text_value = content_item.get("text")
+                if isinstance(text_value, str):
+                    chunks.append(text_value)
+    return "\n".join(chunks).strip()
 
 
 def call_openai_chat(
@@ -663,16 +1003,93 @@ def call_openai_chat(
                 "raw_text": text,
                 "payload": payload,
                 "attempts": attempts,
+                "response_metadata": {
+                    "id": parsed.get("id"),
+                    "model": parsed.get("model"),
+                    "system_fingerprint": parsed.get("system_fingerprint"),
+                },
+                "usage": parsed.get("usage") if isinstance(parsed.get("usage"), dict) else {},
             }
 
         retriable = status == 429 or (500 <= status <= 599)
-        if retriable and attempts <= (max_retries + 1):
-            time.sleep(1.0)
+        if retriable and attempts <= max_retries:
+            time.sleep(min(2.0 ** (attempts - 1), 8.0))
             continue
 
         return {
             "ok": False,
             "error": f"openai_http_{status}",
+            "raw_text": body,
+            "payload": payload,
+            "attempts": attempts,
+        }
+
+
+def call_openai_responses(
+    participant: Dict[str, Any],
+    prompt: str,
+    api_key: str,
+    base_url: str,
+    timeout_s: int,
+    max_retries: int,
+    request_fn: Optional[Callable[[str, Dict[str, str], Dict[str, Any], int], Tuple[int, str]]] = None,
+) -> Dict[str, Any]:
+    endpoint = base_url.rstrip("/") + "/responses"
+    payload = build_responses_payload(participant, prompt)
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json",
+    }
+    requester = request_fn or _http_post_json
+
+    attempts = 0
+    while True:
+        attempts += 1
+        status, body = requester(endpoint, headers, payload, timeout_s)
+
+        if status == 200:
+            parsed, parse_error = parse_json_from_text(body)
+            if parse_error or not isinstance(parsed, dict):
+                return {
+                    "ok": False,
+                    "error": f"responses_not_json:{parse_error}",
+                    "raw_text": body,
+                    "payload": payload,
+                    "attempts": attempts,
+                }
+
+            text = extract_responses_text(parsed)
+            if not text:
+                return {
+                    "ok": False,
+                    "error": "responses_empty_text",
+                    "raw_text": body,
+                    "payload": payload,
+                    "attempts": attempts,
+                }
+
+            return {
+                "ok": True,
+                "error": None,
+                "raw_text": text,
+                "payload": payload,
+                "attempts": attempts,
+                "response_metadata": {
+                    "id": parsed.get("id"),
+                    "model": parsed.get("model"),
+                    "system_fingerprint": parsed.get("system_fingerprint"),
+                },
+                "usage": parsed.get("usage") if isinstance(parsed.get("usage"), dict) else {},
+            }
+
+        retriable = status == 429 or (500 <= status <= 599)
+        if retriable and attempts <= max_retries:
+            time.sleep(min(2.0 ** (attempts - 1), 8.0))
+            continue
+
+        return {
+            "ok": False,
+            "error": f"responses_http_{status}",
             "raw_text": body,
             "payload": payload,
             "attempts": attempts,
@@ -685,11 +1102,12 @@ def format_skill_catalog(skills: List[Dict[str, Any]], family_descriptions: Dict
         sid = skill.get("id")
         family = skill.get("family") or "unknown"
         tasks = ", ".join(to_str_list(skill.get("tasks"))) or "none"
+        status = "enabled" if bool(skill.get("enabled", False)) else "disabled/development"
         desc = family_descriptions.get(family, "")
         if desc:
-            lines.append(f"- {sid}: family={family}; tasks={tasks}; notes={desc}")
+            lines.append(f"- {sid}: status={status}; family={family}; tasks={tasks}; notes={desc}")
         else:
-            lines.append(f"- {sid}: family={family}; tasks={tasks}")
+            lines.append(f"- {sid}: status={status}; family={family}; tasks={tasks}")
     return "\n".join(lines)
 
 
@@ -716,10 +1134,14 @@ def target_json_schema_text() -> str:
         "primary_skill": "skill-id-or-null",
         "secondary_skills": ["skill-id"],
         "clarify_question": "string-or-null",
+        "missing_inputs": ["string"],
         "constraints": ["string"],
+        "parameter_claims": [{"name": "string", "value": "string", "status": "documented|unknown", "evidence": "string"}],
+        "selected_required_inputs_group": "string-or-null",
         "plan": {
             "task": "string-or-null",
             "selected_skill": "skill-id-or-null",
+            "selected_required_inputs_group": "string-or-null",
             "assumptions": ["string"],
             "required_inputs": ["string"],
             "missing_inputs": ["string"],
@@ -731,6 +1153,79 @@ def target_json_schema_text() -> str:
         },
     }
     return dump_json(schema)
+
+
+def target_response_json_schema() -> Dict[str, Any]:
+    string_array = {"type": "array", "items": {"type": "string"}}
+    plan_schema = {
+        "type": "object",
+        "additionalProperties": False,
+        "required": [
+            "task",
+            "selected_skill",
+            "selected_required_inputs_group",
+            "assumptions",
+            "required_inputs",
+            "missing_inputs",
+            "constraints",
+            "runnable_steps",
+            "expected_outputs",
+            "fallbacks",
+            "retry_policy",
+        ],
+        "properties": {
+            "task": {"type": ["string", "null"]},
+            "selected_skill": {"type": ["string", "null"]},
+            "selected_required_inputs_group": {"type": ["string", "null"]},
+            "assumptions": string_array,
+            "required_inputs": string_array,
+            "missing_inputs": string_array,
+            "constraints": string_array,
+            "runnable_steps": string_array,
+            "expected_outputs": string_array,
+            "fallbacks": string_array,
+            "retry_policy": {"type": ["string", "null"]},
+        },
+    }
+    return {
+        "type": "object",
+        "additionalProperties": False,
+        "required": [
+            "decision",
+            "primary_skill",
+            "secondary_skills",
+            "clarify_question",
+            "constraints",
+            "parameter_claims",
+            "missing_inputs",
+            "plan",
+            "selected_required_inputs_group",
+        ],
+        "properties": {
+            "decision": {"type": "string", "enum": ["route", "clarify"]},
+            "primary_skill": {"type": ["string", "null"]},
+            "secondary_skills": string_array,
+            "clarify_question": {"type": ["string", "null"]},
+            "constraints": string_array,
+            "parameter_claims": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "additionalProperties": False,
+                    "required": ["name", "value", "status", "evidence"],
+                    "properties": {
+                        "name": {"type": "string"},
+                        "value": {"type": "string"},
+                        "status": {"type": "string", "enum": ["documented", "unknown"]},
+                        "evidence": {"type": "string"},
+                    },
+                },
+            },
+            "missing_inputs": string_array,
+            "selected_required_inputs_group": {"type": ["string", "null"]},
+            "plan": {"anyOf": [plan_schema, {"type": "null"}]},
+        },
+    }
 
 
 def render_prompt(
@@ -831,12 +1326,12 @@ def choose_examples(
             if not s2f:
                 continue
 
-            s2f_pass = bool(s2f.get("score", {}).get("pass"))
+            s2f_pass = record_passes(s2f, "strict")
             baseline_failed = any(
                 pid != "s2f-agent"
                 and pid in by_pid
                 and by_pid[pid].get("status") == "scored"
-                and not bool(by_pid[pid].get("score", {}).get("pass"))
+                and not record_passes(by_pid[pid], "strict")
                 for pid in main_participant_ids
             )
 
@@ -848,7 +1343,7 @@ def choose_examples(
                         "query": s2f.get("case", {}).get("query"),
                         "participants": {
                             pid: {
-                                "pass": bool(by_pid[pid].get("score", {}).get("pass")) if pid in by_pid else None,
+                                "pass": record_passes(by_pid[pid], "strict") if pid in by_pid else None,
                                 "status": by_pid[pid].get("status") if pid in by_pid else "missing",
                                 "raw_output_path": by_pid[pid].get("raw_output_path") if pid in by_pid else None,
                             }
@@ -871,7 +1366,7 @@ def choose_examples(
                         "query": head.get("case", {}).get("query"),
                         "participants": {
                             pid: {
-                                "pass": bool(by_pid[pid].get("score", {}).get("pass")) if pid in by_pid else None,
+                                "pass": record_passes(by_pid[pid], "strict") if pid in by_pid else None,
                                 "status": by_pid[pid].get("status") if pid in by_pid else "missing",
                                 "raw_output_path": by_pid[pid].get("raw_output_path") if pid in by_pid else None,
                             }
@@ -918,26 +1413,35 @@ def format_metric_cell(metrics: Dict[str, Any], suite: str) -> str:
     suite_metrics = metrics.get("suite_metrics", {}).get(suite, {})
     micro = suite_metrics.get("micro")
     macro = suite_metrics.get("macro")
-    return f"{safe_percent(micro)} / {safe_percent(macro)}"
+    total = suite_metrics.get("total")
+    return f"{safe_percent(micro)} / {safe_percent(macro)} (n={total})"
 
 
 def format_overall_cell(metrics: Dict[str, Any]) -> str:
     overall = metrics.get("overall", {})
-    return f"{safe_percent(overall.get('micro'))} / {safe_percent(overall.get('macro'))}"
+    return f"{safe_percent(overall.get('micro'))} / {safe_percent(overall.get('macro'))} (n={overall.get('total')})"
 
 
-def build_table_markdown(
+def format_ci(ci: Any) -> str:
+    if not isinstance(ci, list) or len(ci) != 2 or ci[0] is None or ci[1] is None:
+        return "n/a"
+    return f"[{ci[0]:.3f}, {ci[1]:.3f}]"
+
+
+def build_one_track_table(
     participant_order: List[str],
     participant_configs: Dict[str, Dict[str, Any]],
     participant_metrics: Dict[str, Dict[str, Any]],
     suites: List[str],
+    title: str,
+    include_ablation: bool,
 ) -> str:
     main = [pid for pid in participant_order if participant_configs[pid].get("table_group") == "main"]
     ablation = [pid for pid in participant_order if participant_configs[pid].get("table_group") == "ablation"]
 
-    lines: List[str] = ["# Comparative Benchmark Summary", ""]
+    lines: List[str] = [f"## {title}", ""]
 
-    lines.append("## Main Results")
+    lines.append("### Main Results")
     lines.append("")
 
     main_header = ["Participant"] + [suite for suite in suites] + ["overall"]
@@ -952,9 +1456,9 @@ def build_table_markdown(
         row.append(format_overall_cell(metrics))
         lines.append("| " + " | ".join(row) + " |")
 
-    if ablation:
+    if include_ablation and ablation:
         lines.append("")
-        lines.append("## o3-mini Ablation")
+        lines.append("### o3-mini Ablation")
         lines.append("")
         ablation_header = ["Participant"] + [suite for suite in suites] + ["overall"]
         lines.append("| " + " | ".join(ablation_header) + " |")
@@ -967,8 +1471,75 @@ def build_table_markdown(
             row.append(format_overall_cell(metrics))
             lines.append("| " + " | ".join(row) + " |")
 
+    return "\n".join(lines) + "\n"
+
+
+def build_stats_table(stats_by_track: Dict[str, Dict[str, Any]]) -> str:
+    lines: List[str] = ["## Statistical Comparisons", ""]
+    lines.append("| Track | Comparison | Suite | Delta micro | 95% CI | McNemar p-value |")
+    lines.append("| --- | --- | --- | --- | --- | --- |")
+    rows = 0
+    for track in SCORE_TRACKS:
+        stats = stats_by_track.get(track, {})
+        for item in stats.get("comparisons", []):
+            comparison = f"{item.get('target')} vs {item.get('baseline')}"
+            p_value = item.get("mcnemar", {}).get("p_value")
+            p_value_text = "n/a" if p_value is None else f"{p_value:.6g}"
+            lines.append(
+                "| "
+                + " | ".join(
+                    [
+                        track,
+                        comparison,
+                        str(item.get("suite")),
+                        f"{item.get('delta_micro', 0.0):+.3f}",
+                        format_ci(item.get("delta_micro_ci")),
+                        p_value_text,
+                    ]
+                )
+                + " |"
+            )
+            rows += 1
+    if rows == 0:
+        lines.append("| n/a | n/a | n/a | n/a | n/a | n/a |")
+    return "\n".join(lines) + "\n"
+
+
+def build_table_markdown(
+    participant_order: List[str],
+    participant_configs: Dict[str, Dict[str, Any]],
+    metrics_by_track: Dict[str, Dict[str, Dict[str, Any]]],
+    suites: List[str],
+    stats_by_track: Optional[Dict[str, Dict[str, Any]]] = None,
+) -> str:
+    lines: List[str] = ["# Comparative Benchmark Summary", ""]
+    lines.append("- Cell format is `micro / macro (n=cases)`.")
+    lines.append("- Strict is the primary manuscript track; lenient is a supplementary fairness track.")
     lines.append("")
-    lines.append("- Cell format is `micro / macro`.")
+    lines.append(
+        build_one_track_table(
+            participant_order,
+            participant_configs,
+            metrics_by_track.get("strict", {}),
+            suites,
+            title="Strict Track",
+            include_ablation=True,
+        ).rstrip()
+    )
+    lines.append("")
+    lines.append(
+        build_one_track_table(
+            participant_order,
+            participant_configs,
+            metrics_by_track.get("lenient", {}),
+            suites,
+            title="Lenient Track",
+            include_ablation=False,
+        ).rstrip()
+    )
+    if stats_by_track is not None:
+        lines.append("")
+        lines.append(build_stats_table(stats_by_track).rstrip())
     return "\n".join(lines) + "\n"
 
 
@@ -978,6 +1549,7 @@ def compute_participant_metrics(
     suites: List[str],
     iterations: int,
     seed: int,
+    score_track: str,
 ) -> Dict[str, Dict[str, Any]]:
     result: Dict[str, Dict[str, Any]] = {}
 
@@ -993,11 +1565,11 @@ def compute_participant_metrics(
         for suite in suites:
             suite_records = [record for record in pid_records if record.get("suite") == suite]
             scored = [record for record in suite_records if record.get("status") == "scored"]
-            passed = sum(1 for record in scored if record.get("score", {}).get("pass"))
-            micro = compute_suite_micro(suite_records)
-            macro = compute_suite_macro(suite_records)
-            micro_ci = bootstrap_micro_ci(suite_records, iterations, rng)
-            macro_ci = bootstrap_macro_ci(suite_records, iterations, rng)
+            passed = sum(1 for record in scored if record_passes(record, score_track))
+            micro = compute_suite_micro(suite_records, score_track=score_track)
+            macro = compute_suite_macro(suite_records, score_track=score_track)
+            micro_ci = bootstrap_micro_ci(suite_records, iterations, rng, score_track=score_track)
+            macro_ci = bootstrap_macro_ci(suite_records, iterations, rng, score_track=score_track)
 
             suite_metrics[suite] = {
                 "total": len(scored),
@@ -1034,7 +1606,12 @@ def compute_participant_metrics(
     return result
 
 
-def build_case_outcome_map(records: List[Dict[str, Any]], participant_id: str, suite: Optional[str] = None) -> Dict[str, bool]:
+def build_case_outcome_map(
+    records: List[Dict[str, Any]],
+    participant_id: str,
+    suite: Optional[str] = None,
+    score_track: str = "strict",
+) -> Dict[str, bool]:
     mapped: Dict[str, bool] = {}
     for record in records:
         if record.get("participant_id") != participant_id:
@@ -1048,7 +1625,10 @@ def build_case_outcome_map(records: List[Dict[str, Any]], participant_id: str, s
         if not case_id or not case_suite:
             continue
         key = f"{case_suite}::{case_id}"
-        mapped[key] = bool(record.get("score", {}).get("pass"))
+        score = record.get("scores", {}).get(score_track)
+        if not isinstance(score, dict):
+            score = record.get("score", {})
+        mapped[key] = bool(score.get("pass"))
     return mapped
 
 
@@ -1059,6 +1639,7 @@ def compute_stats(
     suites: List[str],
     iterations: int,
     seed: int,
+    score_track: str,
 ) -> Dict[str, Any]:
     if "s2f-agent" not in participant_order:
         return {"comparisons": []}
@@ -1072,8 +1653,18 @@ def compute_stats(
 
         rng = random.Random(seed + 1000 + idx)
         for suite in ["overall"] + suites:
-            left = build_case_outcome_map(records, "s2f-agent", None if suite == "overall" else suite)
-            right = build_case_outcome_map(records, baseline_id, None if suite == "overall" else suite)
+            left = build_case_outcome_map(
+                records,
+                "s2f-agent",
+                None if suite == "overall" else suite,
+                score_track=score_track,
+            )
+            right = build_case_outcome_map(
+                records,
+                baseline_id,
+                None if suite == "overall" else suite,
+                score_track=score_track,
+            )
 
             aligned_keys = sorted(set(left.keys()) & set(right.keys()))
             if not aligned_keys:
@@ -1094,6 +1685,7 @@ def compute_stats(
             comparisons.append(
                 {
                     "suite": suite,
+                    "score_track": score_track,
                     "target": "s2f-agent",
                     "baseline": baseline_id,
                     "n": len(aligned_keys),
@@ -1122,6 +1714,7 @@ def compute_stats(
         }
 
     return {
+        "score_track": score_track,
         "comparisons": comparisons,
         "macro_summary": macro_summary,
     }
@@ -1169,10 +1762,115 @@ def load_enabled_skills(repo_root: Path, include_disabled: bool) -> List[Dict[st
 
 
 def participant_requires_openai(participant: Dict[str, Any]) -> bool:
-    return participant.get("kind") == "openai_chat"
+    return participant.get("kind") in {"openai_chat", "openai_responses"}
+
+
+def choose_case_count_metrics(
+    run_metadata: Dict[str, Any],
+    metrics_by_track: Dict[str, Dict[str, Dict[str, Any]]],
+) -> Dict[str, Any]:
+    strict_metrics = metrics_by_track.get("strict", {})
+    preferred = ["s2f-agent"] + to_str_list(run_metadata.get("participants"))
+    for participant_id in preferred:
+        metrics = strict_metrics.get(participant_id)
+        if isinstance(metrics, dict) and metrics.get("overall"):
+            return metrics
+    return {}
+
+
+def render_latest_report(
+    run_metadata: Dict[str, Any],
+    metrics_by_track: Dict[str, Dict[str, Dict[str, Any]]],
+    stats_by_track: Dict[str, Dict[str, Any]],
+    table_markdown: str,
+) -> str:
+    lines: List[str] = ["# Benchmark Results (Latest)", ""]
+    lines.append("## Run Metadata")
+    lines.append("")
+    lines.append(f"- Run ID: `{Path(str(run_metadata.get('output_dir'))).name}`")
+    lines.append(f"- Generated at (UTC): `{run_metadata.get('generated_at')}`")
+    lines.append(f"- Suites: `{', '.join(to_str_list(run_metadata.get('suites')))}`")
+    lines.append(f"- Participants: `{', '.join(to_str_list(run_metadata.get('participants')))}`")
+    lines.append(f"- Seed: `{run_metadata.get('seed')}`")
+    lines.append(f"- OpenAI base URL: `{run_metadata.get('openai_base_url')}`")
+    lines.append(f"- OpenAI timeout/retries: `{run_metadata.get('openai_timeout_seconds')}s / {run_metadata.get('openai_max_retries')}`")
+    lines.append("")
+    lines.append("## Case Counts")
+    lines.append("")
+    case_count_metrics = choose_case_count_metrics(run_metadata, metrics_by_track)
+    suite_metrics = case_count_metrics.get("suite_metrics", {})
+    for suite in to_str_list(run_metadata.get("suites")):
+        total = suite_metrics.get(suite, {}).get("total")
+        lines.append(f"- {suite}: {total}")
+    lines.append(f"- overall: {case_count_metrics.get('overall', {}).get('total')}")
+    lines.append("")
+    lines.append(table_markdown.rstrip())
+    lines.append("")
+    lines.append("## Quality-Control Note")
+    lines.append("")
+    lines.append("- Strict is the primary manuscript track; lenient is a supplementary fairness track.")
+    lines.append("- Report numbers must come from the current run folder, not older manuscript snapshots.")
+    lines.append("")
+    lines.append("## Artifacts")
+    lines.append("")
+    output_dir = Path(str(run_metadata.get("output_dir")))
+    lines.append(f"- Run folder: `{output_dir.as_posix()}/`")
+    lines.append(f"- Summary CSV: `{(output_dir / 'summary.csv').as_posix()}`")
+    lines.append(f"- Stats JSON: `{(output_dir / 'stats.json').as_posix()}`")
+    lines.append(f"- Table snapshot: `{(output_dir / 'table.md').as_posix()}`")
+    lines.append(f"- Example snapshot: `{(output_dir / 'examples.md').as_posix()}`")
+    return "\n".join(lines) + "\n"
+
+
+def sync_manuscript_reports(output_dir: Path, repo_root: Path, latest_report_text: str) -> None:
+    report_dir = repo_root / "benchmark/reports/manuscript"
+    report_dir.mkdir(parents=True, exist_ok=True)
+    run_id = output_dir.name
+    for name in ["summary.csv", "stats.json", "table.md", "examples.md"]:
+        source = output_dir / name
+        if source.exists():
+            target = report_dir / f"benchmark-{name.rsplit('.', 1)[0]}-{run_id}.{name.rsplit('.', 1)[1]}"
+            shutil.copyfile(source, target)
+    (report_dir / "benchmark-results-latest.md").write_text(latest_report_text, encoding="utf-8")
+
+
+def summarize_run_errors(records: List[Dict[str, Any]]) -> Dict[str, int]:
+    counts: Dict[str, int] = {}
+    for record in records:
+        error = record.get("error")
+        if isinstance(error, str) and error:
+            counts[error] = counts.get(error, 0) + 1
+    return counts
+
+
+def resolve_openai_base_url(args: argparse.Namespace, defaults: Dict[str, Any]) -> str:
+    value = (
+        args.openai_base_url
+        or os.environ.get("OPENAI_BASE_URL")
+        or os.environ.get("OPENAI_API_BASE")
+        or str(defaults.get("openai_base_url") or "")
+        or "https://api.openai.com/v1"
+    )
+    value = str(value).strip()
+    if not re.match(r"^[a-z][a-z\d+.-]*://", value, flags=re.IGNORECASE):
+        value = "https://" + value.lstrip("/")
+    parsed = urlsplit(value)
+    path = parsed.path.rstrip("/")
+    if not path:
+        path = "/v1"
+    return urlunsplit((parsed.scheme, parsed.netloc, path, "", ""))
 
 
 def run_benchmark(args: argparse.Namespace) -> int:
+    if getattr(args, "protocol", "") or getattr(args, "manifest", ""):
+        try:
+            from eval_benchmark_v2 import run_benchmark_v2
+        except ImportError:
+            from benchmark.tools.eval_benchmark_v2 import run_benchmark_v2
+        return run_benchmark_v2(args, globals())
+    if getattr(args, "publish", False):
+        raise ValueError("--publish requires benchmark v2 with both --protocol and --manifest")
+
     repo_root = Path(__file__).resolve().parents[2]
 
     benchmark_config_path = (repo_root / args.config).resolve()
@@ -1252,7 +1950,7 @@ def run_benchmark(args: argparse.Namespace) -> int:
     max_retries = int(args.openai_max_retries if args.openai_max_retries is not None else defaults.get("openai_max_retries") or 1)
     iterations = int(args.bootstrap_iterations or defaults.get("bootstrap_iterations") or 2000)
 
-    openai_base_url = args.openai_base_url or defaults.get("openai_base_url") or "https://api.openai.com/v1"
+    openai_base_url = resolve_openai_base_url(args, defaults)
 
     records: List[Dict[str, Any]] = []
 
@@ -1302,11 +2000,13 @@ def run_benchmark(args: argparse.Namespace) -> int:
                     raw_text, parsed_json, run_error = run_subprocess_json(cmd)
                     if run_error:
                         error = run_error
+                        if run_error.startswith("subprocess_exit_"):
+                            status = "infrastructure_error"
                         normalized = normalize_from_raw_text(raw_text, known_skill_ids)
                     else:
                         normalized = normalize_from_object(parsed_json or {}, raw_text, known_skill_ids)
 
-                elif participant.get("kind") == "openai_chat":
+                elif participant.get("kind") in {"openai_chat", "openai_responses"}:
                     mock_response_dir = Path(args.mock_response_dir).resolve() if args.mock_response_dir else None
                     if mock_response_dir:
                         mock_base = mock_response_dir / participant_id / suite
@@ -1379,26 +2079,41 @@ def run_benchmark(args: argparse.Namespace) -> int:
                             task_contracts_text=task_contracts_text,
                             output_contracts_text=output_contracts_text,
                         )
-                        openai_result = call_openai_chat(
-                            participant=participant,
-                            prompt=prompt,
-                            api_key=api_key,
-                            base_url=openai_base_url,
-                            timeout_s=timeout_s,
-                            max_retries=max_retries,
-                        )
+                        if participant.get("kind") == "openai_responses":
+                            openai_result = call_openai_responses(
+                                participant=participant,
+                                prompt=prompt,
+                                api_key=api_key,
+                                base_url=openai_base_url,
+                                timeout_s=timeout_s,
+                                max_retries=max_retries,
+                            )
+                        else:
+                            openai_result = call_openai_chat(
+                                participant=participant,
+                                prompt=prompt,
+                                api_key=api_key,
+                                base_url=openai_base_url,
+                                timeout_s=timeout_s,
+                                max_retries=max_retries,
+                            )
                         payload_snapshot = openai_result.get("payload")
                         raw_text = str(openai_result.get("raw_text") or "")
                         if not openai_result.get("ok"):
                             error = str(openai_result.get("error") or "openai_error")
+                            if "_http_" in error or error.startswith("network_error"):
+                                status = "infrastructure_error"
                         normalized = normalize_from_raw_text(raw_text, known_skill_ids)
 
                 else:
                     raise ValueError(f"Unsupported participant kind: {participant.get('kind')}")
 
-                score = score_case(suite, case, normalized)
-                if status == "skipped":
-                    score = {"pass": False, "checks": [{"name": "skipped", "pass": False, "reason": error}]}
+                scores = {track: score_case(suite, case, normalized, track=track) for track in SCORE_TRACKS}
+                if status != "scored":
+                    scores = {
+                        track: {"pass": False, "checks": [{"name": status, "pass": False, "reason": error}]}
+                        for track in SCORE_TRACKS
+                    }
 
                 elapsed_ms = int((time.time() - start) * 1000)
                 record = {
@@ -1412,7 +2127,8 @@ def run_benchmark(args: argparse.Namespace) -> int:
                     "elapsed_ms": elapsed_ms,
                     "case": case,
                     "normalized": normalized,
-                    "score": score,
+                    "score": scores["strict"],
+                    "scores": scores,
                     "prompt_variant": prompt_variant,
                 }
                 if payload_snapshot is not None:
@@ -1426,22 +2142,27 @@ def run_benchmark(args: argparse.Namespace) -> int:
                 write_record(output_dir / record_path_rel, record)
                 records.append(record)
 
-    participant_metrics = compute_participant_metrics(
-        records=records,
-        participant_ids=selected_participants,
-        suites=suites,
-        iterations=iterations,
-        seed=args.seed,
-    )
-
-    stats = compute_stats(
-        records=records,
-        participant_metrics=participant_metrics,
-        participant_order=selected_participants,
-        suites=suites,
-        iterations=iterations,
-        seed=args.seed,
-    )
+    metrics_by_track: Dict[str, Dict[str, Dict[str, Any]]] = {}
+    stats_by_track: Dict[str, Dict[str, Any]] = {}
+    for score_track in SCORE_TRACKS:
+        participant_metrics = compute_participant_metrics(
+            records=records,
+            participant_ids=selected_participants,
+            suites=suites,
+            iterations=iterations,
+            seed=args.seed,
+            score_track=score_track,
+        )
+        metrics_by_track[score_track] = participant_metrics
+        stats_by_track[score_track] = compute_stats(
+            records=records,
+            participant_metrics=participant_metrics,
+            participant_order=selected_participants,
+            suites=suites,
+            iterations=iterations,
+            seed=args.seed,
+            score_track=score_track,
+        )
 
     run_metadata = {
         "benchmark_name": benchmark_config.get("benchmark_name", "benchmark"),
@@ -1463,13 +2184,14 @@ def run_benchmark(args: argparse.Namespace) -> int:
 
     summary_json = {
         "run_metadata": run_metadata,
-        "participants": participant_metrics,
+        "score_tracks": metrics_by_track,
+        "participants": metrics_by_track["strict"],
         "record_count": len(records),
     }
 
     (output_dir / "run_metadata.json").write_text(dump_json(run_metadata) + "\n", encoding="utf-8")
     (output_dir / "summary.json").write_text(dump_json(summary_json) + "\n", encoding="utf-8")
-    (output_dir / "stats.json").write_text(dump_json(stats) + "\n", encoding="utf-8")
+    (output_dir / "stats.json").write_text(dump_json(stats_by_track) + "\n", encoding="utf-8")
 
     summary_csv_path = output_dir / "summary.csv"
     with summary_csv_path.open("w", newline="", encoding="utf-8") as handle:
@@ -1479,6 +2201,7 @@ def run_benchmark(args: argparse.Namespace) -> int:
                 "participant_id",
                 "participant_label",
                 "table_group",
+                "score_track",
                 "suite",
                 "total",
                 "passed",
@@ -1493,51 +2216,56 @@ def run_benchmark(args: argparse.Namespace) -> int:
 
         for pid in selected_participants:
             participant = selected_configs[pid]
-            suite_metrics = participant_metrics.get(pid, {}).get("suite_metrics", {})
-            for suite in suites:
-                metrics = suite_metrics.get(suite, {})
-                micro_ci = metrics.get("micro_ci") or [None, None]
-                macro_ci = metrics.get("macro_ci") or [None, None]
+            for score_track in SCORE_TRACKS:
+                participant_metrics = metrics_by_track.get(score_track, {})
+                suite_metrics = participant_metrics.get(pid, {}).get("suite_metrics", {})
+                for suite in suites:
+                    metrics = suite_metrics.get(suite, {})
+                    micro_ci = metrics.get("micro_ci") or [None, None]
+                    macro_ci = metrics.get("macro_ci") or [None, None]
+                    writer.writerow(
+                        [
+                            pid,
+                            participant.get("label", pid),
+                            participant.get("table_group", "main"),
+                            score_track,
+                            suite,
+                            metrics.get("total"),
+                            metrics.get("passed"),
+                            metrics.get("micro"),
+                            metrics.get("macro"),
+                            micro_ci[0],
+                            micro_ci[1],
+                            macro_ci[0],
+                            macro_ci[1],
+                        ]
+                    )
+
+                overall = participant_metrics.get(pid, {}).get("overall", {})
                 writer.writerow(
                     [
                         pid,
                         participant.get("label", pid),
                         participant.get("table_group", "main"),
-                        suite,
-                        metrics.get("total"),
-                        metrics.get("passed"),
-                        metrics.get("micro"),
-                        metrics.get("macro"),
-                        micro_ci[0],
-                        micro_ci[1],
-                        macro_ci[0],
-                        macro_ci[1],
+                        score_track,
+                        "overall",
+                        overall.get("total"),
+                        overall.get("passed"),
+                        overall.get("micro"),
+                        overall.get("macro"),
+                        None,
+                        None,
+                        None,
+                        None,
                     ]
                 )
-
-            overall = participant_metrics.get(pid, {}).get("overall", {})
-            writer.writerow(
-                [
-                    pid,
-                    participant.get("label", pid),
-                    participant.get("table_group", "main"),
-                    "overall",
-                    overall.get("total"),
-                    overall.get("passed"),
-                    overall.get("micro"),
-                    overall.get("macro"),
-                    None,
-                    None,
-                    None,
-                    None,
-                ]
-            )
 
     table_markdown = build_table_markdown(
         participant_order=selected_participants,
         participant_configs=selected_configs,
-        participant_metrics=participant_metrics,
+        metrics_by_track=metrics_by_track,
         suites=suites,
+        stats_by_track=stats_by_track,
     )
     (output_dir / "table.md").write_text(table_markdown, encoding="utf-8")
 
@@ -1554,16 +2282,21 @@ def run_benchmark(args: argparse.Namespace) -> int:
     examples_markdown = render_examples_markdown(examples, output_root=output_dir)
     (output_dir / "examples.md").write_text(examples_markdown, encoding="utf-8")
 
+    error_counts = summarize_run_errors(records)
     print(f"benchmark complete: {output_dir}")
     print(f"participants: {', '.join(selected_participants)}")
     print(f"suites: {', '.join(suites)}")
     for pid in selected_participants:
-        overall = participant_metrics.get(pid, {}).get("overall", {})
+        overall = metrics_by_track.get("strict", {}).get(pid, {}).get("overall", {})
         print(
             f"summary [{pid}] micro={safe_percent(overall.get('micro'))} "
             f"macro={safe_percent(overall.get('macro'))} "
             f"n={overall.get('total', 0)}"
         )
+
+    if error_counts:
+        print(f"benchmark errors: {dump_json(error_counts)}", file=sys.stderr)
+        return 2
 
     return 0
 
@@ -1598,6 +2331,16 @@ def build_arg_parser() -> argparse.ArgumentParser:
     parser.add_argument("--bootstrap-iterations", type=int, default=0, help="Bootstrap iterations for confidence intervals")
     parser.add_argument("--mock-response-dir", default="", help="Read OpenAI responses from local fixtures directory")
     parser.add_argument("--no-ablations", action="store_true", help="Disable automatic o3-mini ablation participants")
+    parser.add_argument("--protocol", default="", help="Versioned v2 protocol path")
+    parser.add_argument("--manifest", default="", help="Versioned v2 case manifest path")
+    parser.add_argument(
+        "--track",
+        default="",
+        help="v2 tracks: task-blind-routing,equal-information-orchestration,task-conditioned",
+    )
+    parser.add_argument("--replicates", type=int, default=0, help="v2 independent repeats (primary comparison uses repeat 0)")
+    parser.add_argument("--resume", action="store_true", help="Resume v2 records whose execution fingerprint matches")
+    parser.add_argument("--publish", action="store_true", help="Publish v2 run only after all release gates pass")
     return parser
 
 

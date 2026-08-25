@@ -28,7 +28,7 @@ Prefer: gather requirements → build spec → generate → validate → enable 
    - Write the resulting JSON to `spec.json` per `references/spec-schema.md` before proceeding.
 
 3. Generate the skill package.
-   - Dry-run first: `python skills-dev/skill-factory/scripts/create_skill_from_spec.py --spec <spec.json> --dry-run`
+   - Dry-run first: `python skills/skill-factory/scripts/create_skill_from_spec.py --spec <spec.json> --dry-run`
    - For development/experimental skills, add `--output-root skills-dev` to place output under `skills-dev/<id>/` instead of `skills/<id>/`.
    - If output looks correct, run without `--dry-run`.
    - Use `--no-register` if the skill is not yet ready for routing.
@@ -53,13 +53,13 @@ Prefer: gather requirements → build spec → generate → validate → enable 
 
 ## Grounded Factory Commands
 
-- `python skills-dev/skill-factory/scripts/create_skill_from_spec.py --spec <spec.json>`
-- `python skills-dev/skill-factory/scripts/create_skill_from_spec.py --spec <spec.json> --dry-run`
-- `python skills-dev/skill-factory/scripts/create_skill_from_spec.py --spec <spec.json> --output-root skills-dev`  ← for dev/experimental skills
-- `python skills-dev/skill-factory/scripts/create_skill_from_spec.py --spec <spec.json> --no-register`
-- `python skills-dev/skill-factory/scripts/create_skill_from_spec.py --spec <spec.json> --overwrite`
-- `python skills-dev/skill-factory/scripts/create_skill_from_spec.py --list-templates`
-- `python skills-dev/skill-factory/scripts/register_skill.py --repo-root . --skill-id <id> --path <output-root>/<id> --family <family> --task <task> --trigger <trigger>`
+- `python skills/skill-factory/scripts/create_skill_from_spec.py --spec <spec.json>`
+- `python skills/skill-factory/scripts/create_skill_from_spec.py --spec <spec.json> --dry-run`
+- `python skills/skill-factory/scripts/create_skill_from_spec.py --spec <spec.json> --output-root skills-dev`  ← for dev/experimental skills
+- `python skills/skill-factory/scripts/create_skill_from_spec.py --spec <spec.json> --no-register`
+- `python skills/skill-factory/scripts/create_skill_from_spec.py --spec <spec.json> --overwrite`
+- `python skills/skill-factory/scripts/create_skill_from_spec.py --list-templates`
+- `python skills/skill-factory/scripts/register_skill.py --repo-root . --skill-id <id> --path <output-root>/<id> --family <family> --task <task> --trigger <trigger>`
 
 ## Output Contract
 

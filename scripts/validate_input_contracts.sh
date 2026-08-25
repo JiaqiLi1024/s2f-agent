@@ -152,6 +152,35 @@ while IFS= read -r task_name; do
     fi
   done < <(printf '%s\n' "$canonical_csv" | tr ',' '\n')
 
+  while IFS='|' read -r group_id _description group_required_csv group_canonical_csv; do
+    [[ -z "$group_id" ]] && continue
+    if [[ -z "$group_required_csv" ]]; then
+      echo "fail: task '$task_name' any_of group '$group_id' missing required_inputs" >&2
+      failures=$((failures + 1))
+    fi
+    if [[ -z "$group_canonical_csv" ]]; then
+      echo "fail: task '$task_name' any_of group '$group_id' missing canonical_required_inputs" >&2
+      failures=$((failures + 1))
+    fi
+
+    while IFS= read -r req; do
+      [[ -z "$req" ]] && continue
+      resolved="$(input_schema_resolve_key "$input_schema_file" "$req" || true)"
+      if [[ -z "$resolved" ]]; then
+        echo "fail: task '$task_name' any_of group '$group_id' required input '$req' not resolvable in input schema" >&2
+        failures=$((failures + 1))
+      fi
+    done < <(printf '%s\n' "$group_required_csv" | tr ',' '\n')
+
+    while IFS= read -r req; do
+      [[ -z "$req" ]] && continue
+      if ! in_csv_list "$req" "$schema_keys_csv"; then
+        echo "fail: task '$task_name' any_of group '$group_id' canonical input '$req' missing from input schema keys" >&2
+        failures=$((failures + 1))
+      fi
+    done < <(printf '%s\n' "$group_canonical_csv" | tr ',' '\n')
+  done < <(task_contract_list_any_of_groups "$contracts_file" "$task_name")
+
 done < <(
   awk '
     /^[[:space:]]*contracts:[[:space:]]*$/ {in_contracts=1; next}

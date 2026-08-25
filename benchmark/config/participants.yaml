@@ -4,6 +4,9 @@ default_participants:
   - s2f-agent
   - gpt-4o
   - o3-mini
+  - gpt-5
+  - gpt-5.5
+  - gpt-5.6
 participants:
   - id: s2f-agent
     label: s2f-agent
@@ -16,6 +19,12 @@ participants:
     model: gpt-4o
     prompt_variant: catalog+contracts
     table_group: main
+  - id: gpt-4
+    label: gpt-4
+    kind: openai_chat
+    model: gpt-4
+    prompt_variant: catalog+contracts
+    table_group: main
   - id: o3-mini
     label: o3-mini
     kind: openai_chat
@@ -25,6 +34,44 @@ participants:
     table_group: main
     ablation_family: o3-mini
     ablation_label: catalog+contracts
+  - id: gpt-5
+    label: gpt-5
+    kind: openai_responses
+    model: gpt-5
+    reasoning_effort: medium
+    verbosity: low
+    prompt_variant: catalog+contracts
+    table_group: main
+  - id: gpt-5.5
+    label: gpt-5.5
+    kind: openai_responses
+    model: gpt-5.5
+    reasoning_effort: medium
+    verbosity: low
+    prompt_variant: catalog+contracts
+    table_group: main
+  - id: gpt-5.6
+    label: gpt-5.6
+    kind: openai_responses
+    model: gpt-5.6
+    reasoning_effort: medium
+    verbosity: low
+    prompt_variant: catalog+contracts
+    table_group: main
+  - id: gpt-5.5-ttapi-chat
+    label: gpt-5.5 (ttapi chat)
+    kind: openai_chat
+    model: gpt-5.5
+    reasoning_effort: medium
+    prompt_variant: catalog+contracts
+    table_group: main
+  - id: gpt-5.6-ttapi-chat
+    label: gpt-5.6 (ttapi chat)
+    kind: openai_chat
+    model: gpt-5.6
+    reasoning_effort: medium
+    prompt_variant: catalog+contracts
+    table_group: main
   - id: o3-mini-direct
     label: o3-mini (direct)
     kind: openai_chat

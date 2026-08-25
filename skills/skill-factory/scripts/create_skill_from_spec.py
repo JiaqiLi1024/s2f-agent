@@ -242,7 +242,7 @@ def main() -> int:
         print(f"  3. Edit {relative_skill_path}/scripts/{script_name} — replace stubs with real inference logic")
     print(f"  4. Edit {relative_skill_path}/SKILL.md — populate '## Grounded API/CLI Surface' with verified import paths")
     if not register_in_registry:
-        print(f"  5. Run: python skills-dev/skill-factory/scripts/register_skill.py --repo-root . --skill-id {skill_id} --path {relative_skill_path} --family {family} [--task ...] [--trigger ...]")
+        print(f"  5. Run: python skills/skill-factory/scripts/register_skill.py --repo-root . --skill-id {skill_id} --path {relative_skill_path} --family {family} [--task ...] [--trigger ...]")
     print(f"  6. Run: bash scripts/validate_registry.sh && bash scripts/validate_skill_metadata.sh")
     return 0
 

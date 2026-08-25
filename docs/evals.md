@@ -23,8 +23,11 @@ It does not replace the three suite validators; it reuses their scoring semantic
 ### What it runs
 
 - Case sources: `evals/routing/cases.yaml`, `evals/groundedness/cases.yaml`, `evals/task_success/cases.yaml`
-- Main participants: `s2f-agent`, `gpt-4o`, `o3-mini`
+- Main participants: `s2f-agent`, `gpt-4o`, `o3-mini`, `gpt-5`, `gpt-5.5`, `gpt-5.6`
 - Controlled ablation (o3-mini only): `direct`, `catalog-only`, `catalog+contracts`
+- Score tracks: strict JSON/schema scoring for the main table and lenient deterministic normalization for supplementary fairness analysis.
+- ttapi compatibility participant: `gpt-5.5-ttapi-chat` uses the `gpt-5.5` model through Chat Completions JSON mode for proxies where Responses API or older model slugs are temporarily unavailable.
+- `gpt-5.6-ttapi-chat` uses the same isolated compatibility path and the dedicated `benchmark/protocols/v2-main-gpt56-ttapi.yaml` protocol; it is not interchangeable with the first-party Responses API participant.
 
 Benchmark assets are centrally managed under `benchmark/`:
 
@@ -34,6 +37,8 @@ Benchmark assets are centrally managed under `benchmark/`:
 - `benchmark/fixtures/mock_openai/`
 - `benchmark/runs/`
 - `benchmark/reports/manuscript/`
+
+The versioned v2 extension protocol `benchmark/protocols/v2-main-gpt56.yaml` adds `gpt-5.6` without rewriting the frozen `v2-main.yaml` participant set. It uses the Responses API adapter with `reasoning_effort=medium`, `verbosity=low`, and three repeats; its model snapshot remains unresolved until provider identity is probed.
 
 ### Run benchmark
 
@@ -47,6 +52,27 @@ Local-only dry run (no OpenAI calls):
 
 ```bash
 python3 benchmark/tools/eval_benchmark.py --participants s2f-agent --dry-run
+```
+
+ttapi GPT-5.5 proxy run:
+
+```bash
+OPENAI_BASE_URL=https://www.a8pi.com/v1 \
+python3 benchmark/tools/eval_benchmark.py \
+  --participants gpt-5.5-ttapi-chat \
+  --openai-timeout 180 \
+  --openai-max-retries 2 \
+  --no-ablations
+```
+
+GPT-5.6 v2 dry-run (no API call):
+
+```bash
+python3 benchmark/tools/eval_benchmark.py \
+  --protocol benchmark/protocols/v2-main-gpt56.yaml \
+  --manifest benchmark/manifests/v2-main.yaml \
+  --participants gpt-5.6,s2f-agent \
+  --dry-run
 ```
 
 If OpenAI participants are enabled and `OPENAI_API_KEY` is not set, the script exits with a clear error.
@@ -74,6 +100,7 @@ python3 benchmark/tools/eval_benchmark.py \
 - `--seed`: seed for bootstrap/statistics reproducibility
 - `--dry-run`: skip OpenAI calls and mark OpenAI participants as skipped
 - `--openai-base-url`: OpenAI-compatible endpoint override
+- `OPENAI_BASE_URL` / `OPENAI_API_BASE`: environment-variable endpoint override, useful for ttapi-compatible runs such as `https://w.ciykj.cn/v1`
 
 ### Output artifacts
 
@@ -122,7 +149,7 @@ Each case specifies a query and the expected routing outcome.
 - id: route_006
   query: "Please help me run legacy Torch7 Basset prediction."
   expected_decision: clarify
-  expected_clarify_contains: "which skill should lead"
+  expected_clarify_contains: "disabled"
 ```
 
 Fields:
@@ -136,6 +163,11 @@ Fields:
 | `task` | optional | Task hint passed with `--task` |
 | `expected_decision` | for clarify cases | `route` or `clarify` |
 | `expected_clarify_contains` | for clarify cases | Substring expected in `clarify_question` |
+
+Cases whose expected clarification contains `disabled` require disabled
+registry entries to be visible. The default validator skips these cases and
+reports the skip; use `bash scripts/validate_routing.sh --include-disabled`
+to evaluate the complete 20-skill routing corpus.
 
 Run:
 

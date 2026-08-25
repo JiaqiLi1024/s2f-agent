@@ -30,7 +30,7 @@ Optional context that improves execution quality:
 1. `dnabert2` and `nucleotide-transformer-v3` are co-primary candidates for fine-tuning.
 2. If the query explicitly mentions one skill/model path, route to that skill.
 3. If the query is generic CSV fine-tuning and evidence is close, return `decision=clarify` and ask the user to choose `dnabert2` or `nucleotide-transformer-v3`.
-4. `bpnet` remains preferred for profile-prediction-focused training stacks.
+4. `bpnet-skill` is preferred for BPNet 2.x profile-prediction training stacks.
 5. `basset-workflows` remains legacy-only.
 
 ## Runbook (Minimal Reproducible Commands)

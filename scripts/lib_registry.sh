@@ -334,6 +334,121 @@ task_contract_list_canonical_required_inputs() {
   ' "$contracts_file"
 }
 
+task_contract_list_any_of_groups() {
+  local contracts_file="$1"
+  local task_name="$2"
+  registry_require_file "$contracts_file"
+  awk -v target="$task_name" '
+    function cleaned(s) {
+      gsub(/^[[:space:]]+|[[:space:]]+$/, "", s)
+      gsub(/"/, "", s)
+      return s
+    }
+    function emit() {
+      if (group_id != "") {
+        print group_id "|" description "|" required "|" canonical
+        group_id = ""
+        description = ""
+        required = ""
+        canonical = ""
+      }
+    }
+    /^[[:space:]]*contracts:[[:space:]]*$/ {
+      in_contracts = 1
+      next
+    }
+    in_contracts && $0 ~ ("^[[:space:]]{2}" target ":[[:space:]]*$") {
+      in_task = 1
+      in_any = 0
+      in_required = 0
+      in_canonical = 0
+      group_id = ""
+      description = ""
+      required = ""
+      canonical = ""
+      next
+    }
+    in_contracts && in_task && /^[[:space:]]{2}[a-zA-Z0-9_-]+:[[:space:]]*$/ {
+      emit()
+      in_task = 0
+      in_any = 0
+      in_required = 0
+      in_canonical = 0
+      next
+    }
+    in_task && /^[[:space:]]{4}any_of_required_inputs:[[:space:]]*$/ {
+      in_any = 1
+      in_required = 0
+      in_canonical = 0
+      group_id = ""
+      description = ""
+      required = ""
+      canonical = ""
+      next
+    }
+    in_task && in_any && /^[[:space:]]{6}-[[:space:]]id:[[:space:]]*/ {
+      emit()
+      group_id = $0
+      sub(/^[[:space:]]{6}-[[:space:]]id:[[:space:]]*/, "", group_id)
+      group_id = cleaned(group_id)
+      description = ""
+      required = ""
+      canonical = ""
+      in_required = 0
+      in_canonical = 0
+      next
+    }
+    in_task && in_any && /^[[:space:]]{8}description:[[:space:]]*/ {
+      description = $0
+      sub(/^[[:space:]]{8}description:[[:space:]]*/, "", description)
+      description = cleaned(description)
+      next
+    }
+    in_task && in_any && /^[[:space:]]{8}required_inputs:[[:space:]]*$/ {
+      in_required = 1
+      in_canonical = 0
+      next
+    }
+    in_task && in_any && /^[[:space:]]{8}canonical_required_inputs:[[:space:]]*$/ {
+      in_required = 0
+      in_canonical = 1
+      next
+    }
+    in_task && in_any && in_required && /^[[:space:]]{10}-[[:space:]]*/ {
+      item = $0
+      sub(/^[[:space:]]{10}-[[:space:]]*/, "", item)
+      item = cleaned(item)
+      if (item != "") {
+        required = (required == "" ? item : required "," item)
+      }
+      next
+    }
+    in_task && in_any && in_canonical && /^[[:space:]]{10}-[[:space:]]*/ {
+      item = $0
+      sub(/^[[:space:]]{10}-[[:space:]]*/, "", item)
+      item = cleaned(item)
+      if (item != "") {
+        canonical = (canonical == "" ? item : canonical "," item)
+      }
+      next
+    }
+    in_task && in_any && /^[[:space:]]{4}[a-zA-Z0-9_-]+:[[:space:]]*/ {
+      emit()
+      in_any = 0
+      in_required = 0
+      in_canonical = 0
+      group_id = ""
+      description = ""
+      required = ""
+      canonical = ""
+      next
+    }
+    END {
+      emit()
+    }
+  ' "$contracts_file"
+}
+
 input_schema_list_keys() {
   local schema_file="$1"
   registry_require_file "$schema_file"

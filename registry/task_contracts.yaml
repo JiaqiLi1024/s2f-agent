@@ -29,6 +29,25 @@ contracts:
       - assembly
       - coordinate-or-interval
       - ref-alt-or-variant-spec
+    any_of_required_inputs:
+      - id: single-variant
+        description: Single-site or interval variant with explicit REF/ALT.
+        canonical_required_inputs:
+          - assembly
+          - coordinate-or-interval
+          - ref-alt-or-variant-spec
+        required_inputs:
+          - assembly
+          - coordinate-or-interval
+          - ref-alt-or-variant-spec
+      - id: vcf-batch
+        description: Batch variant-effect workflow from a VCF file.
+        canonical_required_inputs:
+          - assembly
+          - vcf-input
+        required_inputs:
+          - assembly
+          - vcf-input
   fine-tuning:
     canonical_required_inputs:
       - task-objective
@@ -47,6 +66,27 @@ contracts:
       - species
       - assembly
       - sequence-or-interval
+    any_of_required_inputs:
+      - id: interval-or-sequence
+        description: Single interval or raw sequence track prediction input.
+        canonical_required_inputs:
+          - species
+          - assembly
+          - sequence-or-interval
+        required_inputs:
+          - species
+          - assembly
+          - sequence-or-interval
+      - id: bed-batch
+        description: BED path batch input; BED path satisfies sequence-or-interval.
+        canonical_required_inputs:
+          - species
+          - assembly
+          - sequence-or-interval
+        required_inputs:
+          - species
+          - assembly
+          - sequence-or-interval
   troubleshooting:
     canonical_required_inputs:
       - failing-step-or-error
@@ -68,3 +108,12 @@ contracts:
     required_inputs:
       - model-family-objective
       - objective
+  parameter-selection:
+    canonical_required_inputs:
+      - target-stack-or-model-family
+      - parameter-name
+      - parameter-evidence-context
+    required_inputs:
+      - target-stack-or-model-family
+      - parameter-name
+      - parameter-evidence-context

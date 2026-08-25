@@ -285,6 +285,7 @@ fi
 total_cases=0
 pass_cases=0
 fail_cases=0
+skip_cases=0
 
 while IFS=$'\x1f' read -r case_id query expected_primary expected_secondary task_name expected_decision expected_clarify_contains; do
   [[ -z "$case_id" ]] && continue
@@ -293,6 +294,16 @@ while IFS=$'\x1f' read -r case_id query expected_primary expected_secondary task
   expected_decision="${expected_decision:-route}"
   if [[ -z "$expected_decision" ]]; then
     expected_decision="route"
+  fi
+
+  # Disabled-skill clarification cases are evaluated only when the caller
+  # explicitly opts into disabled registry entries. The default router hides
+  # those entries and therefore cannot produce a meaningful "disabled"
+  # explanation for them.
+  if [[ "$include_disabled" -eq 0 && "$expected_clarify_contains" == "disabled" ]]; then
+    skip_cases=$((skip_cases + 1))
+    echo "skip: $case_id (requires --include-disabled)"
+    continue
   fi
 
   route_json=""
@@ -393,7 +404,7 @@ while IFS=$'\x1f' read -r case_id query expected_primary expected_secondary task
   fi
 done < <(parse_eval_cases "$cases_file")
 
-echo "routing eval summary: $pass_cases/$total_cases passed"
+echo "routing eval summary: $pass_cases/$total_cases passed (skipped=$skip_cases)"
 
 if [[ "$fail_cases" -ne 0 ]]; then
   exit 1

@@ -17,6 +17,9 @@ defaults:
     - s2f-agent
     - gpt-4o
     - o3-mini
+    - gpt-5
+    - gpt-5.5
+    - gpt-5.6
   ablation_participants:
     - o3-mini-direct
     - o3-mini-catalog-only
@@ -24,9 +27,12 @@ case_files:
   routing: evals/routing/cases.yaml
   groundedness: evals/groundedness/cases.yaml
   task_success: evals/task_success/cases.yaml
+  parameter_accuracy: evals/parameter_accuracy/cases.yaml
 output_layout:
   required_files:
+    - run_manifest.json
     - run_metadata.json
+    - coverage.json
     - summary.json
     - summary.csv
     - table.md
