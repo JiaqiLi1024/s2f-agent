@@ -202,16 +202,18 @@ class EvalBenchmarkMockTests(unittest.TestCase):
         self.assertEqual(payload["reasoning_effort"], "medium")
         self.assertIn("response_format", payload)
 
-    def test_claude_compat_payload_uses_schema_and_omits_temperature(self) -> None:
+    def test_claude_compat_payloads_use_schema_and_omit_temperature(self) -> None:
         participants = self.mod.get_participant_map(
             self.mod.load_yaml(self.repo_root / "benchmark/config/participants.yaml")
         )
-        participant = participants["claude-sonnet-5"]
-        payload = self.mod.build_openai_payload(participant, prompt="hello")
-        self.assertEqual(payload["model"], "claude-sonnet-5")
-        self.assertNotIn("temperature", payload)
-        self.assertEqual(payload["response_format"]["type"], "json_schema")
-        self.assertTrue(payload["response_format"]["json_schema"]["strict"])
+        for participant_id in ("claude-opus-5", "claude-sonnet-5"):
+            with self.subTest(participant_id=participant_id):
+                participant = participants[participant_id]
+                payload = self.mod.build_openai_payload(participant, prompt="hello")
+                self.assertEqual(payload["model"], participant_id)
+                self.assertNotIn("temperature", payload)
+                self.assertEqual(payload["response_format"]["type"], "json_schema")
+                self.assertTrue(payload["response_format"]["json_schema"]["strict"])
 
     def test_openai_base_url_can_come_from_environment(self) -> None:
         args = argparse.Namespace(openai_base_url="")
