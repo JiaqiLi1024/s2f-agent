@@ -1,0 +1,86 @@
+schema_version: 2
+manifest_id: s2f-agent-v2-regression
+version: "2026-08-04"
+description: Full legacy regression corpus; case-study coupling and duplicate queries are retained and reported.
+case_sources:
+  routing: evals/routing/cases.yaml
+  groundedness: evals/groundedness/cases.yaml
+  task_success: evals/task_success/cases.yaml
+suite_defaults:
+  scope: regression
+  split: regression
+  case_study_coupled: false
+  provenance: legacy-curated
+  difficulty: medium
+  ambiguity: none
+  missing_input_risk: low
+cases:
+  routing:
+    - id: route_001
+    - id: route_002
+    - id: route_003
+    - id: route_004
+    - id: route_005
+    - id: route_006
+    - id: route_007
+    - id: route_008
+    - id: route_009
+    - id: route_010
+    - id: route_011
+    - id: route_012
+    - id: route_013
+    - id: route_014
+    - id: route_015
+    - id: route_016
+    - id: route_017
+    - id: route_018
+    - id: route_019
+    - id: route_020
+      case_study_coupled: true
+    - id: route_021
+      case_study_coupled: true
+    - id: route_022
+    - id: route_023
+  groundedness:
+    - id: grounded_001
+    - id: grounded_002
+    - id: grounded_003
+    - id: grounded_004
+    - id: grounded_005
+    - id: grounded_006
+      case_study_coupled: true
+    - id: grounded_007
+      case_study_coupled: true
+    - id: grounded_008
+  task_success:
+    - id: task_success_001
+    - id: task_success_002
+    - id: task_success_003
+    - id: task_success_004
+    - id: task_success_005
+    - id: task_success_006
+    - id: task_success_007
+      case_study_coupled: true
+    - id: task_success_008
+    - id: task_success_009
+    - id: task_success_010
+    - id: task_success_011
+    - id: task_success_012
+      case_study_coupled: true
+    - id: task_success_013
+    - id: task_success_014
+      case_study_coupled: true
+    - id: task_success_015
+      case_study_coupled: true
+    - id: task_success_016
+      case_study_coupled: true
+    - id: task_success_017
+      case_study_coupled: true
+    - id: task_success_018
+    - id: task_success_019
+    - id: task_success_020
+      case_study_coupled: true
+    - id: task_success_021
+    - id: task_success_022
+    - id: task_success_023
+      case_study_coupled: true

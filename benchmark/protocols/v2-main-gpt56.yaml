@@ -1,0 +1,63 @@
+schema_version: 2
+protocol_id: s2f-agent-v2-main-gpt56
+version: "2026-08-18"
+description: Additive main comparative protocol with gpt-5.6; supersedes no earlier protocol.
+replicates: 3
+primary_repeat_index: 0
+bootstrap_iterations: 10000
+openai_timeout_seconds: 120
+openai_max_retries: 2
+seed: 7
+score_track: strict
+publication:
+  require_clean_worktree: true
+  require_exact_model_snapshot: true
+  allow_floating_models: false
+tracks:
+  - id: task-blind-routing
+    suites: [routing]
+    prompt_template: task_blind.md
+    primary: true
+  - id: equal-information-orchestration
+    suites: [groundedness, task_success]
+    prompt_template: equal_context.md
+    primary: true
+  - id: task-conditioned
+    suites: [groundedness, task_success]
+    prompt_template: task_conditioned.md
+    primary: false
+participants:
+  - id: s2f-agent
+    repeats: 3
+    model_snapshot: local-worktree
+    provider: local
+  - id: gpt-4o
+    repeats: 3
+    temperature: 0
+    strict_json_schema: true
+    model_snapshot: unresolved
+    provider: openai
+  - id: o3-mini
+    repeats: 3
+    temperature: 0
+    strict_json_schema: true
+    model_snapshot: unresolved
+    provider: openai
+  - id: gpt-5
+    repeats: 3
+    temperature: null
+    strict_json_schema: true
+    model_snapshot: unresolved
+    provider: openai
+  - id: gpt-5.5
+    repeats: 3
+    temperature: null
+    strict_json_schema: true
+    model_snapshot: unresolved
+    provider: openai
+  - id: gpt-5.6
+    repeats: 3
+    temperature: null
+    strict_json_schema: true
+    model_snapshot: unresolved
+    provider: openai

@@ -1,0 +1,113 @@
+schema_version: 2
+manifest_id: s2f-agent-skills-parameter
+version: "2026-08-23"
+description: >-
+  Complete registry-skill routing coverage plus paired parameter claims. The
+  parameter suite separates documented values from unsupported universal
+  defaults and is scored on structured claims rather than prose.
+required_skill_coverage:
+  - alphagenome-api
+  - alphagenome-research
+  - basset-workflows
+  - bpnet
+  - bpnet-skill
+  - basenji-workflows
+  - caduceus-inference
+  - borzoi-workflows
+  - chrombpnet-skill
+  - dnabert2
+  - evo2-inference
+  - gpn-models
+  - hyenadna-inference
+  - nucleotide-transformer
+  - nucleotide-transformer-v3
+  - pangolin-workflows
+  - segment-nt
+  - sei-workflows
+  - skill-factory
+  - spliceai-workflows
+case_sources:
+  routing: evals/routing/cases.yaml
+  parameter_accuracy: evals/parameter_accuracy/cases.yaml
+suite_defaults:
+  scope: benchmark
+  split: test
+  case_study_coupled: false
+  provenance: expert-authored
+  difficulty: medium
+  ambiguity: none
+  missing_input_risk: low
+cases:
+  routing:
+    - id: route_001
+    - id: route_002
+    - id: route_003
+    - id: route_004
+    - id: route_005
+    - id: route_006
+    - id: route_007
+    - id: route_008
+    - id: route_009
+    - id: route_010
+    - id: route_011
+    - id: route_012
+    - id: route_013
+    - id: route_014
+    - id: route_015
+    - id: route_016
+    - id: route_017
+    - id: route_018
+    - id: route_019
+    - id: route_022
+    - id: route_023
+    - id: route_024
+    - id: route_025
+    - id: route_026
+    - id: route_027
+    - id: route_028
+    - id: route_029
+    - id: route_030
+    - id: route_031
+    - id: route_032
+    - id: route_033
+    - id: route_034
+    - id: route_035
+    - id: route_036
+  parameter_accuracy:
+    - id: parameter_001
+    - id: parameter_002
+    - id: parameter_003
+    - id: parameter_004
+    - id: parameter_005
+    - id: parameter_006
+    - id: parameter_007
+    - id: parameter_008
+    - id: parameter_009
+    - id: parameter_010
+    - id: parameter_011
+    - id: parameter_012
+    - id: parameter_013
+    - id: parameter_014
+    - id: parameter_015
+    - id: parameter_016
+    - id: parameter_017
+    - id: parameter_018
+    - id: parameter_019
+    - id: parameter_020
+    - id: parameter_021
+    - id: parameter_022
+    - id: parameter_023
+    - id: parameter_024
+    - id: parameter_025
+    - id: parameter_026
+    - id: parameter_027
+    - id: parameter_028
+    - id: parameter_029
+    - id: parameter_030
+    - id: parameter_031
+    - id: parameter_032
+    - id: parameter_033
+    - id: parameter_034
+    - id: parameter_035
+    - id: parameter_036
+    - id: parameter_037

@@ -1,0 +1,60 @@
+schema_version: 2
+protocol_id: s2f-agent-skills-parameter
+version: "2026-08-23"
+description: Complete registry routing coverage and parameter hallucination benchmark.
+include_disabled_skills: true
+replicates: 1
+primary_repeat_index: 0
+bootstrap_iterations: 2000
+openai_timeout_seconds: 120
+openai_max_retries: 2
+seed: 7
+score_track: strict
+publication:
+  require_clean_worktree: false
+  require_exact_model_snapshot: false
+  allow_floating_models: true
+tracks:
+  - id: all-skill-routing
+    suites: [routing]
+    prompt_template: task_blind.md
+    primary: true
+  - id: parameter-accuracy
+    suites: [parameter_accuracy]
+    prompt_template: parameter_accuracy.md
+    primary: true
+participants:
+  - id: s2f-agent
+    repeats: 1
+    model_snapshot: local-worktree
+    provider: local
+  - id: gpt-4o
+    repeats: 1
+    temperature: 0
+    strict_json_schema: true
+    model_snapshot: unresolved
+    provider: openai
+  - id: o3-mini
+    repeats: 1
+    temperature: 0
+    strict_json_schema: true
+    model_snapshot: unresolved
+    provider: openai
+  - id: gpt-5
+    repeats: 1
+    temperature: null
+    strict_json_schema: true
+    model_snapshot: unresolved
+    provider: openai
+  - id: gpt-5.5
+    repeats: 1
+    temperature: null
+    strict_json_schema: true
+    model_snapshot: unresolved
+    provider: openai
+  - id: gpt-5.6
+    repeats: 1
+    temperature: null
+    strict_json_schema: true
+    model_snapshot: unresolved
+    provider: openai

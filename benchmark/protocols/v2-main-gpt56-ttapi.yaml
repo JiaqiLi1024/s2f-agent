@@ -1,0 +1,40 @@
+schema_version: 2
+protocol_id: s2f-agent-v2-main-gpt56-ttapi
+version: "2026-08-18"
+description: Diagnostic paired protocol for gpt-5.6 through the ttapi Chat Completions compatibility endpoint.
+replicates: 3
+primary_repeat_index: 0
+bootstrap_iterations: 10000
+openai_timeout_seconds: 180
+openai_max_retries: 2
+seed: 7
+score_track: strict
+publication:
+  require_clean_worktree: true
+  require_exact_model_snapshot: true
+  allow_floating_models: false
+tracks:
+  - id: task-blind-routing
+    suites: [routing]
+    prompt_template: task_blind.md
+    primary: true
+  - id: equal-information-orchestration
+    suites: [groundedness, task_success]
+    prompt_template: equal_context.md
+    primary: true
+  - id: task-conditioned
+    suites: [groundedness, task_success]
+    prompt_template: task_conditioned.md
+    primary: false
+participants:
+  - id: s2f-agent
+    repeats: 3
+    model_snapshot: local-worktree
+    provider: local
+  - id: gpt-5.6-ttapi-chat
+    repeats: 3
+    temperature: null
+    strict_json_schema: false
+    model_snapshot: unresolved
+    provider: ttapi
+    proxy_compatibility: true

@@ -1,0 +1,6 @@
+participant_id,label,status,api_status,source_participant_id,note,routing_passed,routing_total,routing_micro,routing_macro,groundedness_passed,groundedness_total,groundedness_micro,groundedness_macro,task_success_passed,task_success_total,task_success_micro,task_success_macro,overall_passed,overall_total,overall_micro,overall_macro
+s2f-agent,s2f-agent,completed,,s2f-agent,local agent benchmark completed,23,23,1.0,1.0,8,8,1.0,1.0,23,23,1.0,1.0,54,54,1.0,1.0
+gpt-5.5,gpt-5.5,completed_via_ttapi_chat,200 via chat/completions JSON mode,gpt-5.5-ttapi-chat,"ttapi Responses long-prompt path returned 502, chat JSON path completed full benchmark",5,23,0.21739130434782608,0.41111111111111115,0,8,0.0,0.0,7,23,0.30434782608695654,0.38541666666666663,12,54,0.2222222222222222,0.2655092592592592
+gpt-5,gpt-5,api_unavailable,503 Service temporarily unavailable,,exact ttapi model slug returned 503 during probe; not scored as capability failure,,,,,,,,,,,,,,,,
+gpt-4,gpt-4,api_unavailable,503 Service temporarily unavailable,,exact ttapi model slug returned 503 during probe; not scored as capability failure,,,,,,,,,,,,,,,,
+o3-mini,o3-mini,api_unavailable,503 Service temporarily unavailable,,exact ttapi model slug returned 503 during probe; not scored as capability failure,,,,,,,,,,,,,,,,

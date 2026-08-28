@@ -1,0 +1,5 @@
+participant_id,participant_label,table_group,score_track,suite,total,passed,micro,macro,micro_ci_low,micro_ci_high,macro_ci_low,macro_ci_high
+gpt-5.5-ttapi-chat,gpt-5.5 (ttapi chat),main,strict,routing,23,5,0.21739130434782608,0.41111111111111115,0.043478260869565216,0.34782608695652173,0.03333333333333333,0.5714285714285714
+gpt-5.5-ttapi-chat,gpt-5.5 (ttapi chat),main,strict,overall,23,5,0.21739130434782608,0.41111111111111115,,,,
+gpt-5.5-ttapi-chat,gpt-5.5 (ttapi chat),main,lenient,routing,23,5,0.21739130434782608,0.41111111111111115,0.043478260869565216,0.34782608695652173,0.03333333333333333,0.5714285714285714
+gpt-5.5-ttapi-chat,gpt-5.5 (ttapi chat),main,lenient,overall,23,5,0.21739130434782608,0.41111111111111115,,,,

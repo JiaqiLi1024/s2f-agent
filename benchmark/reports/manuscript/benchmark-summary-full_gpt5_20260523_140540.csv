@@ -1,0 +1,57 @@
+participant_id,participant_label,table_group,score_track,suite,total,passed,micro,macro,micro_ci_low,micro_ci_high,macro_ci_low,macro_ci_high
+s2f-agent,s2f-agent,main,strict,routing,23,23,1.0,1.0,1.0,1.0,1.0,1.0
+s2f-agent,s2f-agent,main,strict,groundedness,8,8,1.0,1.0,1.0,1.0,1.0,1.0
+s2f-agent,s2f-agent,main,strict,task_success,23,23,1.0,1.0,1.0,1.0,1.0,1.0
+s2f-agent,s2f-agent,main,strict,overall,54,54,1.0,1.0,,,,
+s2f-agent,s2f-agent,main,lenient,routing,23,23,1.0,1.0,1.0,1.0,1.0,1.0
+s2f-agent,s2f-agent,main,lenient,groundedness,8,8,1.0,1.0,1.0,1.0,1.0,1.0
+s2f-agent,s2f-agent,main,lenient,task_success,23,23,1.0,1.0,1.0,1.0,1.0,1.0
+s2f-agent,s2f-agent,main,lenient,overall,54,54,1.0,1.0,,,,
+gpt-4o,gpt-4o,main,strict,routing,23,0,0.0,0.0,0.0,0.0,0.0,0.0
+gpt-4o,gpt-4o,main,strict,groundedness,8,0,0.0,0.0,0.0,0.0,0.0,0.0
+gpt-4o,gpt-4o,main,strict,task_success,23,0,0.0,0.0,0.0,0.0,0.0,0.0
+gpt-4o,gpt-4o,main,strict,overall,54,0,0.0,0.0,,,,
+gpt-4o,gpt-4o,main,lenient,routing,23,0,0.0,0.0,0.0,0.0,0.0,0.0
+gpt-4o,gpt-4o,main,lenient,groundedness,8,0,0.0,0.0,0.0,0.0,0.0,0.0
+gpt-4o,gpt-4o,main,lenient,task_success,23,0,0.0,0.0,0.0,0.0,0.0,0.0
+gpt-4o,gpt-4o,main,lenient,overall,54,0,0.0,0.0,,,,
+o3-mini,o3-mini,main,strict,routing,23,0,0.0,0.0,0.0,0.0,0.0,0.0
+o3-mini,o3-mini,main,strict,groundedness,8,0,0.0,0.0,0.0,0.0,0.0,0.0
+o3-mini,o3-mini,main,strict,task_success,23,0,0.0,0.0,0.0,0.0,0.0,0.0
+o3-mini,o3-mini,main,strict,overall,54,0,0.0,0.0,,,,
+o3-mini,o3-mini,main,lenient,routing,23,0,0.0,0.0,0.0,0.0,0.0,0.0
+o3-mini,o3-mini,main,lenient,groundedness,8,0,0.0,0.0,0.0,0.0,0.0,0.0
+o3-mini,o3-mini,main,lenient,task_success,23,0,0.0,0.0,0.0,0.0,0.0,0.0
+o3-mini,o3-mini,main,lenient,overall,54,0,0.0,0.0,,,,
+gpt-5,gpt-5,main,strict,routing,23,0,0.0,0.0,0.0,0.0,0.0,0.0
+gpt-5,gpt-5,main,strict,groundedness,8,0,0.0,0.0,0.0,0.0,0.0,0.0
+gpt-5,gpt-5,main,strict,task_success,23,0,0.0,0.0,0.0,0.0,0.0,0.0
+gpt-5,gpt-5,main,strict,overall,54,0,0.0,0.0,,,,
+gpt-5,gpt-5,main,lenient,routing,23,0,0.0,0.0,0.0,0.0,0.0,0.0
+gpt-5,gpt-5,main,lenient,groundedness,8,0,0.0,0.0,0.0,0.0,0.0,0.0
+gpt-5,gpt-5,main,lenient,task_success,23,0,0.0,0.0,0.0,0.0,0.0,0.0
+gpt-5,gpt-5,main,lenient,overall,54,0,0.0,0.0,,,,
+gpt-5.5,gpt-5.5,main,strict,routing,23,0,0.0,0.0,0.0,0.0,0.0,0.0
+gpt-5.5,gpt-5.5,main,strict,groundedness,8,0,0.0,0.0,0.0,0.0,0.0,0.0
+gpt-5.5,gpt-5.5,main,strict,task_success,23,0,0.0,0.0,0.0,0.0,0.0,0.0
+gpt-5.5,gpt-5.5,main,strict,overall,54,0,0.0,0.0,,,,
+gpt-5.5,gpt-5.5,main,lenient,routing,23,0,0.0,0.0,0.0,0.0,0.0,0.0
+gpt-5.5,gpt-5.5,main,lenient,groundedness,8,0,0.0,0.0,0.0,0.0,0.0,0.0
+gpt-5.5,gpt-5.5,main,lenient,task_success,23,0,0.0,0.0,0.0,0.0,0.0,0.0
+gpt-5.5,gpt-5.5,main,lenient,overall,54,0,0.0,0.0,,,,
+o3-mini-direct,o3-mini (direct),ablation,strict,routing,23,0,0.0,0.0,0.0,0.0,0.0,0.0
+o3-mini-direct,o3-mini (direct),ablation,strict,groundedness,8,0,0.0,0.0,0.0,0.0,0.0,0.0
+o3-mini-direct,o3-mini (direct),ablation,strict,task_success,23,0,0.0,0.0,0.0,0.0,0.0,0.0
+o3-mini-direct,o3-mini (direct),ablation,strict,overall,54,0,0.0,0.0,,,,
+o3-mini-direct,o3-mini (direct),ablation,lenient,routing,23,0,0.0,0.0,0.0,0.0,0.0,0.0
+o3-mini-direct,o3-mini (direct),ablation,lenient,groundedness,8,0,0.0,0.0,0.0,0.0,0.0,0.0
+o3-mini-direct,o3-mini (direct),ablation,lenient,task_success,23,0,0.0,0.0,0.0,0.0,0.0,0.0
+o3-mini-direct,o3-mini (direct),ablation,lenient,overall,54,0,0.0,0.0,,,,
+o3-mini-catalog-only,o3-mini (catalog-only),ablation,strict,routing,23,0,0.0,0.0,0.0,0.0,0.0,0.0
+o3-mini-catalog-only,o3-mini (catalog-only),ablation,strict,groundedness,8,0,0.0,0.0,0.0,0.0,0.0,0.0
+o3-mini-catalog-only,o3-mini (catalog-only),ablation,strict,task_success,23,0,0.0,0.0,0.0,0.0,0.0,0.0
+o3-mini-catalog-only,o3-mini (catalog-only),ablation,strict,overall,54,0,0.0,0.0,,,,
+o3-mini-catalog-only,o3-mini (catalog-only),ablation,lenient,routing,23,0,0.0,0.0,0.0,0.0,0.0,0.0
+o3-mini-catalog-only,o3-mini (catalog-only),ablation,lenient,groundedness,8,0,0.0,0.0,0.0,0.0,0.0,0.0
+o3-mini-catalog-only,o3-mini (catalog-only),ablation,lenient,task_success,23,0,0.0,0.0,0.0,0.0,0.0,0.0
+o3-mini-catalog-only,o3-mini (catalog-only),ablation,lenient,overall,54,0,0.0,0.0,,,,

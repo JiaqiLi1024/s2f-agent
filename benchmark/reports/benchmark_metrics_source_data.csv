@@ -1,0 +1,11 @@
+panel,metric,suite,participant_or_comparison,n,estimate,ci_low,ci_high,exact_mcnemar_p,score_track,source_file
+a,micro_pass_rate,routing,s2f-agent,23,1.0,1.0,1.0,,strict,benchmark-summary-ttapi_s2f_gpt55_chat_full_20260523_152235.csv
+a,micro_pass_rate,routing,gpt-5.5 (ttapi chat),23,0.21739130434782608,0.043478260869565216,0.391304347826087,,strict,benchmark-summary-ttapi_s2f_gpt55_chat_full_20260523_152235.csv
+a,micro_pass_rate,groundedness,s2f-agent,8,1.0,1.0,1.0,,strict,benchmark-summary-ttapi_s2f_gpt55_chat_full_20260523_152235.csv
+a,micro_pass_rate,groundedness,gpt-5.5 (ttapi chat),8,0.0,0.0,0.0,,strict,benchmark-summary-ttapi_s2f_gpt55_chat_full_20260523_152235.csv
+a,micro_pass_rate,task_success,s2f-agent,23,1.0,1.0,1.0,,strict,benchmark-summary-ttapi_s2f_gpt55_chat_full_20260523_152235.csv
+a,micro_pass_rate,task_success,gpt-5.5 (ttapi chat),23,0.30434782608695654,0.13043478260869565,0.4782608695652174,,strict,benchmark-summary-ttapi_s2f_gpt55_chat_full_20260523_152235.csv
+b,paired_micro_pass_rate_difference,overall,s2f-agent minus gpt-5.5 (ttapi chat),54,0.7777777777777778,0.6666666666666667,0.8888888888888888,4.547473508864641e-13,strict,benchmark-stats-ttapi_s2f_gpt55_chat_full_20260523_152235.json
+b,paired_micro_pass_rate_difference,routing,s2f-agent minus gpt-5.5 (ttapi chat),23,0.782608695652174,0.6086956521739131,0.9130434782608696,7.62939453125e-06,strict,benchmark-stats-ttapi_s2f_gpt55_chat_full_20260523_152235.json
+b,paired_micro_pass_rate_difference,groundedness,s2f-agent minus gpt-5.5 (ttapi chat),8,1.0,1.0,1.0,0.0078125,strict,benchmark-stats-ttapi_s2f_gpt55_chat_full_20260523_152235.json
+b,paired_micro_pass_rate_difference,task_success,s2f-agent minus gpt-5.5 (ttapi chat),23,0.6956521739130435,0.5217391304347826,0.8695652173913043,3.0517578125e-05,strict,benchmark-stats-ttapi_s2f_gpt55_chat_full_20260523_152235.json

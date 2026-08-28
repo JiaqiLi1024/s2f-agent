@@ -1,0 +1,17 @@
+participant_id,participant_label,table_group,score_track,suite,total,passed,micro,macro,micro_ci_low,micro_ci_high,macro_ci_low,macro_ci_high
+s2f-agent,s2f-agent,main,strict,routing,23,23,1.0,1.0,1.0,1.0,1.0,1.0
+s2f-agent,s2f-agent,main,strict,groundedness,8,8,1.0,1.0,1.0,1.0,1.0,1.0
+s2f-agent,s2f-agent,main,strict,task_success,23,23,1.0,1.0,1.0,1.0,1.0,1.0
+s2f-agent,s2f-agent,main,strict,overall,54,54,1.0,1.0,,,,
+s2f-agent,s2f-agent,main,lenient,routing,23,23,1.0,1.0,1.0,1.0,1.0,1.0
+s2f-agent,s2f-agent,main,lenient,groundedness,8,8,1.0,1.0,1.0,1.0,1.0,1.0
+s2f-agent,s2f-agent,main,lenient,task_success,23,23,1.0,1.0,1.0,1.0,1.0,1.0
+s2f-agent,s2f-agent,main,lenient,overall,54,54,1.0,1.0,,,,
+gpt-5.5-ttapi-chat,gpt-5.5 (ttapi chat),main,strict,routing,23,5,0.21739130434782608,0.41111111111111115,0.043478260869565216,0.391304347826087,0.13999999999999999,0.5555555555555556
+gpt-5.5-ttapi-chat,gpt-5.5 (ttapi chat),main,strict,groundedness,8,0,0.0,0.0,0.0,0.0,0.0,0.0
+gpt-5.5-ttapi-chat,gpt-5.5 (ttapi chat),main,strict,task_success,23,7,0.30434782608695654,0.38541666666666663,0.13043478260869565,0.4782608695652174,0.14583333333333331,0.5928571428571429
+gpt-5.5-ttapi-chat,gpt-5.5 (ttapi chat),main,strict,overall,54,12,0.2222222222222222,0.2655092592592592,,,,
+gpt-5.5-ttapi-chat,gpt-5.5 (ttapi chat),main,lenient,routing,23,5,0.21739130434782608,0.41111111111111115,0.043478260869565216,0.391304347826087,0.13999999999999999,0.5555555555555556
+gpt-5.5-ttapi-chat,gpt-5.5 (ttapi chat),main,lenient,groundedness,8,0,0.0,0.0,0.0,0.0,0.0,0.0
+gpt-5.5-ttapi-chat,gpt-5.5 (ttapi chat),main,lenient,task_success,23,7,0.30434782608695654,0.38541666666666663,0.13043478260869565,0.4782608695652174,0.14583333333333331,0.5928571428571429
+gpt-5.5-ttapi-chat,gpt-5.5 (ttapi chat),main,lenient,overall,54,12,0.2222222222222222,0.2655092592592592,,,,

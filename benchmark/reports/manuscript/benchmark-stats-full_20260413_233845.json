@@ -1,0 +1,260 @@
+{
+  "comparisons": [
+    {
+      "baseline": "gpt-4o",
+      "baseline_micro": 0.24242424242424243,
+      "delta_micro": 0.7575757575757576,
+      "delta_micro_ci": [
+        0.6060606060606061,
+        0.8787878787878788
+      ],
+      "mcnemar": {
+        "n01_target_fail_baseline_pass": 0,
+        "n10_target_pass_baseline_fail": 25,
+        "p_value": 5.960464477539063e-08
+      },
+      "n": 33,
+      "suite": "overall",
+      "target": "s2f-agent",
+      "target_micro": 1.0
+    },
+    {
+      "baseline": "gpt-4o",
+      "baseline_micro": 0.2222222222222222,
+      "delta_micro": 0.7777777777777778,
+      "delta_micro_ci": [
+        0.5555555555555556,
+        0.9444444444444444
+      ],
+      "mcnemar": {
+        "n01_target_fail_baseline_pass": 0,
+        "n10_target_pass_baseline_fail": 14,
+        "p_value": 0.0001220703125
+      },
+      "n": 18,
+      "suite": "routing",
+      "target": "s2f-agent",
+      "target_micro": 1.0
+    },
+    {
+      "baseline": "gpt-4o",
+      "baseline_micro": 0.0,
+      "delta_micro": 1.0,
+      "delta_micro_ci": [
+        1.0,
+        1.0
+      ],
+      "mcnemar": {
+        "n01_target_fail_baseline_pass": 0,
+        "n10_target_pass_baseline_fail": 4,
+        "p_value": 0.125
+      },
+      "n": 4,
+      "suite": "groundedness",
+      "target": "s2f-agent",
+      "target_micro": 1.0
+    },
+    {
+      "baseline": "gpt-4o",
+      "baseline_micro": 0.36363636363636365,
+      "delta_micro": 0.6363636363636364,
+      "delta_micro_ci": [
+        0.36363636363636365,
+        0.9090909090909091
+      ],
+      "mcnemar": {
+        "n01_target_fail_baseline_pass": 0,
+        "n10_target_pass_baseline_fail": 7,
+        "p_value": 0.015625
+      },
+      "n": 11,
+      "suite": "task_success",
+      "target": "s2f-agent",
+      "target_micro": 1.0
+    },
+    {
+      "baseline": "o3-mini",
+      "baseline_micro": 0.24242424242424243,
+      "delta_micro": 0.7575757575757576,
+      "delta_micro_ci": [
+        0.6060606060606061,
+        0.8787878787878788
+      ],
+      "mcnemar": {
+        "n01_target_fail_baseline_pass": 0,
+        "n10_target_pass_baseline_fail": 25,
+        "p_value": 5.960464477539063e-08
+      },
+      "n": 33,
+      "suite": "overall",
+      "target": "s2f-agent",
+      "target_micro": 1.0
+    },
+    {
+      "baseline": "o3-mini",
+      "baseline_micro": 0.2777777777777778,
+      "delta_micro": 0.7222222222222222,
+      "delta_micro_ci": [
+        0.5,
+        0.8888888888888888
+      ],
+      "mcnemar": {
+        "n01_target_fail_baseline_pass": 0,
+        "n10_target_pass_baseline_fail": 13,
+        "p_value": 0.000244140625
+      },
+      "n": 18,
+      "suite": "routing",
+      "target": "s2f-agent",
+      "target_micro": 1.0
+    },
+    {
+      "baseline": "o3-mini",
+      "baseline_micro": 0.0,
+      "delta_micro": 1.0,
+      "delta_micro_ci": [
+        1.0,
+        1.0
+      ],
+      "mcnemar": {
+        "n01_target_fail_baseline_pass": 0,
+        "n10_target_pass_baseline_fail": 4,
+        "p_value": 0.125
+      },
+      "n": 4,
+      "suite": "groundedness",
+      "target": "s2f-agent",
+      "target_micro": 1.0
+    },
+    {
+      "baseline": "o3-mini",
+      "baseline_micro": 0.2727272727272727,
+      "delta_micro": 0.7272727272727273,
+      "delta_micro_ci": [
+        0.4545454545454546,
+        1.0
+      ],
+      "mcnemar": {
+        "n01_target_fail_baseline_pass": 0,
+        "n10_target_pass_baseline_fail": 8,
+        "p_value": 0.0078125
+      },
+      "n": 11,
+      "suite": "task_success",
+      "target": "s2f-agent",
+      "target_micro": 1.0
+    }
+  ],
+  "macro_summary": {
+    "gpt-4o": {
+      "overall_macro": 0.2041666666666667,
+      "suite_macro": {
+        "groundedness": 0.0,
+        "routing": 0.3,
+        "task_success": 0.3125
+      },
+      "suite_macro_ci": {
+        "groundedness": [
+          0.0,
+          0.0
+        ],
+        "routing": [
+          0.04,
+          0.475
+        ],
+        "task_success": [
+          0.08333333333333333,
+          0.6666666666666666
+        ]
+      }
+    },
+    "o3-mini": {
+      "overall_macro": 0.25833333333333336,
+      "suite_macro": {
+        "groundedness": 0.0,
+        "routing": 0.525,
+        "task_success": 0.25
+      },
+      "suite_macro_ci": {
+        "groundedness": [
+          0.0,
+          0.0
+        ],
+        "routing": [
+          0.2,
+          0.6428571428571429
+        ],
+        "task_success": [
+          0.0,
+          0.5555555555555555
+        ]
+      }
+    },
+    "o3-mini-catalog-only": {
+      "overall_macro": 0.09999999999999999,
+      "suite_macro": {
+        "groundedness": 0.0,
+        "routing": 0.175,
+        "task_success": 0.125
+      },
+      "suite_macro_ci": {
+        "groundedness": [
+          0.0,
+          0.0
+        ],
+        "routing": [
+          0.0,
+          0.3333333333333333
+        ],
+        "task_success": [
+          0.0,
+          0.3333333333333333
+        ]
+      }
+    },
+    "o3-mini-direct": {
+      "overall_macro": 0.0,
+      "suite_macro": {
+        "groundedness": 0.0,
+        "routing": 0.0,
+        "task_success": 0.0
+      },
+      "suite_macro_ci": {
+        "groundedness": [
+          0.0,
+          0.0
+        ],
+        "routing": [
+          0.0,
+          0.0
+        ],
+        "task_success": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "s2f-agent": {
+      "overall_macro": 1.0,
+      "suite_macro": {
+        "groundedness": 1.0,
+        "routing": 1.0,
+        "task_success": 1.0
+      },
+      "suite_macro_ci": {
+        "groundedness": [
+          1.0,
+          1.0
+        ],
+        "routing": [
+          1.0,
+          1.0
+        ],
+        "task_success": [
+          1.0,
+          1.0
+        ]
+      }
+    }
+  }
+}

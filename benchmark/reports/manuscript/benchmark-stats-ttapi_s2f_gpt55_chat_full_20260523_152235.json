@@ -1,0 +1,256 @@
+{
+  "lenient": {
+    "comparisons": [
+      {
+        "baseline": "gpt-5.5-ttapi-chat",
+        "baseline_micro": 0.2222222222222222,
+        "delta_micro": 0.7777777777777778,
+        "delta_micro_ci": [
+          0.6666666666666667,
+          0.8888888888888888
+        ],
+        "mcnemar": {
+          "n01_target_fail_baseline_pass": 0,
+          "n10_target_pass_baseline_fail": 42,
+          "p_value": 4.547473508864641e-13
+        },
+        "n": 54,
+        "score_track": "lenient",
+        "suite": "overall",
+        "target": "s2f-agent",
+        "target_micro": 1.0
+      },
+      {
+        "baseline": "gpt-5.5-ttapi-chat",
+        "baseline_micro": 0.21739130434782608,
+        "delta_micro": 0.782608695652174,
+        "delta_micro_ci": [
+          0.6086956521739131,
+          0.9130434782608696
+        ],
+        "mcnemar": {
+          "n01_target_fail_baseline_pass": 0,
+          "n10_target_pass_baseline_fail": 18,
+          "p_value": 7.62939453125e-06
+        },
+        "n": 23,
+        "score_track": "lenient",
+        "suite": "routing",
+        "target": "s2f-agent",
+        "target_micro": 1.0
+      },
+      {
+        "baseline": "gpt-5.5-ttapi-chat",
+        "baseline_micro": 0.0,
+        "delta_micro": 1.0,
+        "delta_micro_ci": [
+          1.0,
+          1.0
+        ],
+        "mcnemar": {
+          "n01_target_fail_baseline_pass": 0,
+          "n10_target_pass_baseline_fail": 8,
+          "p_value": 0.0078125
+        },
+        "n": 8,
+        "score_track": "lenient",
+        "suite": "groundedness",
+        "target": "s2f-agent",
+        "target_micro": 1.0
+      },
+      {
+        "baseline": "gpt-5.5-ttapi-chat",
+        "baseline_micro": 0.30434782608695654,
+        "delta_micro": 0.6956521739130435,
+        "delta_micro_ci": [
+          0.5217391304347826,
+          0.8695652173913043
+        ],
+        "mcnemar": {
+          "n01_target_fail_baseline_pass": 0,
+          "n10_target_pass_baseline_fail": 16,
+          "p_value": 3.0517578125e-05
+        },
+        "n": 23,
+        "score_track": "lenient",
+        "suite": "task_success",
+        "target": "s2f-agent",
+        "target_micro": 1.0
+      }
+    ],
+    "macro_summary": {
+      "gpt-5.5-ttapi-chat": {
+        "overall_macro": 0.2655092592592592,
+        "suite_macro": {
+          "groundedness": 0.0,
+          "routing": 0.41111111111111115,
+          "task_success": 0.38541666666666663
+        },
+        "suite_macro_ci": {
+          "groundedness": [
+            0.0,
+            0.0
+          ],
+          "routing": [
+            0.13999999999999999,
+            0.5555555555555556
+          ],
+          "task_success": [
+            0.14583333333333331,
+            0.5928571428571429
+          ]
+        }
+      },
+      "s2f-agent": {
+        "overall_macro": 1.0,
+        "suite_macro": {
+          "groundedness": 1.0,
+          "routing": 1.0,
+          "task_success": 1.0
+        },
+        "suite_macro_ci": {
+          "groundedness": [
+            1.0,
+            1.0
+          ],
+          "routing": [
+            1.0,
+            1.0
+          ],
+          "task_success": [
+            1.0,
+            1.0
+          ]
+        }
+      }
+    },
+    "score_track": "lenient"
+  },
+  "strict": {
+    "comparisons": [
+      {
+        "baseline": "gpt-5.5-ttapi-chat",
+        "baseline_micro": 0.2222222222222222,
+        "delta_micro": 0.7777777777777778,
+        "delta_micro_ci": [
+          0.6666666666666667,
+          0.8888888888888888
+        ],
+        "mcnemar": {
+          "n01_target_fail_baseline_pass": 0,
+          "n10_target_pass_baseline_fail": 42,
+          "p_value": 4.547473508864641e-13
+        },
+        "n": 54,
+        "score_track": "strict",
+        "suite": "overall",
+        "target": "s2f-agent",
+        "target_micro": 1.0
+      },
+      {
+        "baseline": "gpt-5.5-ttapi-chat",
+        "baseline_micro": 0.21739130434782608,
+        "delta_micro": 0.782608695652174,
+        "delta_micro_ci": [
+          0.6086956521739131,
+          0.9130434782608696
+        ],
+        "mcnemar": {
+          "n01_target_fail_baseline_pass": 0,
+          "n10_target_pass_baseline_fail": 18,
+          "p_value": 7.62939453125e-06
+        },
+        "n": 23,
+        "score_track": "strict",
+        "suite": "routing",
+        "target": "s2f-agent",
+        "target_micro": 1.0
+      },
+      {
+        "baseline": "gpt-5.5-ttapi-chat",
+        "baseline_micro": 0.0,
+        "delta_micro": 1.0,
+        "delta_micro_ci": [
+          1.0,
+          1.0
+        ],
+        "mcnemar": {
+          "n01_target_fail_baseline_pass": 0,
+          "n10_target_pass_baseline_fail": 8,
+          "p_value": 0.0078125
+        },
+        "n": 8,
+        "score_track": "strict",
+        "suite": "groundedness",
+        "target": "s2f-agent",
+        "target_micro": 1.0
+      },
+      {
+        "baseline": "gpt-5.5-ttapi-chat",
+        "baseline_micro": 0.30434782608695654,
+        "delta_micro": 0.6956521739130435,
+        "delta_micro_ci": [
+          0.5217391304347826,
+          0.8695652173913043
+        ],
+        "mcnemar": {
+          "n01_target_fail_baseline_pass": 0,
+          "n10_target_pass_baseline_fail": 16,
+          "p_value": 3.0517578125e-05
+        },
+        "n": 23,
+        "score_track": "strict",
+        "suite": "task_success",
+        "target": "s2f-agent",
+        "target_micro": 1.0
+      }
+    ],
+    "macro_summary": {
+      "gpt-5.5-ttapi-chat": {
+        "overall_macro": 0.2655092592592592,
+        "suite_macro": {
+          "groundedness": 0.0,
+          "routing": 0.41111111111111115,
+          "task_success": 0.38541666666666663
+        },
+        "suite_macro_ci": {
+          "groundedness": [
+            0.0,
+            0.0
+          ],
+          "routing": [
+            0.13999999999999999,
+            0.5555555555555556
+          ],
+          "task_success": [
+            0.14583333333333331,
+            0.5928571428571429
+          ]
+        }
+      },
+      "s2f-agent": {
+        "overall_macro": 1.0,
+        "suite_macro": {
+          "groundedness": 1.0,
+          "routing": 1.0,
+          "task_success": 1.0
+        },
+        "suite_macro_ci": {
+          "groundedness": [
+            1.0,
+            1.0
+          ],
+          "routing": [
+            1.0,
+            1.0
+          ],
+          "task_success": [
+            1.0,
+            1.0
+          ]
+        }
+      }
+    },
+    "score_track": "strict"
+  }
+}

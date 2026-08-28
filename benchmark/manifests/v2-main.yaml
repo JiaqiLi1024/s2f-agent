@@ -1,0 +1,81 @@
+schema_version: 2
+manifest_id: s2f-agent-v2-main-cases
+version: "2026-08-04"
+description: Case-study-free test split. Gold fields remain in evals and are selected by ID only.
+case_sources:
+  routing: evals/routing/cases.yaml
+  groundedness: evals/groundedness/cases.yaml
+  task_success: evals/task_success/cases.yaml
+suite_defaults:
+  scope: benchmark
+  split: test
+  case_study_coupled: false
+  provenance: expert-authored
+  difficulty: medium
+  ambiguity: none
+  missing_input_risk: low
+cases:
+  routing:
+    - id: route_001
+    - id: route_002
+    - id: route_003
+    - id: route_004
+    - id: route_005
+    - id: route_006
+      ambiguity: underspecified
+      missing_input_risk: medium
+      allowed_decisions: [clarify]
+    - id: route_007
+      ambiguity: underspecified
+      missing_input_risk: medium
+      allowed_decisions: [clarify]
+    - id: route_008
+    - id: route_009
+    - id: route_010
+    - id: route_011
+      ambiguity: underspecified
+      missing_input_risk: high
+      allowed_decisions: [clarify]
+    - id: route_012
+      ambiguity: underspecified
+      missing_input_risk: high
+      allowed_decisions: [clarify]
+    - id: route_013
+    - id: route_014
+    - id: route_015
+    - id: route_016
+      ambiguity: underspecified
+      missing_input_risk: high
+      allowed_decisions: [clarify]
+    - id: route_017
+    - id: route_018
+    - id: route_019
+    - id: route_022
+      ambiguity: underspecified
+      missing_input_risk: high
+      allowed_decisions: [clarify]
+    - id: route_023
+  groundedness:
+    - id: grounded_001
+    - id: grounded_002
+    - id: grounded_003
+    - id: grounded_004
+    - id: grounded_005
+    - id: grounded_008
+  task_success:
+    - id: task_success_001
+    - id: task_success_002
+    - id: task_success_003
+    - id: task_success_004
+    - id: task_success_005
+    - id: task_success_006
+    - id: task_success_008
+    - id: task_success_009
+    - id: task_success_010
+    - id: task_success_011
+    - id: task_success_018
+    - id: task_success_021
+    - id: task_success_022
+      ambiguity: missing-file
+      missing_input_risk: high
+      allowed_decisions: [route, clarify]

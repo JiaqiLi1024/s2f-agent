@@ -1,0 +1,932 @@
+{
+  "lenient": {
+    "comparisons": [
+      {
+        "baseline": "gpt-4o",
+        "baseline_micro": 0.0,
+        "delta_micro": 1.0,
+        "delta_micro_ci": [
+          1.0,
+          1.0
+        ],
+        "mcnemar": {
+          "n01_target_fail_baseline_pass": 0,
+          "n10_target_pass_baseline_fail": 54,
+          "p_value": 1.1102230246251565e-16
+        },
+        "n": 54,
+        "score_track": "lenient",
+        "suite": "overall",
+        "target": "s2f-agent",
+        "target_micro": 1.0
+      },
+      {
+        "baseline": "gpt-4o",
+        "baseline_micro": 0.0,
+        "delta_micro": 1.0,
+        "delta_micro_ci": [
+          1.0,
+          1.0
+        ],
+        "mcnemar": {
+          "n01_target_fail_baseline_pass": 0,
+          "n10_target_pass_baseline_fail": 23,
+          "p_value": 2.384185791015625e-07
+        },
+        "n": 23,
+        "score_track": "lenient",
+        "suite": "routing",
+        "target": "s2f-agent",
+        "target_micro": 1.0
+      },
+      {
+        "baseline": "gpt-4o",
+        "baseline_micro": 0.0,
+        "delta_micro": 1.0,
+        "delta_micro_ci": [
+          1.0,
+          1.0
+        ],
+        "mcnemar": {
+          "n01_target_fail_baseline_pass": 0,
+          "n10_target_pass_baseline_fail": 8,
+          "p_value": 0.0078125
+        },
+        "n": 8,
+        "score_track": "lenient",
+        "suite": "groundedness",
+        "target": "s2f-agent",
+        "target_micro": 1.0
+      },
+      {
+        "baseline": "gpt-4o",
+        "baseline_micro": 0.0,
+        "delta_micro": 1.0,
+        "delta_micro_ci": [
+          1.0,
+          1.0
+        ],
+        "mcnemar": {
+          "n01_target_fail_baseline_pass": 0,
+          "n10_target_pass_baseline_fail": 23,
+          "p_value": 2.384185791015625e-07
+        },
+        "n": 23,
+        "score_track": "lenient",
+        "suite": "task_success",
+        "target": "s2f-agent",
+        "target_micro": 1.0
+      },
+      {
+        "baseline": "o3-mini",
+        "baseline_micro": 0.0,
+        "delta_micro": 1.0,
+        "delta_micro_ci": [
+          1.0,
+          1.0
+        ],
+        "mcnemar": {
+          "n01_target_fail_baseline_pass": 0,
+          "n10_target_pass_baseline_fail": 54,
+          "p_value": 1.1102230246251565e-16
+        },
+        "n": 54,
+        "score_track": "lenient",
+        "suite": "overall",
+        "target": "s2f-agent",
+        "target_micro": 1.0
+      },
+      {
+        "baseline": "o3-mini",
+        "baseline_micro": 0.0,
+        "delta_micro": 1.0,
+        "delta_micro_ci": [
+          1.0,
+          1.0
+        ],
+        "mcnemar": {
+          "n01_target_fail_baseline_pass": 0,
+          "n10_target_pass_baseline_fail": 23,
+          "p_value": 2.384185791015625e-07
+        },
+        "n": 23,
+        "score_track": "lenient",
+        "suite": "routing",
+        "target": "s2f-agent",
+        "target_micro": 1.0
+      },
+      {
+        "baseline": "o3-mini",
+        "baseline_micro": 0.0,
+        "delta_micro": 1.0,
+        "delta_micro_ci": [
+          1.0,
+          1.0
+        ],
+        "mcnemar": {
+          "n01_target_fail_baseline_pass": 0,
+          "n10_target_pass_baseline_fail": 8,
+          "p_value": 0.0078125
+        },
+        "n": 8,
+        "score_track": "lenient",
+        "suite": "groundedness",
+        "target": "s2f-agent",
+        "target_micro": 1.0
+      },
+      {
+        "baseline": "o3-mini",
+        "baseline_micro": 0.0,
+        "delta_micro": 1.0,
+        "delta_micro_ci": [
+          1.0,
+          1.0
+        ],
+        "mcnemar": {
+          "n01_target_fail_baseline_pass": 0,
+          "n10_target_pass_baseline_fail": 23,
+          "p_value": 2.384185791015625e-07
+        },
+        "n": 23,
+        "score_track": "lenient",
+        "suite": "task_success",
+        "target": "s2f-agent",
+        "target_micro": 1.0
+      },
+      {
+        "baseline": "gpt-5",
+        "baseline_micro": 0.0,
+        "delta_micro": 1.0,
+        "delta_micro_ci": [
+          1.0,
+          1.0
+        ],
+        "mcnemar": {
+          "n01_target_fail_baseline_pass": 0,
+          "n10_target_pass_baseline_fail": 54,
+          "p_value": 1.1102230246251565e-16
+        },
+        "n": 54,
+        "score_track": "lenient",
+        "suite": "overall",
+        "target": "s2f-agent",
+        "target_micro": 1.0
+      },
+      {
+        "baseline": "gpt-5",
+        "baseline_micro": 0.0,
+        "delta_micro": 1.0,
+        "delta_micro_ci": [
+          1.0,
+          1.0
+        ],
+        "mcnemar": {
+          "n01_target_fail_baseline_pass": 0,
+          "n10_target_pass_baseline_fail": 23,
+          "p_value": 2.384185791015625e-07
+        },
+        "n": 23,
+        "score_track": "lenient",
+        "suite": "routing",
+        "target": "s2f-agent",
+        "target_micro": 1.0
+      },
+      {
+        "baseline": "gpt-5",
+        "baseline_micro": 0.0,
+        "delta_micro": 1.0,
+        "delta_micro_ci": [
+          1.0,
+          1.0
+        ],
+        "mcnemar": {
+          "n01_target_fail_baseline_pass": 0,
+          "n10_target_pass_baseline_fail": 8,
+          "p_value": 0.0078125
+        },
+        "n": 8,
+        "score_track": "lenient",
+        "suite": "groundedness",
+        "target": "s2f-agent",
+        "target_micro": 1.0
+      },
+      {
+        "baseline": "gpt-5",
+        "baseline_micro": 0.0,
+        "delta_micro": 1.0,
+        "delta_micro_ci": [
+          1.0,
+          1.0
+        ],
+        "mcnemar": {
+          "n01_target_fail_baseline_pass": 0,
+          "n10_target_pass_baseline_fail": 23,
+          "p_value": 2.384185791015625e-07
+        },
+        "n": 23,
+        "score_track": "lenient",
+        "suite": "task_success",
+        "target": "s2f-agent",
+        "target_micro": 1.0
+      },
+      {
+        "baseline": "gpt-5.5",
+        "baseline_micro": 0.0,
+        "delta_micro": 1.0,
+        "delta_micro_ci": [
+          1.0,
+          1.0
+        ],
+        "mcnemar": {
+          "n01_target_fail_baseline_pass": 0,
+          "n10_target_pass_baseline_fail": 54,
+          "p_value": 1.1102230246251565e-16
+        },
+        "n": 54,
+        "score_track": "lenient",
+        "suite": "overall",
+        "target": "s2f-agent",
+        "target_micro": 1.0
+      },
+      {
+        "baseline": "gpt-5.5",
+        "baseline_micro": 0.0,
+        "delta_micro": 1.0,
+        "delta_micro_ci": [
+          1.0,
+          1.0
+        ],
+        "mcnemar": {
+          "n01_target_fail_baseline_pass": 0,
+          "n10_target_pass_baseline_fail": 23,
+          "p_value": 2.384185791015625e-07
+        },
+        "n": 23,
+        "score_track": "lenient",
+        "suite": "routing",
+        "target": "s2f-agent",
+        "target_micro": 1.0
+      },
+      {
+        "baseline": "gpt-5.5",
+        "baseline_micro": 0.0,
+        "delta_micro": 1.0,
+        "delta_micro_ci": [
+          1.0,
+          1.0
+        ],
+        "mcnemar": {
+          "n01_target_fail_baseline_pass": 0,
+          "n10_target_pass_baseline_fail": 8,
+          "p_value": 0.0078125
+        },
+        "n": 8,
+        "score_track": "lenient",
+        "suite": "groundedness",
+        "target": "s2f-agent",
+        "target_micro": 1.0
+      },
+      {
+        "baseline": "gpt-5.5",
+        "baseline_micro": 0.0,
+        "delta_micro": 1.0,
+        "delta_micro_ci": [
+          1.0,
+          1.0
+        ],
+        "mcnemar": {
+          "n01_target_fail_baseline_pass": 0,
+          "n10_target_pass_baseline_fail": 23,
+          "p_value": 2.384185791015625e-07
+        },
+        "n": 23,
+        "score_track": "lenient",
+        "suite": "task_success",
+        "target": "s2f-agent",
+        "target_micro": 1.0
+      }
+    ],
+    "macro_summary": {
+      "gpt-4o": {
+        "overall_macro": 0.0,
+        "suite_macro": {
+          "groundedness": 0.0,
+          "routing": 0.0,
+          "task_success": 0.0
+        },
+        "suite_macro_ci": {
+          "groundedness": [
+            0.0,
+            0.0
+          ],
+          "routing": [
+            0.0,
+            0.0
+          ],
+          "task_success": [
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "gpt-5": {
+        "overall_macro": 0.0,
+        "suite_macro": {
+          "groundedness": 0.0,
+          "routing": 0.0,
+          "task_success": 0.0
+        },
+        "suite_macro_ci": {
+          "groundedness": [
+            0.0,
+            0.0
+          ],
+          "routing": [
+            0.0,
+            0.0
+          ],
+          "task_success": [
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "gpt-5.5": {
+        "overall_macro": 0.0,
+        "suite_macro": {
+          "groundedness": 0.0,
+          "routing": 0.0,
+          "task_success": 0.0
+        },
+        "suite_macro_ci": {
+          "groundedness": [
+            0.0,
+            0.0
+          ],
+          "routing": [
+            0.0,
+            0.0
+          ],
+          "task_success": [
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "o3-mini": {
+        "overall_macro": 0.0,
+        "suite_macro": {
+          "groundedness": 0.0,
+          "routing": 0.0,
+          "task_success": 0.0
+        },
+        "suite_macro_ci": {
+          "groundedness": [
+            0.0,
+            0.0
+          ],
+          "routing": [
+            0.0,
+            0.0
+          ],
+          "task_success": [
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "o3-mini-catalog-only": {
+        "overall_macro": 0.0,
+        "suite_macro": {
+          "groundedness": 0.0,
+          "routing": 0.0,
+          "task_success": 0.0
+        },
+        "suite_macro_ci": {
+          "groundedness": [
+            0.0,
+            0.0
+          ],
+          "routing": [
+            0.0,
+            0.0
+          ],
+          "task_success": [
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "o3-mini-direct": {
+        "overall_macro": 0.0,
+        "suite_macro": {
+          "groundedness": 0.0,
+          "routing": 0.0,
+          "task_success": 0.0
+        },
+        "suite_macro_ci": {
+          "groundedness": [
+            0.0,
+            0.0
+          ],
+          "routing": [
+            0.0,
+            0.0
+          ],
+          "task_success": [
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "s2f-agent": {
+        "overall_macro": 1.0,
+        "suite_macro": {
+          "groundedness": 1.0,
+          "routing": 1.0,
+          "task_success": 1.0
+        },
+        "suite_macro_ci": {
+          "groundedness": [
+            1.0,
+            1.0
+          ],
+          "routing": [
+            1.0,
+            1.0
+          ],
+          "task_success": [
+            1.0,
+            1.0
+          ]
+        }
+      }
+    },
+    "score_track": "lenient"
+  },
+  "strict": {
+    "comparisons": [
+      {
+        "baseline": "gpt-4o",
+        "baseline_micro": 0.0,
+        "delta_micro": 1.0,
+        "delta_micro_ci": [
+          1.0,
+          1.0
+        ],
+        "mcnemar": {
+          "n01_target_fail_baseline_pass": 0,
+          "n10_target_pass_baseline_fail": 54,
+          "p_value": 1.1102230246251565e-16
+        },
+        "n": 54,
+        "score_track": "strict",
+        "suite": "overall",
+        "target": "s2f-agent",
+        "target_micro": 1.0
+      },
+      {
+        "baseline": "gpt-4o",
+        "baseline_micro": 0.0,
+        "delta_micro": 1.0,
+        "delta_micro_ci": [
+          1.0,
+          1.0
+        ],
+        "mcnemar": {
+          "n01_target_fail_baseline_pass": 0,
+          "n10_target_pass_baseline_fail": 23,
+          "p_value": 2.384185791015625e-07
+        },
+        "n": 23,
+        "score_track": "strict",
+        "suite": "routing",
+        "target": "s2f-agent",
+        "target_micro": 1.0
+      },
+      {
+        "baseline": "gpt-4o",
+        "baseline_micro": 0.0,
+        "delta_micro": 1.0,
+        "delta_micro_ci": [
+          1.0,
+          1.0
+        ],
+        "mcnemar": {
+          "n01_target_fail_baseline_pass": 0,
+          "n10_target_pass_baseline_fail": 8,
+          "p_value": 0.0078125
+        },
+        "n": 8,
+        "score_track": "strict",
+        "suite": "groundedness",
+        "target": "s2f-agent",
+        "target_micro": 1.0
+      },
+      {
+        "baseline": "gpt-4o",
+        "baseline_micro": 0.0,
+        "delta_micro": 1.0,
+        "delta_micro_ci": [
+          1.0,
+          1.0
+        ],
+        "mcnemar": {
+          "n01_target_fail_baseline_pass": 0,
+          "n10_target_pass_baseline_fail": 23,
+          "p_value": 2.384185791015625e-07
+        },
+        "n": 23,
+        "score_track": "strict",
+        "suite": "task_success",
+        "target": "s2f-agent",
+        "target_micro": 1.0
+      },
+      {
+        "baseline": "o3-mini",
+        "baseline_micro": 0.0,
+        "delta_micro": 1.0,
+        "delta_micro_ci": [
+          1.0,
+          1.0
+        ],
+        "mcnemar": {
+          "n01_target_fail_baseline_pass": 0,
+          "n10_target_pass_baseline_fail": 54,
+          "p_value": 1.1102230246251565e-16
+        },
+        "n": 54,
+        "score_track": "strict",
+        "suite": "overall",
+        "target": "s2f-agent",
+        "target_micro": 1.0
+      },
+      {
+        "baseline": "o3-mini",
+        "baseline_micro": 0.0,
+        "delta_micro": 1.0,
+        "delta_micro_ci": [
+          1.0,
+          1.0
+        ],
+        "mcnemar": {
+          "n01_target_fail_baseline_pass": 0,
+          "n10_target_pass_baseline_fail": 23,
+          "p_value": 2.384185791015625e-07
+        },
+        "n": 23,
+        "score_track": "strict",
+        "suite": "routing",
+        "target": "s2f-agent",
+        "target_micro": 1.0
+      },
+      {
+        "baseline": "o3-mini",
+        "baseline_micro": 0.0,
+        "delta_micro": 1.0,
+        "delta_micro_ci": [
+          1.0,
+          1.0
+        ],
+        "mcnemar": {
+          "n01_target_fail_baseline_pass": 0,
+          "n10_target_pass_baseline_fail": 8,
+          "p_value": 0.0078125
+        },
+        "n": 8,
+        "score_track": "strict",
+        "suite": "groundedness",
+        "target": "s2f-agent",
+        "target_micro": 1.0
+      },
+      {
+        "baseline": "o3-mini",
+        "baseline_micro": 0.0,
+        "delta_micro": 1.0,
+        "delta_micro_ci": [
+          1.0,
+          1.0
+        ],
+        "mcnemar": {
+          "n01_target_fail_baseline_pass": 0,
+          "n10_target_pass_baseline_fail": 23,
+          "p_value": 2.384185791015625e-07
+        },
+        "n": 23,
+        "score_track": "strict",
+        "suite": "task_success",
+        "target": "s2f-agent",
+        "target_micro": 1.0
+      },
+      {
+        "baseline": "gpt-5",
+        "baseline_micro": 0.0,
+        "delta_micro": 1.0,
+        "delta_micro_ci": [
+          1.0,
+          1.0
+        ],
+        "mcnemar": {
+          "n01_target_fail_baseline_pass": 0,
+          "n10_target_pass_baseline_fail": 54,
+          "p_value": 1.1102230246251565e-16
+        },
+        "n": 54,
+        "score_track": "strict",
+        "suite": "overall",
+        "target": "s2f-agent",
+        "target_micro": 1.0
+      },
+      {
+        "baseline": "gpt-5",
+        "baseline_micro": 0.0,
+        "delta_micro": 1.0,
+        "delta_micro_ci": [
+          1.0,
+          1.0
+        ],
+        "mcnemar": {
+          "n01_target_fail_baseline_pass": 0,
+          "n10_target_pass_baseline_fail": 23,
+          "p_value": 2.384185791015625e-07
+        },
+        "n": 23,
+        "score_track": "strict",
+        "suite": "routing",
+        "target": "s2f-agent",
+        "target_micro": 1.0
+      },
+      {
+        "baseline": "gpt-5",
+        "baseline_micro": 0.0,
+        "delta_micro": 1.0,
+        "delta_micro_ci": [
+          1.0,
+          1.0
+        ],
+        "mcnemar": {
+          "n01_target_fail_baseline_pass": 0,
+          "n10_target_pass_baseline_fail": 8,
+          "p_value": 0.0078125
+        },
+        "n": 8,
+        "score_track": "strict",
+        "suite": "groundedness",
+        "target": "s2f-agent",
+        "target_micro": 1.0
+      },
+      {
+        "baseline": "gpt-5",
+        "baseline_micro": 0.0,
+        "delta_micro": 1.0,
+        "delta_micro_ci": [
+          1.0,
+          1.0
+        ],
+        "mcnemar": {
+          "n01_target_fail_baseline_pass": 0,
+          "n10_target_pass_baseline_fail": 23,
+          "p_value": 2.384185791015625e-07
+        },
+        "n": 23,
+        "score_track": "strict",
+        "suite": "task_success",
+        "target": "s2f-agent",
+        "target_micro": 1.0
+      },
+      {
+        "baseline": "gpt-5.5",
+        "baseline_micro": 0.0,
+        "delta_micro": 1.0,
+        "delta_micro_ci": [
+          1.0,
+          1.0
+        ],
+        "mcnemar": {
+          "n01_target_fail_baseline_pass": 0,
+          "n10_target_pass_baseline_fail": 54,
+          "p_value": 1.1102230246251565e-16
+        },
+        "n": 54,
+        "score_track": "strict",
+        "suite": "overall",
+        "target": "s2f-agent",
+        "target_micro": 1.0
+      },
+      {
+        "baseline": "gpt-5.5",
+        "baseline_micro": 0.0,
+        "delta_micro": 1.0,
+        "delta_micro_ci": [
+          1.0,
+          1.0
+        ],
+        "mcnemar": {
+          "n01_target_fail_baseline_pass": 0,
+          "n10_target_pass_baseline_fail": 23,
+          "p_value": 2.384185791015625e-07
+        },
+        "n": 23,
+        "score_track": "strict",
+        "suite": "routing",
+        "target": "s2f-agent",
+        "target_micro": 1.0
+      },
+      {
+        "baseline": "gpt-5.5",
+        "baseline_micro": 0.0,
+        "delta_micro": 1.0,
+        "delta_micro_ci": [
+          1.0,
+          1.0
+        ],
+        "mcnemar": {
+          "n01_target_fail_baseline_pass": 0,
+          "n10_target_pass_baseline_fail": 8,
+          "p_value": 0.0078125
+        },
+        "n": 8,
+        "score_track": "strict",
+        "suite": "groundedness",
+        "target": "s2f-agent",
+        "target_micro": 1.0
+      },
+      {
+        "baseline": "gpt-5.5",
+        "baseline_micro": 0.0,
+        "delta_micro": 1.0,
+        "delta_micro_ci": [
+          1.0,
+          1.0
+        ],
+        "mcnemar": {
+          "n01_target_fail_baseline_pass": 0,
+          "n10_target_pass_baseline_fail": 23,
+          "p_value": 2.384185791015625e-07
+        },
+        "n": 23,
+        "score_track": "strict",
+        "suite": "task_success",
+        "target": "s2f-agent",
+        "target_micro": 1.0
+      }
+    ],
+    "macro_summary": {
+      "gpt-4o": {
+        "overall_macro": 0.0,
+        "suite_macro": {
+          "groundedness": 0.0,
+          "routing": 0.0,
+          "task_success": 0.0
+        },
+        "suite_macro_ci": {
+          "groundedness": [
+            0.0,
+            0.0
+          ],
+          "routing": [
+            0.0,
+            0.0
+          ],
+          "task_success": [
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "gpt-5": {
+        "overall_macro": 0.0,
+        "suite_macro": {
+          "groundedness": 0.0,
+          "routing": 0.0,
+          "task_success": 0.0
+        },
+        "suite_macro_ci": {
+          "groundedness": [
+            0.0,
+            0.0
+          ],
+          "routing": [
+            0.0,
+            0.0
+          ],
+          "task_success": [
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "gpt-5.5": {
+        "overall_macro": 0.0,
+        "suite_macro": {
+          "groundedness": 0.0,
+          "routing": 0.0,
+          "task_success": 0.0
+        },
+        "suite_macro_ci": {
+          "groundedness": [
+            0.0,
+            0.0
+          ],
+          "routing": [
+            0.0,
+            0.0
+          ],
+          "task_success": [
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "o3-mini": {
+        "overall_macro": 0.0,
+        "suite_macro": {
+          "groundedness": 0.0,
+          "routing": 0.0,
+          "task_success": 0.0
+        },
+        "suite_macro_ci": {
+          "groundedness": [
+            0.0,
+            0.0
+          ],
+          "routing": [
+            0.0,
+            0.0
+          ],
+          "task_success": [
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "o3-mini-catalog-only": {
+        "overall_macro": 0.0,
+        "suite_macro": {
+          "groundedness": 0.0,
+          "routing": 0.0,
+          "task_success": 0.0
+        },
+        "suite_macro_ci": {
+          "groundedness": [
+            0.0,
+            0.0
+          ],
+          "routing": [
+            0.0,
+            0.0
+          ],
+          "task_success": [
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "o3-mini-direct": {
+        "overall_macro": 0.0,
+        "suite_macro": {
+          "groundedness": 0.0,
+          "routing": 0.0,
+          "task_success": 0.0
+        },
+        "suite_macro_ci": {
+          "groundedness": [
+            0.0,
+            0.0
+          ],
+          "routing": [
+            0.0,
+            0.0
+          ],
+          "task_success": [
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "s2f-agent": {
+        "overall_macro": 1.0,
+        "suite_macro": {
+          "groundedness": 1.0,
+          "routing": 1.0,
+          "task_success": 1.0
+        },
+        "suite_macro_ci": {
+          "groundedness": [
+            1.0,
+            1.0
+          ],
+          "routing": [
+            1.0,
+            1.0
+          ],
+          "task_success": [
+            1.0,
+            1.0
+          ]
+        }
+      }
+    },
+    "score_track": "strict"
+  }
+}
