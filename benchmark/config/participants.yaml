@@ -72,6 +72,22 @@ participants:
     reasoning_effort: medium
     prompt_variant: catalog+contracts
     table_group: main
+  - id: claude-opus-5
+    label: Claude Opus 5 (Anthropic OpenAI compatibility)
+    kind: openai_chat
+    model: claude-opus-5
+    strict_json_schema: true
+    omit_temperature: true
+    prompt_variant: catalog+contracts
+    table_group: main
+  - id: claude-sonnet-5
+    label: Claude Sonnet 5 (Anthropic OpenAI compatibility)
+    kind: openai_chat
+    model: claude-sonnet-5
+    strict_json_schema: true
+    omit_temperature: true
+    prompt_variant: catalog+contracts
+    table_group: main
   - id: o3-mini-direct
     label: o3-mini (direct)
     kind: openai_chat
