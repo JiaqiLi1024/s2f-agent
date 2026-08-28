@@ -867,8 +867,9 @@ def build_openai_payload(participant: Dict[str, Any], prompt: str) -> Dict[str, 
     payload: Dict[str, Any] = {
         "model": participant["model"],
         "messages": [{"role": "user", "content": prompt}],
-        "temperature": 0,
     }
+    if not participant.get("omit_temperature"):
+        payload["temperature"] = 0
     if participant.get("strict_json_schema"):
         payload["response_format"] = {
             "type": "json_schema",
@@ -1931,6 +1932,21 @@ def run_benchmark(args: argparse.Namespace) -> int:
         raise ValueError("benchmark config missing case_files mapping")
 
     suite_cases = load_suite_cases(case_files, suites, repo_root)
+    selected_case_ids = parse_csv_arg(args.case_ids)
+    if selected_case_ids:
+        requested_case_ids = set(selected_case_ids)
+        available_case_ids = {
+            str(case.get("id"))
+            for cases in suite_cases.values()
+            for case in cases
+        }
+        missing_case_ids = [case_id for case_id in selected_case_ids if case_id not in available_case_ids]
+        if missing_case_ids:
+            raise ValueError(f"unknown case IDs for selected suites: {missing_case_ids}")
+        suite_cases = {
+            suite: [case for case in cases if str(case.get("id")) in requested_case_ids]
+            for suite, cases in suite_cases.items()
+        }
 
     templates_root = repo_root / "benchmark/prompts"
     template_cache: Dict[str, str] = {}
@@ -1967,6 +1983,8 @@ def run_benchmark(args: argparse.Namespace) -> int:
                 status = "scored"
                 error: Optional[str] = None
                 payload_snapshot: Optional[Dict[str, Any]] = None
+                response_metadata_snapshot: Optional[Dict[str, Any]] = None
+                usage_snapshot: Optional[Dict[str, Any]] = None
 
                 if participant.get("kind") == "local_agent":
                     if suite == "routing":
@@ -2098,6 +2116,12 @@ def run_benchmark(args: argparse.Namespace) -> int:
                                 max_retries=max_retries,
                             )
                         payload_snapshot = openai_result.get("payload")
+                        response_metadata = openai_result.get("response_metadata")
+                        if isinstance(response_metadata, dict):
+                            response_metadata_snapshot = response_metadata
+                        usage = openai_result.get("usage")
+                        if isinstance(usage, dict):
+                            usage_snapshot = usage
                         raw_text = str(openai_result.get("raw_text") or "")
                         if not openai_result.get("ok"):
                             error = str(openai_result.get("error") or "openai_error")
@@ -2133,6 +2157,10 @@ def run_benchmark(args: argparse.Namespace) -> int:
                 }
                 if payload_snapshot is not None:
                     record["openai_payload"] = payload_snapshot
+                if response_metadata_snapshot is not None:
+                    record["response_metadata"] = response_metadata_snapshot
+                if usage_snapshot is not None:
+                    record["usage"] = usage_snapshot
 
                 raw_output_rel = Path("raw_outputs") / participant_id / suite / f"{case['id']}.txt"
                 record_path_rel = Path("case_records") / participant_id / suite / f"{case['id']}.json"
@@ -2171,6 +2199,7 @@ def run_benchmark(args: argparse.Namespace) -> int:
         "dry_run": bool(args.dry_run),
         "participants": selected_participants,
         "suites": suites,
+        "case_ids": selected_case_ids,
         "openai_base_url": openai_base_url,
         "openai_timeout_seconds": timeout_s,
         "openai_max_retries": max_retries,
@@ -2320,6 +2349,11 @@ def build_arg_parser() -> argparse.ArgumentParser:
         "--suites",
         default="",
         help="Comma-separated suites to run (routing,groundedness,task_success)",
+    )
+    parser.add_argument(
+        "--case-ids",
+        default="",
+        help="Optional comma-separated case IDs within the selected suites",
     )
     parser.add_argument("--output-dir", default="", help="Output directory for this benchmark run")
     parser.add_argument("--seed", type=int, default=7, help="Random seed")
