@@ -1297,6 +1297,51 @@ def write_raw(path: Path, text: str) -> None:
     path.write_text(text, encoding="utf-8")
 
 
+def load_reusable_api_record(
+    reuse_roots: Sequence[Path],
+    participant_id: str,
+    participant_kind: str,
+    prompt_variant: str,
+    suite: str,
+    case_id: str,
+    expected_payload: Dict[str, Any],
+) -> Optional[Tuple[Dict[str, Any], str, Path]]:
+    """Load a scored API record only when its execution inputs still match."""
+    for reuse_root in reuse_roots:
+        record_path = reuse_root / "case_records" / participant_id / suite / f"{case_id}.json"
+        if not record_path.is_file():
+            continue
+        try:
+            stored = json.loads(record_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            continue
+        if not isinstance(stored, dict) or stored.get("status") != "scored":
+            continue
+        stored_case = stored.get("case")
+        if not isinstance(stored_case, dict) or stored_case.get("id") != case_id:
+            continue
+        if stored.get("participant_id") != participant_id or stored.get("suite") != suite:
+            continue
+        if stored.get("participant_kind") != participant_kind:
+            continue
+        if stored.get("prompt_variant") != prompt_variant:
+            continue
+        if stored.get("openai_payload") != expected_payload:
+            continue
+        raw_rel = stored.get("raw_output_path")
+        if not isinstance(raw_rel, str) or not raw_rel.strip():
+            continue
+        raw_path = reuse_root / raw_rel
+        if not raw_path.is_file():
+            continue
+        try:
+            raw_text = raw_path.read_text(encoding="utf-8")
+        except OSError:
+            continue
+        return stored, raw_text, record_path
+    return None
+
+
 def choose_examples(
     records: List[Dict[str, Any]],
     main_participant_ids: List[str],
@@ -1918,6 +1963,10 @@ def run_benchmark(args: argparse.Namespace) -> int:
     output_dir.mkdir(parents=True, exist_ok=True)
     raw_outputs_dir.mkdir(parents=True, exist_ok=True)
     case_records_dir.mkdir(parents=True, exist_ok=True)
+    reuse_roots = [Path(value).resolve() for value in parse_csv_arg(args.reuse_records_from)]
+    missing_reuse_roots = [str(path) for path in reuse_roots if not path.is_dir()]
+    if missing_reuse_roots:
+        raise FileNotFoundError(f"reuse record directories not found: {missing_reuse_roots}")
 
     include_disabled = bool(defaults.get("include_disabled_skills", False))
     skills = load_enabled_skills(repo_root, include_disabled=include_disabled)
@@ -1985,6 +2034,7 @@ def run_benchmark(args: argparse.Namespace) -> int:
                 payload_snapshot: Optional[Dict[str, Any]] = None
                 response_metadata_snapshot: Optional[Dict[str, Any]] = None
                 usage_snapshot: Optional[Dict[str, Any]] = None
+                reused_from_snapshot: Optional[str] = None
 
                 if participant.get("kind") == "local_agent":
                     if suite == "routing":
@@ -2098,35 +2148,59 @@ def run_benchmark(args: argparse.Namespace) -> int:
                             output_contracts_text=output_contracts_text,
                         )
                         if participant.get("kind") == "openai_responses":
-                            openai_result = call_openai_responses(
-                                participant=participant,
-                                prompt=prompt,
-                                api_key=api_key,
-                                base_url=openai_base_url,
-                                timeout_s=timeout_s,
-                                max_retries=max_retries,
-                            )
+                            expected_payload = build_responses_payload(participant, prompt)
                         else:
-                            openai_result = call_openai_chat(
-                                participant=participant,
-                                prompt=prompt,
-                                api_key=api_key,
-                                base_url=openai_base_url,
-                                timeout_s=timeout_s,
-                                max_retries=max_retries,
-                            )
-                        payload_snapshot = openai_result.get("payload")
-                        response_metadata = openai_result.get("response_metadata")
-                        if isinstance(response_metadata, dict):
-                            response_metadata_snapshot = response_metadata
-                        usage = openai_result.get("usage")
-                        if isinstance(usage, dict):
-                            usage_snapshot = usage
-                        raw_text = str(openai_result.get("raw_text") or "")
-                        if not openai_result.get("ok"):
-                            error = str(openai_result.get("error") or "openai_error")
-                            if "_http_" in error or error.startswith("network_error"):
-                                status = "infrastructure_error"
+                            expected_payload = build_openai_payload(participant, prompt)
+                        reusable = load_reusable_api_record(
+                            reuse_roots=reuse_roots,
+                            participant_id=participant_id,
+                            participant_kind=str(participant.get("kind") or ""),
+                            prompt_variant=prompt_variant,
+                            suite=suite,
+                            case_id=str(case.get("id") or ""),
+                            expected_payload=expected_payload,
+                        )
+                        if reusable is not None:
+                            stored_record, raw_text, reused_record_path = reusable
+                            payload_snapshot = expected_payload
+                            stored_metadata = stored_record.get("response_metadata")
+                            if isinstance(stored_metadata, dict):
+                                response_metadata_snapshot = stored_metadata
+                            stored_usage = stored_record.get("usage")
+                            if isinstance(stored_usage, dict):
+                                usage_snapshot = stored_usage
+                            reused_from_snapshot = str(reused_record_path)
+                        else:
+                            if participant.get("kind") == "openai_responses":
+                                openai_result = call_openai_responses(
+                                    participant=participant,
+                                    prompt=prompt,
+                                    api_key=api_key,
+                                    base_url=openai_base_url,
+                                    timeout_s=timeout_s,
+                                    max_retries=max_retries,
+                                )
+                            else:
+                                openai_result = call_openai_chat(
+                                    participant=participant,
+                                    prompt=prompt,
+                                    api_key=api_key,
+                                    base_url=openai_base_url,
+                                    timeout_s=timeout_s,
+                                    max_retries=max_retries,
+                                )
+                            payload_snapshot = openai_result.get("payload")
+                            response_metadata = openai_result.get("response_metadata")
+                            if isinstance(response_metadata, dict):
+                                response_metadata_snapshot = response_metadata
+                            usage = openai_result.get("usage")
+                            if isinstance(usage, dict):
+                                usage_snapshot = usage
+                            raw_text = str(openai_result.get("raw_text") or "")
+                            if not openai_result.get("ok"):
+                                error = str(openai_result.get("error") or "openai_error")
+                                if "_http_" in error or error.startswith("network_error"):
+                                    status = "infrastructure_error"
                         normalized = normalize_from_raw_text(raw_text, known_skill_ids)
 
                 else:
@@ -2161,6 +2235,8 @@ def run_benchmark(args: argparse.Namespace) -> int:
                     record["response_metadata"] = response_metadata_snapshot
                 if usage_snapshot is not None:
                     record["usage"] = usage_snapshot
+                if reused_from_snapshot is not None:
+                    record["reused_from"] = reused_from_snapshot
 
                 raw_output_rel = Path("raw_outputs") / participant_id / suite / f"{case['id']}.txt"
                 record_path_rel = Path("case_records") / participant_id / suite / f"{case['id']}.json"
@@ -2200,6 +2276,7 @@ def run_benchmark(args: argparse.Namespace) -> int:
         "participants": selected_participants,
         "suites": suites,
         "case_ids": selected_case_ids,
+        "reuse_records_from": [str(path) for path in reuse_roots],
         "openai_base_url": openai_base_url,
         "openai_timeout_seconds": timeout_s,
         "openai_max_retries": max_retries,
@@ -2364,6 +2441,11 @@ def build_arg_parser() -> argparse.ArgumentParser:
     parser.add_argument("--openai-max-retries", type=int, default=None, help="OpenAI retry count for 429/5xx")
     parser.add_argument("--bootstrap-iterations", type=int, default=0, help="Bootstrap iterations for confidence intervals")
     parser.add_argument("--mock-response-dir", default="", help="Read OpenAI responses from local fixtures directory")
+    parser.add_argument(
+        "--reuse-records-from",
+        default="",
+        help="Comma-separated prior run directories containing matching scored API records",
+    )
     parser.add_argument("--no-ablations", action="store_true", help="Disable automatic o3-mini ablation participants")
     parser.add_argument("--protocol", default="", help="Versioned v2 protocol path")
     parser.add_argument("--manifest", default="", help="Versioned v2 case manifest path")
