@@ -494,6 +494,10 @@ When a workflow fails, start from the skill's `references/` folder and then chec
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for how to add skills, run validation, and submit pull requests.
 
+## License
+
+This repository is licensed under the [Apache License 2.0](./LICENSE). Third-party models, datasets, and dependencies may have their own license terms.
+
 ## Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=JiaqiLiZju/s2f-agent&type=Date)](https://star-history.com/#JiaqiLiZju/s2f-agent&Date)
