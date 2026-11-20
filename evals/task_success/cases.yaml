@@ -124,7 +124,7 @@ cases:
     required_step_contains: "run_alphagenome_track_prediction_bed_batch.py --interval"
     required_expected_output_contains: "alphagenome_track_chr19_6700000_6732768_trackplot.png"
   - id: task_success_020
-    query: "Use $alphagenome-api to run VCF batch variant effect prediction on case-study-playbooks/variant-effect/vcf/Test.geuvadis.vcf, assembly hg38, output to output/alphagenome/."
+    query: "Use $alphagenome-api to run VCF batch variant effect prediction on evals/task_success/fixtures/example.vcf, assembly hg38, output to output/alphagenome/."
     task: variant-effect
     min_runnable_steps: 1
     min_expected_outputs: 2
@@ -148,7 +148,7 @@ cases:
     required_selected_inputs_group: "vcf-batch"
     required_missing_input_contains: "vcf-input"
   - id: task_success_023
-    query: "Run track prediction BED batch for human hg38 using $alphagenome-api on case-study-playbooks/track_prediction/bed/Test.interval.bed."
+    query: "Run track prediction BED batch for human hg38 using $alphagenome-api on evals/task_success/fixtures/example.bed."
     task: track-prediction
     min_runnable_steps: 1
     min_expected_outputs: 4
