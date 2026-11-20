@@ -7,6 +7,7 @@ import importlib.util
 import json
 import argparse
 import os
+import tempfile
 import unittest
 from pathlib import Path
 from unittest import mock
@@ -201,6 +202,65 @@ class EvalBenchmarkMockTests(unittest.TestCase):
         self.assertEqual(payload["model"], "o3-mini")
         self.assertEqual(payload["reasoning_effort"], "medium")
         self.assertIn("response_format", payload)
+
+    def test_claude_compat_payloads_use_schema_and_omit_temperature(self) -> None:
+        participants = self.mod.get_participant_map(
+            self.mod.load_yaml(self.repo_root / "benchmark/config/participants.yaml")
+        )
+        for participant_id in ("claude-opus-5", "claude-sonnet-5"):
+            with self.subTest(participant_id=participant_id):
+                participant = participants[participant_id]
+                payload = self.mod.build_openai_payload(participant, prompt="hello")
+                self.assertEqual(payload["model"], participant_id)
+                self.assertNotIn("temperature", payload)
+                self.assertEqual(payload["response_format"]["type"], "json_schema")
+                self.assertTrue(payload["response_format"]["json_schema"]["strict"])
+
+    def test_reusable_api_record_requires_matching_scored_payload(self) -> None:
+        payload = {"model": "claude-sonnet-5", "messages": [{"role": "user", "content": "x"}]}
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            raw_rel = Path("raw_outputs/claude-sonnet-5/routing/route_001.txt")
+            record_path = root / "case_records/claude-sonnet-5/routing/route_001.json"
+            (root / raw_rel).parent.mkdir(parents=True)
+            record_path.parent.mkdir(parents=True)
+            (root / raw_rel).write_text('{"decision":"route"}', encoding="utf-8")
+            record_path.write_text(
+                json.dumps(
+                    {
+                        "status": "scored",
+                        "participant_id": "claude-sonnet-5",
+                        "participant_kind": "openai_chat",
+                        "prompt_variant": "catalog+contracts",
+                        "suite": "routing",
+                        "case": {"id": "route_001"},
+                        "openai_payload": payload,
+                        "raw_output_path": raw_rel.as_posix(),
+                    }
+                ),
+                encoding="utf-8",
+            )
+            reused = self.mod.load_reusable_api_record(
+                [root],
+                "claude-sonnet-5",
+                "openai_chat",
+                "catalog+contracts",
+                "routing",
+                "route_001",
+                payload,
+            )
+            self.assertIsNotNone(reused)
+            self.assertIsNone(
+                self.mod.load_reusable_api_record(
+                    [root],
+                    "claude-sonnet-5",
+                    "openai_chat",
+                    "catalog+contracts",
+                    "routing",
+                    "route_001",
+                    {"model": "different"},
+                )
+            )
 
     def test_openai_base_url_can_come_from_environment(self) -> None:
         args = argparse.Namespace(openai_base_url="")
